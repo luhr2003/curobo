@@ -1,0 +1,91 @@
+## SPDX-FileCopyrightText: Copyright (c) 2023-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+## SPDX-License-Identifier: Apache-2.0
+##
+## MPPI stage for MPC. Pairs with lbfgs_mpc.yml as a two-stage optimizer:
+##   optimizer_configs=["mpc/mppi_mpc.yml", "mpc/lbfgs_mpc.yml"]
+## The rollout block is the same as lbfgs_mpc.yml so the two stages share
+## costs; only the optimizer block differs.
+rollout:
+  cost_cfg:
+    cspace_cfg:
+      activation_distance:
+      - 0.01
+      - 0.01
+      - 0.01
+      - 0.01
+      - 0.01
+
+      squared_l2_regularization_weight:
+      - 0.01
+      - 10000.0
+      - 10.0
+      - 0.0
+      - 0.0
+      weight:
+      - 1000.0
+      - 1000.0
+      - 1000.0
+      - 100.0
+      - 0.0
+      cost_type: STATE
+      retime_weights: false
+      retime_regularization_weights: true
+      cspace_target_weight: 1000.0
+      cspace_non_terminal_weight_factor: 0.05
+
+    tool_pose_cfg:
+      use_lie_group: false
+      weight:
+      - 5000.0
+      - 200.0
+      _terminal_pose_convergence_tolerance:
+      - 0.0
+      - 0.0
+
+  constraint_cfg:
+    scene_collision_cfg:
+      activation_distance: 0.01
+      use_speed_metric: false
+      use_sweep: false
+      use_sweep_kernel: false
+      weight: 10000.0
+    self_collision_cfg:
+      weight: 1000.0
+
+
+optimizer:
+  solver_type: "mppi"
+  solver_name: "mppi"
+  gamma: 1.0
+  init_cov: 0.5
+  kappa: 0.001
+  beta: 0.01
+  step_size_cov: 0.1
+  step_size_mean: 0.98
+  num_iters: 3
+  inner_iters: 3
+  null_act_frac: 0.0
+  num_particles: 25
+  random_mean: false
+  sample_mode: BEST
+  sample_params:
+    filter_coeffs:
+    - 0.3
+    - 0.3
+    - 0.4
+    fixed_samples: true
+    n_knots: 5
+    sample_ratio:
+      halton: 0.0
+      halton-knot: 0.0
+      random: 0.0
+      random-knot: 0.0
+      stomp: 1.0
+    seed: 23
+  sample_per_problem: true
+  seed: 0
+  squash_fn: CLAMP
+  store_debug: false
+  sync_cuda_time: false
+  update_cov: true
+  use_coo_sparse: true

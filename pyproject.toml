@@ -100,6 +100,27 @@ benchmark = [
     "seaborn",
 ]
 
+# Isaac Lab 2.3.x (bundles Isaac Sim 5.x + all extras).
+# Requires Python 3.11 and CUDA 12.x. torch / torchvision pins match the
+# versions validated for Isaac Sim 5.x; see Isaac Lab "Installation using
+# Isaac Lab Pip Packages" docs.
+#
+# Install with:
+#     uv pip install -e '.[isaaclab]'
+# or, when combining with a locked torch/runtime extra, prefer this extra
+# alone (it supersedes cu12-torch because it pins torch==2.7.0).
+isaaclab = [
+    # CUDA 12 runtime (matches torch cu128 build; same packages as [cu12]).
+    "cuda-core[cu12]>=0.7",
+    "nvidia-cuda-runtime-cu12>=12",
+    # Isaac Lab meta-package that pulls in Isaac Sim 5.x and all extras
+    # (rl_games fork is installed separately via git).
+    "isaaclab[isaacsim,all]==2.3.2.post1",
+    # PyTorch pin required by Isaac Sim 5.x / Isaac Lab 2.3 (cu128 wheels).
+    "torch==2.7.0",
+    "torchvision==0.22.0",
+]
+
 [project.urls]
 Homepage = "https://nvlabs.github.io/curobo"
 Repository = "https://github.com/NVlabs/curobo"
@@ -253,7 +274,23 @@ conflicts = [
     { extra = "cu12-torch" },
     { extra = "cu13-torch" },
   ],
+  # isaaclab pins torch==2.7.0 (cu128), incompatible with the cu13 stack.
+  [
+    { extra = "isaaclab" },
+    { extra = "cu13" },
+  ],
+  [
+    { extra = "isaaclab" },
+    { extra = "cu13-torch" },
+  ],
 ]
+
+# NVIDIA PyPI hosts the isaacsim-* wheels pulled in transitively by
+# isaaclab[isaacsim,all]. Kept non-explicit so any package not found on
+# PyPI can still resolve here.
+[[tool.uv.index]]
+name = "nvidia"
+url = "https://pypi.nvidia.com"
 
 [[tool.uv.index]]
 name = "pytorch-cu130"
@@ -268,5 +305,9 @@ explicit = true
 [tool.uv.sources]
 torch = [
   { index = "pytorch-cu128", extra = "cu12-torch" },
+  { index = "pytorch-cu128", extra = "isaaclab" },
   { index = "pytorch-cu130", extra = "cu13-torch" },
+]
+torchvision = [
+  { index = "pytorch-cu128", extra = "isaaclab" },
 ]

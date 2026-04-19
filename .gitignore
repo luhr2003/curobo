@@ -165,3 +165,10 @@ docker/pkgs/*
 *.svg
 *.SVG
 !docs/images/*.svg
+
+# direnv
+.envrc.local
+.direnv/
+
+# Isaac Sim / Omniverse cache (created by .envrc)
+.cache/

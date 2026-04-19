@@ -1,0 +1,790 @@
+kinematics:
+  urdf_path: robot/g1_simple/g1_simple.urdf
+  asset_root_path: robot/g1_simple
+  base_link: g1_29dof_with_hand_rev_1_0
+  collision_link_names:
+  - g1_29dof_with_hand_rev_1_0
+  - pelvis_contour_link
+  - waist_yaw_link
+  - waist_roll_link
+  - torso_link
+  - head_link
+  - left_hip_pitch_link
+  - left_upper_leg_link
+  - left_knee_link
+  - left_foot_link
+  - right_hip_pitch_link
+  - right_upper_leg_link
+  - right_knee_link
+  - right_foot_link
+  - left_shoulder_pitch_link
+  - left_shoulder_roll_link
+  - left_shoulder_yaw_link
+  - left_elbow_link
+  - left_wrist_roll_link
+  - left_wrist_pitch_link
+  - left_wrist_yaw_link
+  - left_hand_palm_link
+  - left_hand_fingers_link
+  - right_shoulder_pitch_link
+  - right_shoulder_roll_link
+  - right_shoulder_yaw_link
+  - right_elbow_link
+  - right_wrist_roll_link
+  - right_wrist_pitch_link
+  - right_wrist_yaw_link
+  - right_hand_palm_link
+  - right_hand_fingers_link
+  collision_spheres:
+    g1_29dof_with_hand_rev_1_0:
+    - center:
+      - 0.0
+      - 0.0
+      - 0.0
+      radius: 0.01
+    pelvis_contour_link:
+    - center:
+      - 0.0
+      - 0.0
+      - 0.0
+      radius: 0.05
+    - center:
+      - 0.0
+      - 0.0
+      - -0.077
+      radius: 0.075
+    waist_yaw_link:
+    - center:
+      - 0.0
+      - 0.0
+      - 0.0
+      radius: 0.0001
+    - center:
+      - 0.0
+      - 0.0
+      - 0.044
+      radius: 0.0001
+    waist_roll_link:
+    - center:
+      - 0.0
+      - 0.0
+      - 0.0
+      radius: 0.0001
+    torso_link:
+    - center:
+      - 0.003
+      - 0.022
+      - 0.041
+      radius: 0.05
+    - center:
+      - 0.003
+      - -0.022
+      - 0.041
+      radius: 0.05
+    - center:
+      - 0.003
+      - 0.043
+      - 0.102
+      radius: 0.05
+    - center:
+      - 0.003
+      - -0.043
+      - 0.102
+      radius: 0.05
+    - center:
+      - 0.013
+      - 0.031
+      - 0.185
+      radius: 0.07
+    - center:
+      - 0.013
+      - -0.031
+      - 0.185
+      radius: 0.07
+    - center:
+      - 0.003
+      - 0.044
+      - 0.245
+      radius: 0.05
+    - center:
+      - 0.003
+      - -0.044
+      - 0.245
+      radius: 0.05
+    head_link:
+    - center:
+      - -0.007
+      - -0.0
+      - 0.359
+      radius: 0.03
+    - center:
+      - 0.007
+      - -0.0
+      - 0.423
+      radius: 0.05
+    - center:
+      - 0.026
+      - -0.0
+      - 0.479
+      radius: 0.05
+    - center:
+      - -0.013
+      - -0.0
+      - 0.481
+      radius: 0.05
+    left_hip_pitch_link:
+    - center:
+      - 0.0
+      - 0.0
+      - 0.0
+      radius: 0.04
+    - center:
+      - 0.008
+      - 0.042
+      - -0.032
+      radius: 0.06
+    left_upper_leg_link:
+    - center:
+      - 0.0
+      - 0.0
+      - -0.05
+      radius: 0.04
+    - center:
+      - 0.0
+      - 0.0
+      - -0.11
+      radius: 0.04
+    - center:
+      - 0.0
+      - 0.0
+      - -0.17
+      radius: 0.04
+    - center:
+      - 0.0
+      - 0.0
+      - -0.25
+      radius: 0.04
+    left_knee_link:
+    - center:
+      - 0.005
+      - 0.0
+      - -0.04
+      radius: 0.035
+    - center:
+      - 0.005
+      - 0.0
+      - -0.1
+      radius: 0.035
+    - center:
+      - 0.005
+      - 0.0
+      - -0.16
+      radius: 0.035
+    - center:
+      - 0.005
+      - 0.0
+      - -0.22
+      radius: 0.035
+    left_foot_link:
+    - center:
+      - 0.035
+      - 0.0
+      - -0.03
+      radius: 0.06
+    right_hip_pitch_link:
+    - center:
+      - 0.0
+      - -0.0
+      - 0.0
+      radius: 0.04
+    - center:
+      - 0.008
+      - -0.042
+      - -0.032
+      radius: 0.06
+    right_upper_leg_link:
+    - center:
+      - 0.0
+      - 0.0
+      - -0.05
+      radius: 0.04
+    - center:
+      - 0.0
+      - 0.0
+      - -0.11
+      radius: 0.04
+    - center:
+      - 0.0
+      - 0.0
+      - -0.17
+      radius: 0.04
+    - center:
+      - 0.0
+      - 0.0
+      - -0.25
+      radius: 0.04
+    right_knee_link:
+    - center:
+      - 0.005
+      - 0.0
+      - -0.04
+      radius: 0.035
+    - center:
+      - 0.005
+      - 0.0
+      - -0.1
+      radius: 0.035
+    - center:
+      - 0.005
+      - 0.0
+      - -0.16
+      radius: 0.035
+    - center:
+      - 0.005
+      - 0.0
+      - -0.22
+      radius: 0.035
+    right_foot_link:
+    - center:
+      - 0.035
+      - 0.0
+      - -0.03
+      radius: 0.06
+    left_shoulder_pitch_link:
+    - center:
+      - -0.0
+      - 0.007
+      - -0.002
+      radius: 0.04
+    left_shoulder_roll_link:
+    - center:
+      - -0.0
+      - 0.007
+      - -0.0
+      radius: 0.04
+    - center:
+      - 0.0
+      - 0.006
+      - -0.05
+      radius: 0.035
+    left_shoulder_yaw_link:
+    - center:
+      - -0.0
+      - 0.0
+      - 0.003
+      radius: 0.035
+    - center:
+      - -0.005
+      - -0.0
+      - -0.036
+      radius: 0.03
+    - center:
+      - 0.014
+      - -0.004
+      - -0.083
+      radius: 0.04
+    left_elbow_link:
+    - center:
+      - 0.038
+      - 0.001
+      - -0.01
+      radius: 0.04
+    left_wrist_roll_link:
+    - center:
+      - 0.007
+      - 0.0
+      - 0.0
+      radius: 0.03
+    left_wrist_pitch_link:
+    - center:
+      - 0.02
+      - 0.0
+      - 0.0
+      radius: 0.035
+    left_wrist_yaw_link:
+    - center:
+      - 0.028
+      - 0.0
+      - 0.0
+      radius: 0.03
+    right_shoulder_pitch_link:
+    - center:
+      - -0.0
+      - -0.007
+      - -0.002
+      radius: 0.04
+    right_shoulder_roll_link:
+    - center:
+      - -0.0
+      - -0.007
+      - -0.0
+      radius: 0.04
+    - center:
+      - 0.0
+      - -0.006
+      - -0.05
+      radius: 0.035
+    right_shoulder_yaw_link:
+    - center:
+      - -0.0
+      - -0.0
+      - 0.003
+      radius: 0.035
+    - center:
+      - -0.005
+      - 0.0
+      - -0.036
+      radius: 0.03
+    - center:
+      - 0.014
+      - 0.004
+      - -0.083
+      radius: 0.04
+    right_elbow_link:
+    - center:
+      - 0.038
+      - -0.001
+      - -0.01
+      radius: 0.04
+    right_wrist_roll_link:
+    - center:
+      - 0.007
+      - -0.0
+      - 0.0
+      radius: 0.03
+    right_wrist_pitch_link:
+    - center:
+      - 0.02
+      - -0.0
+      - 0.0
+      radius: 0.035
+    right_wrist_yaw_link:
+    - center:
+      - 0.028
+      - -0.0
+      - 0.0
+      radius: 0.03
+    left_hand_palm_link:
+    - center:
+      - 0.03
+      - 0.002
+      - -0.013
+      radius: 0.02903
+    - center:
+      - 0.058
+      - -0.002
+      - -0.025
+      radius: 0.02302
+    - center:
+      - 0.014
+      - -0.001
+      - 0.001
+      radius: 0.02252
+    - center:
+      - 0.057
+      - -0.005
+      - 0.027
+      radius: 0.02202
+    - center:
+      - 0.028
+      - -0.001
+      - 0.013
+      radius: 0.02853
+    - center:
+      - 0.061
+      - 0.001
+      - -0.0
+      radius: 0.02252
+    left_hand_fingers_link:
+    - center:
+      - 0.0
+      - 0.0
+      - 0.0
+      radius: 0.08
+    right_hand_palm_link:
+    - center:
+      - 0.015
+      - 0.0
+      - 0.014
+      radius: 0.015
+    - center:
+      - 0.015
+      - 0.0
+      - -0.014
+      radius: 0.015
+    - center:
+      - 0.038
+      - 0.0
+      - 0.025
+      radius: 0.015
+    - center:
+      - 0.038
+      - 0.0
+      - -0.025
+      radius: 0.015
+    - center:
+      - 0.038
+      - 0.0
+      - 0.0
+      radius: 0.015
+    - center:
+      - 0.06
+      - 0.0
+      - 0.028
+      radius: 0.015
+    - center:
+      - 0.06
+      - 0.0
+      - -0.028
+      radius: 0.015
+    - center:
+      - 0.06
+      - 0.0
+      - 0.0
+      radius: 0.015
+    right_hand_fingers_link:
+    - center:
+      - 0.0
+      - 0.0
+      - 0.0
+      radius: 0.08
+  collision_sphere_buffer:
+    g1_29dof_with_hand_rev_1_0: -0.005
+    pelvis_contour_link: -0.005
+    waist_yaw_link: -0.005
+    waist_roll_link: -0.005
+    torso_link: -0.005
+    head_link: -0.005
+    left_shoulder_pitch_link: -0.005
+    left_shoulder_roll_link: -0.005
+    left_shoulder_yaw_link: -0.005
+    left_elbow_link: -0.005
+    left_wrist_roll_link: -0.005
+    left_wrist_pitch_link: -0.005
+    left_wrist_yaw_link: -0.005
+    right_shoulder_pitch_link: -0.005
+    right_shoulder_roll_link: -0.005
+    right_shoulder_yaw_link: -0.005
+    right_elbow_link: -0.005
+    right_wrist_roll_link: -0.005
+    right_wrist_pitch_link: -0.005
+    right_wrist_yaw_link: -0.005
+    left_hip_pitch_link: -0.02
+    left_upper_leg_link: -0.02
+    left_knee_link: -0.02
+    left_foot_link: -0.02
+    right_hip_pitch_link: -0.02
+    right_upper_leg_link: -0.02
+    right_knee_link: -0.02
+    right_foot_link: -0.02
+    left_hand_palm_link: -0.02
+    left_hand_fingers_link: -0.02
+    right_hand_palm_link: -0.02
+    right_hand_fingers_link: -0.02
+  self_collision_ignore:
+    g1_29dof_with_hand_rev_1_0:
+    - imu_in_pelvis
+    - left_hip_pitch_link
+    - pelvis_contour_link
+    - right_hip_pitch_link
+    - waist_yaw_link
+    - waist_roll_link
+    - torso_link
+    pelvis_contour_link:
+    - right_hip_pitch_link
+    - left_hip_pitch_link
+    - waist_yaw_link
+    - waist_roll_link
+    - torso_link
+    imu_in_pelvis:
+    - left_hip_pitch_link
+    - pelvis_contour_link
+    - right_hip_pitch_link
+    - waist_yaw_link
+    waist_yaw_link:
+    - waist_roll_link
+    - torso_link
+    - pelvis_contour_link
+    - g1_29dof_with_hand_rev_1_0
+    waist_roll_link:
+    - waist_yaw_link
+    - torso_link
+    - pelvis_contour_link
+    torso_link:
+    - d435_link
+    - head_link
+    - imu_in_torso
+    - logo_link
+    - mid360_link
+    - waist_roll_link
+    - waist_yaw_link
+    - pelvis_contour_link
+    - left_shoulder_pitch_link
+    - left_shoulder_roll_link
+    - left_shoulder_yaw_link
+    - right_shoulder_pitch_link
+    - right_shoulder_roll_link
+    - right_shoulder_yaw_link
+    head_link:
+    - imu_in_torso
+    - left_shoulder_pitch_link
+    - logo_link
+    - mid360_link
+    - right_shoulder_pitch_link
+    - torso_link
+    - d435_link
+    d435_link:
+    - head_link
+    - imu_in_torso
+    - left_shoulder_pitch_link
+    - logo_link
+    - mid360_link
+    - right_shoulder_pitch_link
+    - torso_link
+    imu_in_torso:
+    - left_shoulder_pitch_link
+    - logo_link
+    - mid360_link
+    - right_shoulder_pitch_link
+    - torso_link
+    logo_link:
+    - mid360_link
+    - right_shoulder_pitch_link
+    - left_shoulder_pitch_link
+    - torso_link
+    mid360_link:
+    - right_shoulder_pitch_link
+    - left_shoulder_pitch_link
+    - torso_link
+    left_hip_pitch_link:
+    - left_upper_leg_link
+    - pelvis_contour_link
+    - g1_29dof_with_hand_rev_1_0
+    - waist_yaw_link
+    left_upper_leg_link:
+    - left_knee_link
+    - left_hip_pitch_link
+    left_knee_link:
+    - left_foot_link
+    - left_upper_leg_link
+    left_foot_link:
+    - left_knee_link
+    right_hip_pitch_link:
+    - right_upper_leg_link
+    - pelvis_contour_link
+    - g1_29dof_with_hand_rev_1_0
+    - waist_yaw_link
+    right_upper_leg_link:
+    - right_knee_link
+    - right_hip_pitch_link
+    right_knee_link:
+    - right_foot_link
+    - right_upper_leg_link
+    right_foot_link:
+    - right_knee_link
+    left_shoulder_pitch_link:
+    - left_shoulder_roll_link
+    - logo_link
+    - mid360_link
+    - right_shoulder_pitch_link
+    - torso_link
+    - head_link
+    left_shoulder_roll_link:
+    - left_shoulder_yaw_link
+    - torso_link
+    - left_shoulder_pitch_link
+    left_shoulder_yaw_link:
+    - left_elbow_link
+    - left_shoulder_roll_link
+    - torso_link
+    left_elbow_link:
+    - left_wrist_roll_link
+    - left_shoulder_yaw_link
+    left_wrist_roll_link:
+    - left_wrist_pitch_link
+    - left_elbow_link
+    left_wrist_pitch_link:
+    - left_wrist_yaw_link
+    - left_wrist_roll_link
+    left_wrist_yaw_link:
+    - left_hand_palm_link
+    - left_wrist_pitch_link
+    left_hand_palm_link:
+    - left_hand_fingers_link
+    - left_wrist_yaw_link
+    - left_hip_pitch_link
+    left_hand_fingers_link:
+    - left_hand_palm_link
+    right_shoulder_pitch_link:
+    - right_shoulder_roll_link
+    - right_shoulder_yaw_link
+    - torso_link
+    - head_link
+    right_shoulder_roll_link:
+    - right_shoulder_yaw_link
+    - torso_link
+    - right_shoulder_pitch_link
+    right_shoulder_yaw_link:
+    - right_elbow_link
+    - right_shoulder_roll_link
+    - torso_link
+    right_elbow_link:
+    - right_wrist_roll_link
+    - right_shoulder_yaw_link
+    right_wrist_roll_link:
+    - right_wrist_pitch_link
+    - right_elbow_link
+    right_wrist_pitch_link:
+    - right_wrist_yaw_link
+    - right_wrist_roll_link
+    right_wrist_yaw_link:
+    - right_hand_palm_link
+    - right_wrist_pitch_link
+    right_hand_palm_link:
+    - right_hand_fingers_link
+    - right_wrist_yaw_link
+    - right_hip_pitch_link
+    right_hand_fingers_link:
+    - right_hand_palm_link
+  self_collision_buffer:
+    pelvis_contour_link: -0.05
+    g1_29dof_with_hand_rev_1_0: -0.05
+    torso_link: -0.05
+    left_hip_pitch_link: -0.02
+    left_upper_leg_link: -0.02
+    left_knee_link: -0.02
+    left_foot_link: -0.02
+    right_hip_pitch_link: -0.02
+    right_upper_leg_link: -0.02
+    right_knee_link: -0.02
+    right_foot_link: -0.02
+    left_hand_palm_link: -0.02
+    left_hand_fingers_link: -0.02
+    right_hand_palm_link: -0.02
+    right_hand_fingers_link: -0.02
+  lock_joints:
+    left_hip_pitch_joint: 0.0
+    right_hip_pitch_joint: 0.0
+    left_knee_joint: 0.0
+    right_knee_joint: 0.0
+  mesh_link_names:
+  - g1_29dof_with_hand_rev_1_0
+  - pelvis_contour_link
+  - waist_yaw_link
+  - waist_roll_link
+  - torso_link
+  - head_link
+  - left_hip_pitch_link
+  - right_hip_pitch_link
+  - left_shoulder_pitch_link
+  - left_shoulder_roll_link
+  - left_shoulder_yaw_link
+  - left_elbow_link
+  - left_wrist_roll_link
+  - left_wrist_pitch_link
+  - left_wrist_yaw_link
+  - left_hand_palm_link
+  - right_shoulder_pitch_link
+  - right_shoulder_roll_link
+  - right_shoulder_yaw_link
+  - right_elbow_link
+  - right_wrist_roll_link
+  - right_wrist_pitch_link
+  - right_wrist_yaw_link
+  - right_hand_palm_link
+  cspace:
+    joint_names:
+    - waist_yaw_joint
+    - waist_roll_joint
+    - waist_pitch_joint
+    - left_shoulder_pitch_joint
+    - right_shoulder_pitch_joint
+    - left_shoulder_roll_joint
+    - right_shoulder_roll_joint
+    - left_shoulder_yaw_joint
+    - right_shoulder_yaw_joint
+    - left_elbow_joint
+    - right_elbow_joint
+    - left_wrist_roll_joint
+    - right_wrist_roll_joint
+    - left_wrist_pitch_joint
+    - right_wrist_pitch_joint
+    - left_wrist_yaw_joint
+    - right_wrist_yaw_joint
+    - left_hip_pitch_joint
+    - right_hip_pitch_joint
+    - left_knee_joint
+    - right_knee_joint
+    null_space_weight:
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    cspace_distance_weight:
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    max_jerk: 10000.0
+    max_acceleration: 10.0
+    position_limit_clip: -0.2
+    default_joint_position:
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.35
+    - -0.35
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
+  tool_frames:
+  - right_hand_palm_link
+  - left_hand_palm_link
+  format_version: 2.0
