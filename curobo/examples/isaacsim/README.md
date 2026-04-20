@@ -83,7 +83,8 @@ docstring.
 
 | Script | What it demos | Run |
 |---|---|---|
-| **Reactive MPC** — Franka continuously tracks a draggable cube with `ModelPredictiveControl.optimize_action_sequence`. Collision table avoided online. | GUI / drag cube while MPC tracks | `uv run isaacsim-mpc` |
+| **Reactive MPC** — Franka continuously tracks a draggable cube with `ModelPredictiveControl.optimize_action_sequence`. Cube spawns on the retract-config EE so the first drag delta is zero and MPC can follow incrementally. Supports `--use_mppi` for MPPI + L-BFGS two-stage plus an on-screen planned-EE trajectory. | GUI / drag cube slowly | `uv run isaacsim-mpc` |
+| **Batched MPC (multi-env)** — two Franka robots at different world offsets, each with its own collision scene (same `collision_test.yml` / `collision_thin_walls.yml` pair as `batch-motion-gen-reacher`). One batched `optimize_action_sequence` call tracks both cubes simultaneously. `max_batch_size=2, multi_env=True`. | 2 envs, drag either cube | `uv run isaacsim-batch-mpc` |
 
 ### Related (not Isaac Sim, but useful)
 
@@ -102,6 +103,8 @@ boots, plans, and exits cleanly — no display required:
 ```bash
 uv run isaacsim-motion-gen-reacher       --headless_mode native --max_steps 150
 uv run isaacsim-batch-motion-gen-reacher --headless_mode native --max_steps 300
+uv run isaacsim-mpc                      --headless_mode native --max_steps 300
+uv run isaacsim-batch-mpc                --headless_mode native --max_steps 300
 uv run isaacsim-dynamic-batch            --headless_mode native --max_steps 2500 --cycle_switch_interval 300
 ```
 

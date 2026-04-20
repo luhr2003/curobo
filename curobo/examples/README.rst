@@ -1,7 +1,7 @@
 cuRobo Examples
 ===============
 
-Examples are split into three categories:
+Examples are split into four categories:
 
 * **Getting Started** (``getting_started/``): Step-by-step tutorials for beginners.
   Each script is paired with a Sphinx page under ``docs/getting-started/``.
@@ -9,6 +9,9 @@ Examples are split into three categories:
   ``docs/guides/``.
 * **Reference** (``reference/``): Interactive comparison / debugging demos for specific
   features (e.g., sphere fitting, pose estimation).
+* **Isaac Sim** (``isaacsim/``): Ports of the v1 ``MagicCurobo/examples/isaac_sim``
+  demos to the v2 API. See ``isaacsim/README.md`` for the full index and
+  ``uv run`` entry points (e.g. ``isaacsim-mpc``, ``isaacsim-batch-mpc``).
 
 Getting Started
 ---------------

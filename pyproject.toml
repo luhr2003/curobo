@@ -143,6 +143,7 @@ isaacsim-ik-batched-env           = "curobo.examples.isaacsim.ik_batched_env:mai
 isaacsim-ik-humanoid-batched-env  = "curobo.examples.isaacsim.ik_humanoid_batched_env:main"
 # MPC
 isaacsim-mpc                      = "curobo.examples.isaacsim.mpc_example:main"
+isaacsim-batch-mpc                = "curobo.examples.isaacsim.batch_mpc_example:main"
 # Robot builder (not Isaac Sim but useful at this level)
 curobo-build-robot-model          = "curobo.examples.getting_started.build_robot_model:main"
 
