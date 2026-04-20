@@ -190,13 +190,13 @@ def main():
     stage.DefinePrim("/curobo", "Xform")
     my_world.scene.add_default_ground_plane()
 
-    target = cuboid.VisualCuboid(
-        "/World/target",
-        position=np.array([0.5, 0, 0.5]),
-        orientation=np.array([0, 1, 0, 0]),
-        color=np.array([1.0, 0, 0]),
-        size=0.05,
-    )
+    # Target cube created later, after MPC is ready, so we can place it at the
+    # retract-config EE pose (v1 ``multi_arm_reacher.py`` pattern). Putting it
+    # there keeps the first few frame's ``cube - eef`` delta at zero; user
+    # drags it incrementally and MPC tracks it frame-to-frame. Placing the
+    # cube 35cm away from the retract EE (like v1's ``[0.5, 0, 0.5]``) would
+    # exceed v2 MPC's per-cycle reach and the arm would stall at retract.
+    target = None
 
     setup_logger("warn")
     device_cfg = DeviceCfg()
@@ -251,9 +251,20 @@ def main():
 
     mpc.setup(current_state)
 
-    # Initial goal = FK at the retract config; later overwritten by the cube.
+    # Initial goal = FK at the retract config. We also place the draggable
+    # cube here so the first user interaction (grab + drag) produces small
+    # incremental targets — the only input pattern v2 MPC can actually track.
     kin = mpc.compute_kinematics(current_state)
     retract_pose = kin.tool_poses.to_dict()[mpc.tool_frames[0]]
+    retract_pos_np = retract_pose.position.view(3).cpu().numpy()
+    retract_quat_np = retract_pose.quaternion.view(4).cpu().numpy()
+    target = cuboid.VisualCuboid(
+        "/World/target",
+        position=retract_pos_np,
+        orientation=retract_quat_np,
+        color=np.array([1.0, 0, 0]),
+        size=0.05,
+    )
     mpc.update_goal_tool_poses(
         _goal_from_pose(
             mpc,
@@ -262,15 +273,13 @@ def main():
                 quaternion=retract_pose.quaternion.view(1, 4).clone(),
             ),
         ),
-        run_ik=True,
-        use_best_effort_ik=True,
+        run_ik=False,
     )
 
     # Warmup a first optimize call so CUDA graphs get captured.
-    mpc.optimize_next_action(current_state)
+    mpc.optimize_action_sequence(current_state)
 
     init_curobo = False
-    cmd_state_full = None
     step = 0
     add_extensions(simulation_app, args.headless_mode)
 
@@ -339,17 +348,12 @@ def main():
                     cube_orientation, device=device_cfg.device, dtype=device_cfg.dtype
                 ).view(1, 4),
             )
-            # Upstream v2 MPC limitation: ``update_goal_tool_poses(run_ik=True)``
-            # uses an internal IK with ``num_seeds=1`` seeded from the current
-            # state. For targets far from the current pose (e.g. retract →
-            # cube at [0.5, 0, 0.5]) IK fails. ``use_best_effort_ik=True`` at
-            # least keeps whatever IK produced, so the cost terms have
-            # *something* to track — without it the goal isn't updated at all.
-            mpc.update_goal_tool_poses(
-                _goal_from_pose(mpc, ik_goal),
-                run_ik=True,
-                use_best_effort_ik=True,
-            )
+            # Pose-only tracking (same pattern as v2's
+            # ``reactive_control --visualize`` and ``humanoid_retargeting --mpc``).
+            # Using ``run_ik=True`` here would silently fail for any cube
+            # position the internal 1-seed IK can't reach, leaving the goal
+            # unchanged — see the discussion in ``BATCH_INTERFACES.md``.
+            mpc.update_goal_tool_poses(_goal_from_pose(mpc, ik_goal), run_ik=False)
             past_pose = cube_position
 
         sim_js = robot.get_joints_state()
@@ -358,32 +362,49 @@ def main():
             continue
         sim_js_names = robot.dof_names
 
-        cu_js = JointState(
-            position=torch.as_tensor(sim_js.positions, device=device_cfg.device, dtype=device_cfg.dtype),
-            velocity=torch.as_tensor(sim_js.velocities, device=device_cfg.device, dtype=device_cfg.dtype) * 0.0,
-            acceleration=torch.as_tensor(sim_js.velocities, device=device_cfg.device, dtype=device_cfg.dtype) * 0.0,
-            jerk=torch.as_tensor(sim_js.velocities, device=device_cfg.device, dtype=device_cfg.dtype) * 0.0,
-            joint_names=sim_js_names,
-        ).reorder(mpc.joint_names)
+        # Feed MPC its **own last planned state**, not the live sim joints.
+        # PD controllers always lag a few ms behind the command, so reading
+        # ``robot.get_joints_state()`` back into MPC makes each cycle re-plan
+        # from a position just barely past the previous one → knot 7 only
+        # advances a fraction of a millimetre per frame → arm looks frozen.
+        # v2's own viser loop (``reactive_control.py:306-317``) does the same
+        # thing: ``current_state`` is chained from ``action_sequence[:, -1]``
+        # so the planner always projects forward in its own clean coordinate
+        # frame. The ``sim_js`` read is only used for visualising drift or
+        # falling back if MPC produced no action this tick.
 
-        if cmd_state_full is None:
-            current_state.copy_(cu_js.unsqueeze(0))
-        else:
-            current_state_partial = cmd_state_full.reorder(mpc.joint_names)
-            current_state.copy_(current_state_partial)
-            current_state.joint_names = current_state_partial.joint_names
-        current_state.copy_(cu_js.unsqueeze(0))
-
-        mpc_result = mpc.optimize_next_action(current_state)
+        # Use ``optimize_action_sequence`` + command ``action_sequence[:, -1]``
+        # (the last knot of the trimmed execution horizon). Commanding
+        # ``next_action`` (knot 0) would keep the robot glued to the current
+        # pose because the B-spline's first few knots all sit on the start
+        # state (ease-in region).
+        mpc_result = mpc.optimize_action_sequence(current_state)
 
         if args.use_mppi:
             draw_points(_planned_ee_trajectory(mpc, mpc_result))
 
-        succ = True
-        # v2 MPC's ``next_action`` doesn't populate ``joint_names``; names come
-        # from ``mpc.joint_names`` and indexing is positional.
-        cmd_state_full = mpc_result.next_action
-        cmd_state_full.joint_names = list(mpc.joint_names)
+        succ = (
+            mpc_result.action_sequence is not None
+            and mpc_result.action_sequence.position.shape[1] > 0
+        )
+        if not succ:
+            carb.log_warn("MPC returned no action sequence; skipping command.")
+            continue
+
+        act_seq = mpc_result.action_sequence
+        cmd_position = act_seq.position[:, -1, :]
+
+        # Chain MPC's own view of the robot: next optimize() call will see the
+        # planner's last predicted state, not the lagged sim state.
+        current_state = JointState.from_position(
+            cmd_position.clone(), joint_names=list(mpc.joint_names),
+        )
+        current_state.velocity = act_seq.velocity[:, -1, :].clone()
+        current_state.acceleration = act_seq.acceleration[:, -1, :].clone()
+
+        cmd_state_full = JointState.from_position(
+            cmd_position.clone(), joint_names=list(mpc.joint_names),
+        )
 
         idx_list = []
         common_js_names = []
@@ -393,7 +414,6 @@ def main():
                 common_js_names.append(x)
 
         cmd_state = cmd_state_full.reorder(common_js_names)
-        cmd_state_full = cmd_state
 
         art_action = ArticulationAction(
             cmd_state.position.view(-1).cpu().numpy(),
@@ -405,11 +425,7 @@ def main():
             err_str = f"{pose_err.item():.4f}" if pose_err is not None else "N/A"
             print(f"pose_error={err_str}", flush=True)
 
-        if succ:
-            for _ in range(1):
-                articulation_controller.apply_action(art_action)
-        else:
-            carb.log_warn("No action is being taken.")
+        articulation_controller.apply_action(art_action)
 
 
 if __name__ == "__main__":

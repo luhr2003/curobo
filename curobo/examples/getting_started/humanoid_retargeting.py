@@ -721,7 +721,7 @@ def visualize_motion(
             )
             handle = server.scene.add_icosphere(
                 name=f"/targets/{label}",
-                position=target_positions[0][0][i],
+                position=np.asarray(target_positions[0][0][i]).reshape(-1)[:3],
                 radius=target_radius,
                 color=target_color,
             )
@@ -737,7 +737,7 @@ def visualize_motion(
         tp = target_positions[0]
         if tp is not None and idx < len(tp):
             for i, h in enumerate(target_sphere_handles):
-                h.position = tp[idx][i]
+                h.position = np.asarray(tp[idx][i]).reshape(-1)[:3]
 
     def _set_frame(idx):
         q = torch.tensor(

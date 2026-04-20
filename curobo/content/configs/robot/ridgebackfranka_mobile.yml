@@ -4,7 +4,9 @@
 # RidgebackFranka with a free floating base (base + arm planning, 10 DOF + 2 locked fingers).
 # Uses ``ridgeback_franka.urdf`` whose chain adds 3 dummy base joints
 # (prismatic X, prismatic Y, revolute Z) between panda_mobile and base_link.
-# Collision spheres are identical to ridgebackfranka.yml (same URDF minus the 3 virtual base joints).
+# cspace_distance_weight + null_space_weight on the base joints are 10x the arm weights,
+# so the IK seed (and PRM graph) prefer arm-only solutions and only move the base when
+# geometric reach requires it. Bump to 50-100 if the base still moves too eagerly.
 robot_cfg:
   kinematics:
     add_object_link: false
@@ -662,9 +664,9 @@ robot_cfg:
       - 1.0
       - 1.0
       cspace_distance_weight:
-      - 1.0
-      - 1.0
-      - 1.0
+      - 10.0
+      - 10.0
+      - 10.0
       - 1.0
       - 1.0
       - 1.0
@@ -753,9 +755,9 @@ robot_cfg:
       - 1.0
       - 1.0
       null_space_weight:
-      - 1.0
-      - 1.0
-      - 1.0
+      - 10.0
+      - 10.0
+      - 10.0
       - 1.0
       - 1.0
       - 1.0
