@@ -81,19 +81,129 @@ def add_extensions(simulation_app, headless_mode: Optional[str] = None) -> bool:
     return True
 
 
-def add_robot_to_scene(
+def _resolve_asset_path(robot_config: Dict) -> str:
+    """Resolve the root directory for the robot's assets.
+
+    Honors ``kinematics.external_asset_path`` when set; otherwise uses
+    :func:`curobo.content.get_assets_path` (the bundled content tree).
+    """
+    asset_path = str(get_assets_path())
+    ext_asset = robot_config.get("kinematics", {}).get("external_asset_path")
+    if ext_asset is not None:
+        asset_path = ext_asset
+    return asset_path
+
+
+def _add_robot_from_usd(
     robot_config: Dict,
     my_world: World,
-    subroot: str = "",
-    robot_name: str = "robot",
-    position: np.ndarray = np.array([0, 0, 0]),
-    initialize_world: bool = True,
+    subroot: str,
+    robot_name: str,
+    position: np.ndarray,
+    initialize_world: bool,
+    usd_path: Optional[str],
+    usd_robot_root: Optional[str],
 ) -> Tuple[Robot, str]:
-    """Import the robot from its URDF and attach it to *my_world*.
+    """Reference a pre-built robot USD onto the stage (no URDF import step).
 
-    The ``robot_config`` dict is the ``robot_cfg`` block loaded from the v2
-    YAML (same layout as v1).  Returns ``(robot, robot_prim_path)``.
+    Requires explicit ``usd_path`` / ``usd_robot_root`` arguments — v2's
+    :class:`KinematicsLoaderCfg` is a strict dataclass that rejects unknown
+    kwargs, so these can't live under ``kinematics:`` in the YAML.  The
+    caller is expected to read them from top-level YAML keys and pass them
+    in explicitly.
+
+    Skips URDF parsing + conversion entirely; much faster startup than the
+    URDF importer path.
     """
+    import omni.usd
+    import omni.kit.app
+
+    if usd_path is None:
+        raise ValueError(
+            "load_from_usd=True but no usd_path provided. Expected a top-level "
+            "'usd_path' entry in the robot YAML (peer of 'kinematics:')."
+        )
+    if usd_robot_root is None:
+        raise ValueError(
+            "load_from_usd=True but no usd_robot_root provided. Expected a "
+            "top-level 'usd_robot_root' entry in the robot YAML (prim path "
+            "inside the USD that carries the articulation root)."
+        )
+
+    asset_path = _resolve_asset_path(robot_config)
+    usd_file_path = join_path(asset_path, usd_path)
+    # Silently no-oping when the USD is missing is the #1 cause of "robot
+    # doesn't show up" bugs — fail loudly instead.
+    if not _file_exists(usd_file_path):
+        raise FileNotFoundError(
+            f"Robot USD not found at {usd_file_path}. Check top-level usd_path "
+            f"+ kinematics.asset_root_path / external_asset_path in the robot config."
+        )
+
+    stage = my_world.scene.stage
+    robot_path = (
+        subroot.rstrip("/") + "/" + usd_robot_root.lstrip("/")
+        if subroot
+        else usd_robot_root
+    )
+
+    try:
+        if _ISAAC_SIM_45:
+            try:
+                from isaacsim.core.utils.stage import add_reference_to_stage
+            except ImportError:
+                from omni.isaac.core.utils.stage import add_reference_to_stage
+        else:
+            from omni.isaac.core.utils.stage import add_reference_to_stage
+        add_reference_to_stage(usd_path=usd_file_path, prim_path=robot_path)
+    except (ImportError, AttributeError):
+        # Fallback: manually define + reference.
+        robot_prim = stage.GetPrimAtPath(robot_path)
+        if not robot_prim.IsValid():
+            robot_prim = stage.DefinePrim(robot_path, "Xform")
+        if not robot_prim.GetReferences().HasReferences():
+            robot_prim.GetReferences().AddReference(
+                assetPath=usd_file_path, primPath=usd_robot_root,
+            )
+
+    # Tick the app once so the referenced children compose before
+    # Articulation's find_matching_prim_paths runs.
+    omni.kit.app.get_app().update()
+
+    # ``Robot`` (really the underlying Articulation view) needs the prim path
+    # that carries PhysicsArticulationRootAPI.  That's ``base_link`` and may
+    # live *under* ``usd_robot_root`` rather than be equal to it.
+    base_link_name = robot_config.get("kinematics", {}).get("base_link", "")
+    if base_link_name and not robot_path.rstrip("/").endswith("/" + base_link_name):
+        articulation_path = robot_path.rstrip("/") + "/" + base_link_name
+    else:
+        articulation_path = robot_path
+
+    robot_p = Robot(prim_path=articulation_path, name=robot_name)
+
+    # Position the root prim (robot_path, not articulation_path).
+    linkp = stage.GetPrimAtPath(robot_path)
+    if linkp.IsValid():
+        set_prim_transform(
+            linkp, [position[0], position[1], position[2], 1, 0, 0, 0]
+        )
+
+    robot = my_world.scene.add(robot_p)
+    if initialize_world and _ISAAC_SIM_45:
+        my_world.initialize_physics()
+        robot.initialize()
+    return robot, articulation_path
+
+
+def _add_robot_from_urdf(
+    robot_config: Dict,
+    my_world: World,
+    subroot: str,
+    robot_name: str,
+    position: np.ndarray,
+    initialize_world: bool,
+) -> Tuple[Robot, str]:
+    """Import the robot via the Isaac Sim URDF importer (converts to USD on first run)."""
     urdf_interface = _urdf.acquire_urdf_interface()
     import_config = _urdf.ImportConfig()
     import_config.merge_fixed_joints = False
@@ -109,11 +219,7 @@ def add_robot_to_scene(
     import_config.distance_scale = 1
     import_config.density = 0.0
 
-    asset_path = str(get_assets_path())
-    ext_asset = robot_config.get("kinematics", {}).get("external_asset_path")
-    if ext_asset is not None:
-        asset_path = ext_asset
-
+    asset_path = _resolve_asset_path(robot_config)
     urdf_rel = robot_config["kinematics"]["urdf_path"]
     full_path = join_path(asset_path, urdf_rel)
     robot_root = get_path_of_dir(full_path)
@@ -159,6 +265,50 @@ def add_robot_to_scene(
         my_world.initialize_physics()
         robot.initialize()
     return robot, robot_path
+
+
+def add_robot_to_scene(
+    robot_config: Dict,
+    my_world: World,
+    subroot: str = "",
+    robot_name: str = "robot",
+    position: np.ndarray = np.array([0, 0, 0]),
+    initialize_world: bool = True,
+    load_from_usd: bool = False,
+    usd_path: Optional[str] = None,
+    usd_robot_root: Optional[str] = None,
+) -> Tuple[Robot, str]:
+    """Attach a robot to *my_world*.  Returns ``(robot, prim_path)``.
+
+    Two load paths:
+
+    * **URDF** (default, ``load_from_usd=False``).  Runs the Isaac Sim URDF
+      importer which parses ``kinematics.urdf_path`` and caches a
+      ``<stem>_temp.usd`` next to it; that temp USD is then referenced into
+      the stage.  No pre-generated USD required.
+
+    * **USD** (``load_from_usd=True``).  Requires explicit ``usd_path`` and
+      ``usd_robot_root`` arguments.  They **must** come from **top-level**
+      YAML keys (peers of ``kinematics:``), not from under ``kinematics:`` —
+      v2's :class:`KinematicsLoaderCfg` is a strict dataclass that raises
+      ``TypeError: unexpected keyword argument 'usd_path'`` if they leak in.
+      References a pre-built robot USD directly; skips URDF parsing +
+      conversion, so startup is noticeably faster.
+    """
+    if load_from_usd:
+        return _add_robot_from_usd(
+            robot_config, my_world, subroot, robot_name, position, initialize_world,
+            usd_path, usd_robot_root,
+        )
+    return _add_robot_from_urdf(
+        robot_config, my_world, subroot, robot_name, position, initialize_world,
+    )
+
+
+def _file_exists(path: str) -> bool:
+    """Local wrapper to avoid pulling ``os`` into the module scope."""
+    import os
+    return os.path.isfile(path)
 
 
 def stage_obstacles_as_scene(

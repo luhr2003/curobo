@@ -804,3 +804,5 @@ kinematics:
   - right_hand_palm_link
   - left_hand_palm_link
   format_version: 2.0
+usd_path: robot/g1_simple/g1_simple_mobile.usd
+usd_robot_root: /g1_mobile

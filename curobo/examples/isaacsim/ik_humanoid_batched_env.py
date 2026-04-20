@@ -93,6 +93,14 @@ parser.add_argument(
           "Default is the fixed-base variant (``magicsim_g1_simple.yml``)."),
     default=False,
 )
+parser.add_argument(
+    "--load_from_usd",
+    action="store_true",
+    help=("Reference a pre-built robot USD (``kinematics.usd_path``) instead of "
+          "running the Isaac Sim URDF importer. Faster startup, but requires the "
+          "USD file to already exist under the asset tree."),
+    default=False,
+)
 args = parser.parse_args()
 
 
@@ -193,12 +201,19 @@ def main():
     robot_file = (
         "magicsim_g1_simple_mobile.yml" if args.mobile else "magicsim_g1_simple.yml"
     )
-    robot_cfg_full = load_yaml(str(get_robot_configs_path() / robot_file))
+    robot_yaml = load_yaml(str(get_robot_configs_path() / robot_file))
+    # Isaac Sim-only fields live at the YAML top level (peers of
+    # ``kinematics:``); pop them out before the solver ever sees them, since
+    # ``KinematicsLoaderCfg`` is a strict dataclass.
+    usd_path = robot_yaml.pop("usd_path", None)
+    usd_robot_root = robot_yaml.pop("usd_robot_root", None)
     # v2 YAML style for these files is unwrapped (top-level ``kinematics:``)
     # — wrap with ``robot_cfg:`` so ``InverseKinematicsCfg.create`` handles
     # both shipping styles uniformly.
-    if "robot_cfg" not in robot_cfg_full:
-        robot_cfg_full = {"robot_cfg": robot_cfg_full}
+    if "robot_cfg" not in robot_yaml:
+        robot_cfg_full = {"robot_cfg": robot_yaml}
+    else:
+        robot_cfg_full = robot_yaml
     robot_cfg = robot_cfg_full["robot_cfg"]
     j_names = robot_cfg["kinematics"]["cspace"]["joint_names"]
     default_config = (
@@ -279,6 +294,9 @@ def main():
             robot_name=f"robot_{env_idx}",
             position=base_position,
             initialize_world=False,
+            load_from_usd=args.load_from_usd,
+            usd_path=usd_path,
+            usd_robot_root=usd_robot_root,
         )
         robots.append(robot)
 

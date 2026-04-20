@@ -125,6 +125,27 @@ isaaclab = [
 Homepage = "https://nvlabs.github.io/curobo"
 Repository = "https://github.com/NVlabs/curobo"
 
+# Short-command entry points for the Isaac Sim reacher ports under
+# curobo/examples/isaacsim/. Usage: `uv run <name>` from the repo root.
+# Every target calls its module's ``main()`` after argparse does its thing,
+# so all the CLI flags documented in each module work verbatim.
+[project.scripts]
+# Single-arm
+isaacsim-motion-gen-reacher       = "curobo.examples.isaacsim.motion_gen_reacher:main"
+isaacsim-multi-arm-reacher        = "curobo.examples.isaacsim.multi_arm_reacher:main"
+# Batched motion planning
+isaacsim-batch-motion-gen-reacher = "curobo.examples.isaacsim.batch_motion_gen_reacher:main"
+isaacsim-batched-multi-arm-reacher = "curobo.examples.isaacsim.batched_multi_arm_reacher:main"
+isaacsim-dynamic-batch            = "curobo.examples.isaacsim.dynamic_batch_motion_gen_reacher:main"
+# IK
+isaacsim-ik-reachability          = "curobo.examples.isaacsim.ik_reachability:main"
+isaacsim-ik-batched-env           = "curobo.examples.isaacsim.ik_batched_env:main"
+isaacsim-ik-humanoid-batched-env  = "curobo.examples.isaacsim.ik_humanoid_batched_env:main"
+# MPC
+isaacsim-mpc                      = "curobo.examples.isaacsim.mpc_example:main"
+# Robot builder (not Isaac Sim but useful at this level)
+curobo-build-robot-model          = "curobo.examples.getting_started.build_robot_model:main"
+
 [tool.setuptools]
 include-package-data = true
 
