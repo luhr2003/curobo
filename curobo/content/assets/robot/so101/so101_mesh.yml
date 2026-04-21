@@ -1,0 +1,77 @@
+##
+## SO-ARM100 (SO101) Collision Spheres Configuration
+## Link chain: base → shoulder → upper_arm → lower_arm → wrist → gripper_link → jaw
+## Sphere centers are in each link's local frame.
+## Radii scaled to 0.7× original conservative packing.
+##
+## STS3215 servo housing ≈ 40×20×40 mm → effective radius ≈ 0.030–0.045 m
+## Link lengths (from URDF joint origins):
+##   shoulder  → shoulder_lift:  ~60 mm
+##   upper_arm → elbow_flex:    ~116 mm
+##   lower_arm → wrist_flex:    ~135 mm
+##   wrist     → wrist_roll:    ~064 mm
+##   gripper   → jaw:           ~036 mm
+##
+
+collision_spheres:
+  # ── shoulder (shoulder_pan motor bracket) ─────────────────
+  # shoulder_lift joint at (-0.030, -0.018, -0.054)
+  shoulder:
+    - "center": [0.0, 0.0, 0.0]
+      "radius": 0.0315
+    - "center": [-0.015, -0.009, -0.027]
+      "radius": 0.028
+    - "center": [-0.028, -0.017, -0.050]
+      "radius": 0.0266
+
+  # ── upper_arm (shoulder_lift → elbow_flex) ────────────────
+  # elbow_flex joint at (-0.113, -0.028, 0.0)
+  upper_arm:
+    - "center": [0.0, 0.0, 0.0]
+      "radius": 0.028
+    - "center": [-0.028, -0.007, 0.0]
+      "radius": 0.0245
+    - "center": [-0.056, -0.014, 0.0]
+      "radius": 0.0245
+    - "center": [-0.084, -0.021, 0.0]
+      "radius": 0.0245
+    - "center": [-0.108, -0.027, 0.0]
+      "radius": 0.0245
+
+  # ── lower_arm (elbow_flex → wrist_flex) ───────────────────
+  # wrist_flex joint at (-0.135, 0.005, 0.0)
+  lower_arm:
+    - "center": [0.0, 0.0, 0.0]
+      "radius": 0.0245
+    - "center": [-0.027, 0.001, 0.0]
+      "radius": 0.0224
+    - "center": [-0.054, 0.002, 0.0]
+      "radius": 0.0224
+    - "center": [-0.081, 0.003, 0.0]
+      "radius": 0.0224
+    - "center": [-0.108, 0.004, 0.0]
+      "radius": 0.0224
+    - "center": [-0.130, 0.005, 0.0]
+      "radius": 0.021
+
+  # ── wrist (wrist_flex → wrist_roll) ───────────────────────
+  # wrist_roll joint at (0.0, -0.061, 0.018)
+  wrist:
+    - "center": [0.0, 0.0, 0.0]
+      "radius": 0.0245
+    - "center": [0.0, -0.020, 0.006]
+      "radius": 0.0224
+    - "center": [0.0, -0.040, 0.012]
+      "radius": 0.0224
+    - "center": [0.0, -0.058, 0.017]
+      "radius": 0.021
+
+  # ── gripper_link (wrist_roll → gripper jaw) ───────────────
+  # gripper joint at (0.020, 0.019, -0.023)
+  gripper_link:
+    - "center": [0.0, 0.0, 0.0]
+      "radius": 0.0245
+    - "center": [0.010, 0.010, -0.012]
+      "radius": 0.021
+    - "center": [0.018, 0.017, -0.021]
+      "radius": 0.0196

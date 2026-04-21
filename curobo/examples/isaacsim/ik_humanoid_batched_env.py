@@ -450,10 +450,16 @@ def main():
                     f"{result.rotation_error.view(n_envs, -1).detach().cpu().numpy()})"
                 )
             else:
+                ik_status = getattr(result, "status", None)
                 sol_positions = result.js_solution.position[:, 0, :]
                 sol_joint_names = result.js_solution.joint_names
                 for env_idx in range(n_envs):
                     if not success_flat[env_idx]:
+                        reason = ik_status if ik_status else "IK seed did not converge"
+                        carb.log_warn(
+                            f"env_{env_idx} dual-arm IK failed — {reason} "
+                            f"(goal likely unreachable or in collision)"
+                        )
                         continue
                     env_robot = robots[env_idx]
                     idx_list_env = []

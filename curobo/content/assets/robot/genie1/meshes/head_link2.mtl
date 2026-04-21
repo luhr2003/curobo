@@ -1,0 +1,59 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v5.0.1937526254)
+
+newmtl Black_002
+Kd 0 0 0
+illum 1
+
+newmtl white_001
+Kd 1 1 1
+illum 1
+
+newmtl material_black
+Kd 0 0 0
+illum 1
+
+newmtl material_blue
+Kd 0 0 0.800000012
+illum 1
+
+newmtl material_brown
+Kd 0.870588243 0.811764717 0.764705896
+illum 1
+
+newmtl material_default
+Kd 0.752941191 0.752941191 0.752941191
+illum 1
+
+newmtl material_green
+Kd 0 1 0
+illum 1
+
+newmtl material_grey
+Kd 0.200000003 0.200000003 0.200000003
+illum 1
+
+newmtl material_orange
+Kd 1 0.423529416 0.0392156877
+illum 1
+
+newmtl material_red
+Kd 0.800000012 0 0
+illum 1
+
+newmtl material_transparent
+Kd 1 1 1
+illum 1
+
+newmtl material_white
+Kd 1 1 1
+illum 1
+
+newmtl rad_002
+Kd 0.588235319 0 0
+illum 1
+
+newmtl White_002
+Kd 0.886274576 0.886274576 0.886274576
+illum 1
+

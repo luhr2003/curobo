@@ -1,0 +1,23 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v5.0.1937526254)
+
+newmtl Diffuse_13_245_0_100
+Kd 0.800000012 0.800000012 0.800000012
+illum 1
+
+newmtl Diffuse_198_193_188_100
+Kd 0.800000012 0.800000012 0.800000012
+illum 1
+
+newmtl Diffuse_221_221_227_100_008
+Kd 0.800000012 0.800000012 0.800000012
+illum 1
+
+newmtl Diffuse_221_221_227_100_004
+Kd 0.800000012 0.800000012 0.800000012
+illum 1
+
+newmtl Diffuse_221_221_227_100
+Kd 0.800000012 0.800000012 0.800000012
+illum 1
+

@@ -53,7 +53,7 @@ parser.add_argument(
 parser.add_argument(
     "--robot",
     type=str,
-    default="ridgebackfranka_mobile.yml",
+    default="magicsim_ridgebacksawyer_mobile.yml",
     help="cuRobo v2 robot YAML (name under content/configs/robot/, or absolute path).",
 )
 parser.add_argument(

@@ -504,12 +504,22 @@ def main():
                     % (n_envs, int(success_flat.sum()), n_envs, float(result.total_time or 0.0))
                 )
 
+                plan_status = getattr(result, "status", None)
                 for env_idx in range(n_envs):
                     if not success_flat[env_idx]:
+                        reason = plan_status if plan_status else "planner returned success=False"
+                        carb.log_warn(
+                            f"env_{env_idx} plan_pose failed — {reason} "
+                            f"(likely start/goal self-collision or unreachable IK)"
+                        )
                         cmd_plans[env_idx] = None
                         continue
                     traj = _extract_per_env_trajectory(result, env_idx)
                     if traj is None or traj.position.shape[0] == 0:
+                        carb.log_warn(
+                            f"env_{env_idx} plan succeeded but trajectory is empty "
+                            f"(start ≈ goal or interpolator returned 0 waypoints)"
+                        )
                         cmd_plans[env_idx] = None
                         continue
                     # Map the planner's active joints onto the Isaac Sim

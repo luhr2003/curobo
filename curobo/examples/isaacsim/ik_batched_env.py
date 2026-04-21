@@ -445,8 +445,14 @@ def main():
             sol_positions = result.js_solution.position[:, 0, :]
             sol_joint_names = result.js_solution.joint_names
 
+            ik_status = getattr(result, "status", None)
             for env_idx in range(n_envs):
                 if not success_flat[env_idx]:
+                    reason = ik_status if ik_status else "IK seed did not converge"
+                    carb.log_warn(
+                        f"env_{env_idx} IK failed — {reason} "
+                        f"(goal likely unreachable or in collision)"
+                    )
                     cmd_plans[env_idx] = None
                     continue
                 single_env_js = JointState.from_position(

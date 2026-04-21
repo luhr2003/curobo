@@ -1,0 +1,588 @@
+robot_cfg:
+  kinematics:
+    urdf_path: robot/split_aloha/split_aloha.urdf
+    asset_root_path: robot/split_aloha
+    base_link: split_aloha_mobile
+    tool_frames:
+    - R_ee
+    - L_ee
+    collision_link_names:
+    - base_link
+    - box_link
+    - lifting_link
+    - fl_arm_base
+    - fl_link1
+    - fl_link2
+    - fl_link3
+    - fl_link4
+    - fl_link5
+    - fl_link6
+    - fr_arm_base
+    - fr_link1
+    - fr_link2
+    - fr_link3
+    - fr_link4
+    - fr_link5
+    - fr_link6
+    - attached_object
+    collision_spheres:
+      base_link:
+      - center:
+        - 0.25
+        - 0.19
+        - 0.0
+        radius: 0.12
+      - center:
+        - 0.25
+        - -0.19
+        - 0.0
+        radius: 0.12
+      - center:
+        - -0.25
+        - 0.19
+        - 0.0
+        radius: 0.12
+      - center:
+        - -0.25
+        - -0.19
+        - 0.0
+        radius: 0.12
+      - center:
+        - 0.0
+        - 0.0
+        - 0.05
+        radius: 0.15
+      box_link:
+      - center:
+        - 0.1
+        - 0.0
+        - 0.0
+        radius: 0.12
+      - center:
+        - 0.3
+        - 0.0
+        - 0.0
+        radius: 0.11
+      - center:
+        - 0.5
+        - 0.0
+        - 0.0
+        radius: 0.1
+      - center:
+        - 0.7
+        - 0.0
+        - 0.0
+        radius: 0.1
+      - center:
+        - 0.9
+        - 0.0
+        - 0.0
+        radius: 0.1
+      - center:
+        - 1.1
+        - 0.0
+        - 0.0
+        radius: 0.11
+      lifting_link:
+      - center:
+        - 0.05
+        - 0.0
+        - 0.0
+        radius: 0.1
+      - center:
+        - 0.14
+        - 0.3
+        - 0.0
+        radius: 0.11
+      - center:
+        - 0.14
+        - -0.3
+        - 0.0
+        radius: 0.11
+      - center:
+        - 0.14
+        - 0.15
+        - 0.0
+        radius: 0.1
+      - center:
+        - 0.14
+        - -0.15
+        - 0.0
+        radius: 0.1
+      - center:
+        - 0.14
+        - 0.0
+        - 0.0
+        radius: 0.1
+      fl_arm_base:
+      - center:
+        - -0.012
+        - -0.001
+        - 0.064
+        radius: 0.0595
+      fl_link1:
+      - center:
+        - 0.0
+        - 0.022
+        - 0.001
+        radius: 0.029
+      - center:
+        - 0.002
+        - -0.025
+        - 0.002
+        radius: 0.029
+      fl_link2:
+      - center:
+        - 0.246
+        - -0.046
+        - 0.013
+        radius: 0.0282
+      - center:
+        - 0.142
+        - -0.031
+        - 0.003
+        radius: 0.0282
+      - center:
+        - 0.195
+        - -0.04
+        - 0.003
+        radius: 0.0282
+      - center:
+        - 0.089
+        - -0.02
+        - 0.0
+        radius: 0.0282
+      fl_link3:
+      - center:
+        - 0.264
+        - 0.0
+        - -0.0
+        radius: 0.04
+      - center:
+        - -0.005
+        - -0.0
+        - 0.025
+        radius: 0.0294
+      - center:
+        - -0.006
+        - -0.0
+        - -0.024
+        radius: 0.0294
+      - center:
+        - 0.15
+        - -0.011
+        - 0.003
+        radius: 0.0287
+      - center:
+        - 0.06
+        - -0.015
+        - 0.0
+        radius: 0.0273
+      - center:
+        - 0.106
+        - -0.016
+        - 0.001
+        radius: 0.0267
+      - center:
+        - 0.196
+        - -0.009
+        - -0.0
+        radius: 0.0273
+      fl_link4:
+      - center:
+        - 0.074
+        - -0.056
+        - 0.0
+        radius: 0.0317
+      fl_link5:
+      - center:
+        - 0.012
+        - -0.002
+        - -0.005
+        radius: 0.0376
+      fl_link6:
+      - center:
+        - 0.002
+        - -0.057
+        - 0.024
+        radius: 0.0367
+      - center:
+        - -0.051
+        - -0.003
+        - 0.03
+        radius: 0.0367
+      - center:
+        - 0.055
+        - -0.004
+        - 0.03
+        radius: 0.0347
+      fl_link7:
+      - center:
+        - 0.0
+        - 0.0
+        - 0.0
+        radius: 0.02
+      fl_link8:
+      - center:
+        - 0.0
+        - 0.0
+        - 0.0
+        radius: 0.02
+      fr_arm_base:
+      - center:
+        - -0.012
+        - -0.001
+        - 0.064
+        radius: 0.0595
+      fr_link1:
+      - center:
+        - 0.0
+        - 0.022
+        - 0.001
+        radius: 0.029
+      - center:
+        - 0.002
+        - -0.025
+        - 0.002
+        radius: 0.029
+      fr_link2:
+      - center:
+        - 0.246
+        - -0.046
+        - 0.013
+        radius: 0.0282
+      - center:
+        - 0.142
+        - -0.031
+        - 0.003
+        radius: 0.0282
+      - center:
+        - 0.195
+        - -0.04
+        - 0.003
+        radius: 0.0282
+      - center:
+        - 0.089
+        - -0.02
+        - 0.0
+        radius: 0.0282
+      fr_link3:
+      - center:
+        - 0.264
+        - 0.0
+        - -0.0
+        radius: 0.04
+      - center:
+        - -0.005
+        - -0.0
+        - 0.025
+        radius: 0.0294
+      - center:
+        - -0.006
+        - -0.0
+        - -0.024
+        radius: 0.0294
+      - center:
+        - 0.15
+        - -0.011
+        - 0.003
+        radius: 0.0287
+      - center:
+        - 0.06
+        - -0.015
+        - 0.0
+        radius: 0.0273
+      - center:
+        - 0.106
+        - -0.016
+        - 0.001
+        radius: 0.0267
+      - center:
+        - 0.196
+        - -0.009
+        - -0.0
+        radius: 0.0273
+      fr_link4:
+      - center:
+        - 0.074
+        - -0.056
+        - 0.0
+        radius: 0.0317
+      fr_link5:
+      - center:
+        - 0.012
+        - -0.002
+        - -0.005
+        radius: 0.0376
+      fr_link6:
+      - center:
+        - 0.002
+        - -0.057
+        - 0.024
+        radius: 0.0367
+      - center:
+        - -0.051
+        - -0.003
+        - 0.03
+        radius: 0.0367
+      - center:
+        - 0.055
+        - -0.004
+        - 0.03
+        radius: 0.0347
+      fr_link7:
+      - center:
+        - 0.0
+        - 0.0
+        - 0.0
+        radius: 0.02
+      fr_link8:
+      - center:
+        - 0.0
+        - 0.0
+        - 0.0
+        radius: 0.02
+    self_collision_ignore:
+      base_link:
+      - box_link
+      - lifting_link
+      box_link:
+      - base_link
+      - lifting_link
+      lifting_link:
+      - base_link
+      - box_link
+      - fl_arm_base
+      - fr_arm_base
+      - fl_link1
+      - fr_link1
+      fl_arm_base:
+      - lifting_link
+      - fl_link1
+      - fl_link2
+      fl_link1:
+      - fl_arm_base
+      - fl_link2
+      - fl_link3
+      - lifting_link
+      fl_link2:
+      - fl_link1
+      - fl_link3
+      - fl_link4
+      fl_link3:
+      - fl_link2
+      - fl_link4
+      - fl_link5
+      fl_link4:
+      - fl_link3
+      - fl_link5
+      - fl_link6
+      fl_link5:
+      - fl_link4
+      - fl_link6
+      fl_link6:
+      - fl_link5
+      - attached_object
+      fr_arm_base:
+      - lifting_link
+      - fr_link1
+      - fr_link2
+      fr_link1:
+      - fr_arm_base
+      - fr_link2
+      - fr_link3
+      - lifting_link
+      fr_link2:
+      - fr_link1
+      - fr_link3
+      - fr_link4
+      fr_link3:
+      - fr_link2
+      - fr_link4
+      - fr_link5
+      fr_link4:
+      - fr_link3
+      - fr_link5
+      - fr_link6
+      fr_link5:
+      - fr_link4
+      - fr_link6
+      fr_link6:
+      - fr_link5
+      - attached_object
+    self_collision_buffer:
+      base_link: -0.03
+      box_link: -0.03
+      lifting_link: -0.02
+      fl_arm_base: -0.01
+      fr_arm_base: -0.01
+      attached_object: 0.0
+    lock_joints:
+      dummy_base_prismatic_x_joint: 0.0
+      dummy_base_prismatic_y_joint: 0.0
+      dummy_base_revolute_z_joint: 0.0
+    extra_links:
+      attached_object:
+        parent_link_name: fr_link6
+        link_name: attached_object
+        fixed_transform:
+        - 0
+        - 0
+        - 0
+        - 1
+        - 0
+        - 0
+        - 0
+        joint_type: FIXED
+        joint_name: attach_joint
+    extra_collision_spheres:
+      attached_object: 4
+    collision_sphere_buffer: 0.0
+    format_version: 2.0
+    use_global_cumul: true
+    add_object_link: false
+    load_meshes: false
+    load_tool_frames_with_mesh: false
+    cspace:
+      joint_names:
+      - lifting_joint
+      - fl_joint1
+      - fl_joint2
+      - fl_joint3
+      - fl_joint4
+      - fl_joint5
+      - fl_joint6
+      - fr_joint1
+      - fr_joint2
+      - fr_joint3
+      - fr_joint4
+      - fr_joint5
+      - fr_joint6
+      default_joint_position:
+      - -0.1
+      - 0.0
+      - 1.2
+      - -1.2
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 1.2
+      - -1.2
+      - 0.0
+      - 0.0
+      - 0.0
+      null_space_weight:
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      cspace_distance_weight:
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      - 1
+      max_acceleration:
+      - 15.0
+      - 15.0
+      - 15.0
+      - 15.0
+      - 15.0
+      - 15.0
+      - 15.0
+      - 15.0
+      - 15.0
+      - 15.0
+      - 15.0
+      - 15.0
+      - 15.0
+      max_jerk:
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      acceleration_scale:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      velocity_scale:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      jerk_scale:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      null_space_maximum_distance:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      position_limit_clip: 0.0
+  load_dynamics: false

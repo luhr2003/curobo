@@ -60,7 +60,7 @@ parser.add_argument(
 parser.add_argument(
     "--robot",
     type=str,
-    default="franka.yml",
+    default="magicsim_franka_umi.yml",
     help="cuRobo v2 robot YAML (under content/configs/robot/ or absolute path).",
 )
 parser.add_argument(
@@ -387,14 +387,36 @@ def main() -> None:
                 # interpolated_trajectory.position: (B, 1, max_H, dof_full).
                 interp = result.interpolated_trajectory
                 last = result.interpolated_last_tstep     # (B, 1)
+                status = getattr(result, "status", None)
                 for s in range(result.success.shape[0]):
                     if not bool(result.success[s].any().item()):
+                        # Per-env failure must not be silent — the batch
+                        # overall succeeded (some env did), so the outer
+                        # ``else`` branch wouldn't fire. Log why this
+                        # specific env failed so the user isn't staring at
+                        # a stationary robot with no output.
+                        reason = status if status else "planner returned success=False"
+                        carb.log_warn(
+                            f"env_{s} plan failed — {reason} "
+                            f"(likely start/goal self-collision or unreachable IK)"
+                        )
                         cmd_plan[s] = None
                         continue
                     env_traj = interp[s].squeeze(0)       # (max_H, dof_full)
+                    last_t = int(last[s].item())
                     env_traj = trim_joint_state_trajectory(
-                        env_traj, 0, int(last[s].item())
+                        env_traj, 0, last_t
                     )                                     # (valid_H, dof_full)
+                    if env_traj.position.shape[0] == 0:
+                        # success=True but 0-waypoint trajectory → start ≈ goal.
+                        # Robot will sit still. Warn so the user isn't left
+                        # guessing why this env didn't animate.
+                        carb.log_warn(
+                            f"env_{s} plan returned 0 waypoints (last_tstep={last_t}) — "
+                            f"start pose ≈ goal pose, robot stays put"
+                        )
+                        cmd_plan[s] = None
+                        continue
 
                     # Reorder to sim dof indexing (and cache idx_list for both envs
                     # — assuming identical robot type across envs).

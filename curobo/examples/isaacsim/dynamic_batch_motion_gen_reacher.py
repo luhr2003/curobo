@@ -472,10 +472,15 @@ def main() -> None:
             if result is not None and bool(result.success.any().item()):
                 interp = result.interpolated_trajectory     # (B, 1, max_H, dof_full)
                 last = result.interpolated_last_tstep       # (B, 1)
+                status = getattr(result, "status", None)
                 for slot_idx in range(current_batch_size):
                     env_id = current_batch_env_ids[slot_idx]
                     if not bool(result.success[slot_idx].any().item()):
-                        print(f"[plan] env {env_id} failed")
+                        reason = status if status else "planner returned success=False"
+                        print(
+                            f"[plan] env {env_id} failed — {reason} "
+                            f"(likely start/goal self-collision or unreachable IK)"
+                        )
                         if failed_plan_goal[env_id] is None:
                             failed_plan_goal[env_id] = ik_goal_batch[slot_idx].clone()
                         continue

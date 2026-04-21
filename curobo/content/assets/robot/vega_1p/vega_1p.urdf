@@ -1,0 +1,1034 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="vega_1p">
+  <joint name="dummy_base_prismatic_x_joint" type="prismatic">
+    <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+    <parent link="vega_1p_mobile"/>
+    <child link="dummy_base_x"/>
+    <axis xyz="1. 0. 0."/>
+    <limit lower="-600.2800293" upper="600.2800293" effort="4800." velocity="15."/>
+  </joint>
+  <joint name="dummy_base_prismatic_y_joint" type="prismatic">
+    <origin xyz="0.0000004 0. 0. " rpy="0. 0. 0"/>
+    <parent link="dummy_base_x"/>
+    <child link="dummy_base_y"/>
+    <axis xyz="0. 1. 0."/>
+    <limit lower="-600.2800293" upper="600.2800293" effort="4800." velocity="15."/>
+  </joint>
+  <joint name="dummy_base_revolute_z_joint" type="revolute">
+    <origin xyz="-0. 0. 0." rpy="0. 0. 0."/>
+    <parent link="dummy_base_y"/>
+    <child link="vega_1p_base"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="-600.2800208" upper="600.2800208" effort="4800." velocity="15.0000002"/>
+  </joint>
+  <link name="dummy_base_x">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.0001"/>
+      <inertia ixx="0.001" ixy="0." ixz="0." iyy="0.001" iyz="0." izz="0.001"/>
+    </inertial>
+  </link>
+  <link name="dummy_base_y">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.0001"/>
+      <inertia ixx="0.001" ixy="0." ixz="0." iyy="0.001" iyz="0." izz="0.001"/>
+    </inertial>
+  </link>
+  <link name="vega_1p_mobile"/>
+  <joint name="B_base_cam_mount" type="fixed">
+    <origin xyz="-0.3303 0. 0.176 " rpy="3.1415854 1.5707964 0. " />
+    <parent link="vega_1p_base" />
+    <child link="B_base_cam" />
+  </joint>
+  <joint name="B_wheel_j1" type="continuous">
+    <origin xyz="-0.265 0. 0.044" rpy="3.1415927 0. 3.1415927" />
+    <parent link="vega_1p_base" />
+    <child link="vega_1p_B_wheel_l1" />
+    <axis xyz="0. 0. 1." />
+    <limit effort="100" velocity="10"/>
+  </joint>
+  <joint name="B_wheel_j2" type="continuous">
+    <origin xyz="0.03329 0.01652 0.058 " rpy="3.1415927 0. 1.6159817" />
+    <parent link="vega_1p_B_wheel_l1" />
+    <child link="vega_1p_B_wheel_l2" />
+    <axis xyz="0. 0. 1." />
+    <limit effort="100" velocity="10"/>
+  </joint>
+  <joint name="F_base_cam_mount" type="fixed">
+    <origin xyz="0.3373 0. 0.208 " rpy="0. 0. 0." />
+    <parent link="vega_1p_base" />
+    <child link="F_base_cam" />
+  </joint>
+  <joint name="L_arm_j1" type="revolute">
+    <origin xyz="0. 0.16946 0. " rpy="0. 0. 0." />
+    <parent link="arm_center" />
+    <child link="vega_1p_L_arm_l1" />
+    <axis xyz="0. 1. 0." />
+    <limit lower="-3.071" upper="3.071" effort="150." velocity="2.4" />
+  </joint>
+  <joint name="L_arm_j2" type="revolute">
+    <origin xyz="0.04 0.06 0.0454" rpy="0. 0. 0." />
+    <parent link="vega_1p_L_arm_l1" />
+    <child link="L_arm_l2" />
+    <axis xyz="0. 0. 1." />
+    <limit lower="-0.453" upper="1.5529999" effort="150." velocity="2.4" />
+  </joint>
+  <joint name="L_arm_j3" type="revolute">
+    <origin xyz="0.1644 0. -0.043 " rpy="0. 0. 0." />
+    <parent link="L_arm_l2" />
+    <child link="L_arm_l3" />
+    <axis xyz="1. 0. 0." />
+    <limit lower="-3.071" upper="3.071" effort="80." velocity="2.6999998" />
+  </joint>
+  <joint name="L_arm_j4" type="revolute">
+    <origin xyz="0.113 0.0433 0.06 " rpy="0. 0. 0." />
+    <parent link="L_arm_l3" />
+    <child link="L_arm_l4" />
+    <axis xyz="0. 1. 0." />
+    <limit lower="-3.071" upper="0.244" effort="80." velocity="2.6999998" />
+  </joint>
+  <joint name="L_arm_j5" type="revolute">
+    <origin xyz="0.1938 -0.0434 -0.04 " rpy="0. 0. 0." />
+    <parent link="L_arm_l4" />
+    <child link="L_arm_l5" />
+    <axis xyz="1. 0. 0." />
+    <limit lower="-3.071" upper="3.071" effort="25." velocity="2.6999998" />
+  </joint>
+  <joint name="L_arm_j6" type="revolute">
+    <origin xyz="0.0762 0.0319 -0. " rpy="0. 0. 0." />
+    <parent link="L_arm_l5" />
+    <child link="vega_1p_L_arm_l6" />
+    <axis xyz="0. 1. 0." />
+    <limit lower="-1.396" upper="1.396" effort="25." velocity="2.6999998" />
+  </joint>
+  <joint name="L_arm_j7" type="revolute">
+    <origin xyz="0.065 -0.032 0.0319" rpy="0. 0. 0." />
+    <parent link="vega_1p_L_arm_l6" />
+    <child link="L_arm_l7" />
+    <axis xyz="0. 0. 1." />
+    <limit lower="-1.378" upper="1.1169999" effort="25." velocity="2.6999998" />
+  </joint>
+  <joint name="L_arm_j8" type="fixed">
+    <origin xyz="0.11597 -0. -0.032 " rpy="0. 1.57079 0. " />
+    <parent link="L_arm_l7" />
+    <child link="L_arm_l8" />
+  </joint>
+  <joint name="L_base_cam_mount" type="fixed">
+    <origin xyz="0.02 0.2673 0.208 " rpy="0. 0. 1.5708" />
+    <parent link="vega_1p_base" />
+    <child link="L_base_cam" />
+  </joint>
+  <joint name="L_ee_j0" type="fixed">
+    <origin xyz="0. 0. -0." rpy="-0. 0. -1.57079" />
+    <parent link="L_arm_l8" />
+    <child link="L_ee" />
+  </joint>
+  <joint name="L_wheel_j1" type="revolute">
+    <origin xyz="0.185 0.225 0.133" rpy="3.1415927 0. 3.1415927" />
+    <parent link="vega_1p_base" />
+    <child link="L_wheel_l1" />
+    <axis xyz="0. 0. 1." />
+    <limit lower="-2.7219996" upper="2.7219996" effort="6." velocity="2.9999998" />
+  </joint>
+  <joint name="L_wheel_j2" type="continuous">
+    <origin xyz="0. -0.0395 0.1005" rpy="3.1415927 0. 3.1415927" />
+    <parent link="L_wheel_l1" />
+    <child link="L_wheel_l2" />
+    <axis xyz="0. 1. 0." />
+    <limit effort="100" velocity="10"/>
+  </joint>
+  <joint name="R_arm_j1" type="revolute">
+    <origin xyz="0. -0.16946 0. " rpy="3.1415927 0. 0. " />
+    <parent link="arm_center" />
+    <child link="vega_1p_R_arm_l1" />
+    <axis xyz="0. 1. 0." />
+    <limit lower="-3.071" upper="3.071" effort="150." velocity="2.4" />
+  </joint>
+  <joint name="R_arm_j2" type="revolute">
+    <origin xyz="0.04 0.06 -0.0454" rpy="3.1415927 0. 0. " />
+    <parent link="vega_1p_R_arm_l1" />
+    <child link="R_arm_l2" />
+    <axis xyz="0. 0. 1." />
+    <limit lower="-1.5529999" upper="0.453" effort="150." velocity="2.4" />
+  </joint>
+  <joint name="R_arm_j3" type="revolute">
+    <origin xyz="0.1644 -0. -0.043 " rpy="0. 0. 0." />
+    <parent link="R_arm_l2" />
+    <child link="R_arm_l3" />
+    <axis xyz="1. 0. 0." />
+    <limit lower="-3.071" upper="3.071" effort="80." velocity="2.6999998" />
+  </joint>
+  <joint name="R_arm_j4" type="revolute">
+    <origin xyz="0.113 0.0433 0.06 " rpy="0. 0. 0." />
+    <parent link="R_arm_l3" />
+    <child link="R_arm_l4" />
+    <axis xyz="0. 1. 0." />
+    <limit lower="-3.071" upper="0.244" effort="80." velocity="2.6999998" />
+  </joint>
+  <joint name="R_arm_j5" type="revolute">
+    <origin xyz="0.1938 -0.0434 -0.04 " rpy="0. 0. 0." />
+    <parent link="R_arm_l4" />
+    <child link="R_arm_l5" />
+    <axis xyz="1. 0. 0." />
+    <limit lower="-3.071" upper="3.071" effort="25." velocity="2.6999998" />
+  </joint>
+  <joint name="R_arm_j6" type="revolute">
+    <origin xyz="0.0762 -0.0319 -0. " rpy="3.1415927 0. 0. " />
+    <parent link="R_arm_l5" />
+    <child link="vega_1p_R_arm_l6" />
+    <axis xyz="0. 1. 0." />
+    <limit lower="-1.396" upper="1.396" effort="25." velocity="2.6999998" />
+  </joint>
+  <joint name="R_arm_j7" type="revolute">
+    <origin xyz="0.065 -0.032 -0.0319" rpy="3.1415927 0. 0. " />
+    <parent link="vega_1p_R_arm_l6" />
+    <child link="R_arm_l7" />
+    <axis xyz="0. 0. 1." />
+    <limit lower="-1.1169999" upper="1.378" effort="25." velocity="2.6999998" />
+  </joint>
+  <joint name="R_arm_j8" type="fixed">
+    <origin xyz="0.11597 0. -0.032 " rpy="0. 1.57079 0. " />
+    <parent link="R_arm_l7" />
+    <child link="R_arm_l8" />
+  </joint>
+  <joint name="R_base_cam_mount" type="fixed">
+    <origin xyz="0.02 -0.2673 0.208 " rpy="0. 0. -1.5708" />
+    <parent link="vega_1p_base" />
+    <child link="R_base_cam" />
+  </joint>
+  <joint name="R_ee_j0" type="fixed">
+    <origin xyz="0. 0. -0." rpy="0. 0. 1.57079" />
+    <parent link="R_arm_l8" />
+    <child link="R_ee" />
+  </joint>
+  <joint name="R_wheel_j1" type="revolute">
+    <origin xyz="0.185 -0.225 0.133" rpy="3.1415927 0. 3.1415927" />
+    <parent link="vega_1p_base" />
+    <child link="R_wheel_l1" />
+    <axis xyz="0. 0. 1." />
+    <limit lower="-2.7219996" upper="2.7219996" effort="6." velocity="2.9999998" />
+  </joint>
+  <joint name="R_wheel_j2" type="continuous">
+    <origin xyz="0. 0.0395 0.1005" rpy="0. 0. 3.1415927" />
+    <parent link="R_wheel_l1" />
+    <child link="R_wheel_l2" />
+    <axis xyz="0. 1. 0." />
+    <limit effort="100" velocity="10"/>
+  </joint>
+  <joint name="arm_center_j0" type="fixed">
+    <origin xyz="-0.05908 0. -0.44528" rpy="3.1415927 0. 0. " />
+    <parent link="vega_1p_torso_l3" />
+    <child link="arm_center" />
+  </joint>
+  <joint name="back_lidar_mount" type="fixed">
+    <origin xyz="-0.34 0. 0.0985" rpy="-1.5708026 0.0000927 3.1415927" />
+    <parent link="vega_1p_base" />
+    <child link="vega_1p_back_lidar" />
+  </joint>
+  <joint name="front_lidar_mount" type="fixed">
+    <origin xyz="0.306 0. 0.287" rpy="3.1415 0. 0. " />
+    <parent link="vega_1p_base" />
+    <child link="vega_1p_front_lidar" />
+  </joint>
+  <joint name="head_j1" type="revolute">
+    <origin xyz="-0.0735 -0.0725 0.014 " rpy="0. 0. 0." />
+    <parent link="arm_center" />
+    <child link="vega_1p_head_l1" />
+    <axis xyz="0. 1. 0." />
+    <limit lower="-1.4829999" upper="1.4829999" effort="6." velocity="3.1999998" />
+  </joint>
+  <joint name="head_j2" type="revolute">
+    <origin xyz="0. 0.0725 -0.0035" rpy="0. 0. 0." />
+    <parent link="vega_1p_head_l1" />
+    <child link="vega_1p_head_l2" />
+    <axis xyz="0. 0. 1." />
+    <limit lower="-2.792" upper="2.792" effort="2.5" velocity="3.1999998" />
+  </joint>
+  <joint name="head_j3" type="revolute">
+    <origin xyz="0. 0.002 0.0495" rpy="3.1415927 0. 0. " />
+    <parent link="vega_1p_head_l2" />
+    <child link="vega_1p_head_l3" />
+    <axis xyz="0. 1. 0." />
+    <limit lower="-1.378" upper="1.4829999" effort="6." velocity="3.1999998" />
+  </joint>
+  <joint name="torso_j1" type="revolute">
+    <origin xyz="-0.235 0. 0.248" rpy="3.1415927 0. 0. " />
+    <parent link="vega_1p_base" />
+    <child link="vega_1p_torso_l1" />
+    <axis xyz="0. 1. 0." />
+    <limit lower="0." upper="1.5699999" effort="700." velocity="0.8999999" />
+  </joint>
+  <joint name="torso_j2" type="revolute">
+    <origin xyz="0.396 0. -0.082" rpy="3.1415927 0. 0. " />
+    <parent link="vega_1p_torso_l1" />
+    <child link="vega_1p_torso_l2" />
+    <axis xyz="0. 1. 0." />
+    <limit lower="0." upper="3.1409998" effort="380." velocity="0.8999999" />
+  </joint>
+  <joint name="torso_j3" type="revolute">
+    <origin xyz="-0.40718 0. 0.09764" rpy="3.1415927 0. 0. " />
+    <parent link="vega_1p_torso_l2" />
+    <child link="vega_1p_torso_l3" />
+    <axis xyz="0. 1. 0." />
+    <limit lower="-1.5699999" upper="1.5699999" effort="380." velocity="0.8999999" />
+  </joint>
+  <joint name="zed_left_camera_mount" type="fixed">
+    <origin xyz="0.0365 -0.023 -0.0489" rpy="1.5707963 -0.0000062 3.1415863" />
+    <parent link="vega_1p_head_l3" />
+    <child link="zed_left_camera" />
+  </joint>
+  <joint name="zed_left_depth_mount" type="fixed">
+    <origin xyz="0.025 -0.023 -0.0489" rpy="1.5707963 -0.0000062 3.1415863" />
+    <parent link="vega_1p_head_l3" />
+    <child link="zed_depth_frame" />
+  </joint>
+  <joint name="zed_right_camera_mount" type="fixed">
+    <origin xyz="0.0365 0.027 -0.0489" rpy="1.5707963 -0.0000062 3.1415863" />
+    <parent link="vega_1p_head_l3" />
+    <child link="zed_right_camera" />
+  </joint>
+  <link name="B_base_cam">
+    <inertial>
+      <origin xyz="-0.00857 0. -0.001 " rpy="0. 0. 0." />
+      <mass value="0.00309" />
+      <inertia ixx="0.0000002" ixy="0." ixz="0." iyy="0.0000001" iyz="0." izz="0.0000001" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. -1.5707964 0. " />
+      <geometry>
+        <mesh filename="./meshes/B_base_cam_visuals_base_cam_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+  </link>
+  <link name="F_base_cam">
+    <inertial>
+      <origin xyz="-0.00857 0. -0.001 " rpy="0. 0. 0." />
+      <mass value="0.00309" />
+      <inertia ixx="0.0000002" ixy="0." ixz="0." iyy="0.0000001" iyz="0." izz="0.0000001" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/F_base_cam_visuals_base_cam_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+  </link>
+  <link name="L_arm_l2">
+    <inertial>
+      <origin xyz="0.08194 -0.0000015 -0.04058 " rpy="0. 0. 0." />
+      <mass value="1.4059401" />
+      <inertia ixx="0.00168" ixy="-0.0000001" ixz="0.00041" iyy="0.00441" iyz="0.0000002" izz="0.00412" />
+    </inertial>
+    <visual>
+      <origin xyz="-0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l2_visuals_arm_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l2_collisions_arm_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="L_arm_l3">
+    <inertial>
+      <origin xyz="0.07978 0.00403 0.0398 " rpy="0. 0. 0." />
+      <mass value="1.1609401" />
+      <inertia ixx="0.0017" ixy="-0.00011" ixz="-0.00104" iyy="0.00337" iyz="-0.0000779" izz="0.00257" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l3_visuals_arm_l3_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l3_collisions_arm_l3_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="L_arm_l4">
+    <inertial>
+      <origin xyz="0.09219 -0.03791 -0.02953" rpy="0. 0. 0." />
+      <mass value="0.93204" />
+      <inertia ixx="0.00101" ixy="0.00023" ixz="0.00042" iyy="0.00305" iyz="-0.00011" izz="0.00274" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l4_visuals_arm_l4_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l4_collisions_arm_l4_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="L_arm_l5">
+    <inertial>
+      <origin xyz="0.06497 -0.00266 0.000012" rpy="0. 0. 0." />
+      <mass value="0.64582" />
+      <inertia ixx="0.00034" ixy="0.0000054" ixz="-0.0000002" iyy="0.00056" iyz="0." izz="0.00052" />
+    </inertial>
+    <visual>
+      <origin xyz="-0. -0. -0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l5_visuals_arm_l5_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0. -0. -0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l5_collisions_arm_l5_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="L_arm_l7">
+    <inertial>
+      <origin xyz="0.032 0.0000548 -0.01786 " rpy="0. 0. 0." />
+      <mass value="0.35802" />
+      <inertia ixx="0.0002" ixy="-0." ixz="0.0000806" iyy="0.00031" iyz="-0." izz="0.00034" />
+    </inertial>
+    <visual>
+      <origin xyz="0. -0. -0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l7_visuals_arm_l7_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. -0. -0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l7_collisions_arm_l7_0_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. -0. -0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l7_collisions_arm_l7_1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="L_arm_l8">
+    <inertial>
+      <origin xyz="-0.01782 -0.00021 0.00027" rpy="0. 0. 0." />
+      <mass value="0.20064" />
+      <inertia ixx="0.0000925" ixy="0.0000001" ixz="0.0000003" iyy="0.0000573" iyz="0.0000002" izz="0.0000568" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. -0." rpy="0. -1.57079 0. " />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l8_visuals_arm_l8_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. -0." rpy="0. -1.57079 0. " />
+      <geometry>
+        <mesh filename="./meshes/L_arm_l8_collisions_arm_l8_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="L_base_cam">
+    <inertial>
+      <origin xyz="-0.00857 0. -0.001 " rpy="0. 0. 0." />
+      <mass value="0.00309" />
+      <inertia ixx="0.0000002" ixy="0." ixz="0." iyy="0.0000001" iyz="0." izz="0.0000001" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. -0.0000001" />
+      <geometry>
+        <mesh filename="./meshes/L_base_cam_visuals_base_cam_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+  </link>
+  <link name="L_ee">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <mass value="1." />
+      <inertia ixx="0.0001" ixy="0." ixz="0." iyy="0.0001" iyz="0." izz="0.0001" />
+    </inertial>
+  </link>
+  <link name="L_wheel_l1">
+    <inertial>
+      <origin xyz="-0.0000746 -0.03713 -0.03504 " rpy="0. 0. 0." />
+      <mass value="0.358" />
+      <inertia ixx="0.000664" ixy="0.0000002" ixz="0.0000011" iyy="0.0005757" iyz="-0.0002181" izz="0.0003543" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="3.1415927 0. 3.1415927" />
+      <geometry>
+        <mesh filename="./meshes/L_wheel_l1_visuals_wheel_l1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+  </link>
+  <link name="L_wheel_l2">
+    <inertial>
+      <origin xyz="0. 0.03937 0. " rpy="0. 0. 0." />
+      <mass value="3.7" />
+      <inertia ixx="0.00676" ixy="0." ixz="0." iyy="0.01139" iyz="0." izz="0.00676" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_wheel_l2_visuals_wheel_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/L_wheel_l2_collisions_wheel_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="R_arm_l2">
+    <inertial>
+      <origin xyz="0.08749 -0.0000013 -0.04135 " rpy="0. 0. 0." />
+      <mass value="1.40595" />
+      <inertia ixx="0.00168" ixy="-0.0000001" ixz="0.00041" iyy="0.00441" iyz="0.0000002" izz="0.00412" />
+    </inertial>
+    <visual>
+      <origin xyz="-0. -0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l2_visuals_arm_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0. -0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l2_collisions_arm_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="R_arm_l3">
+    <inertial>
+      <origin xyz="0.08127 0.00414 0.04053" rpy="0. 0. 0." />
+      <mass value="1.1608" />
+      <inertia ixx="0.0017" ixy="-0.00011" ixz="-0.00104" iyy="0.00337" iyz="-0.0000833" izz="0.00257" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l3_visuals_arm_l3_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l3_collisions_arm_l3_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="R_arm_l4">
+    <inertial>
+      <origin xyz="0.07728 -0.03736 -0.02906" rpy="0. 0. 0." />
+      <mass value="0.93204" />
+      <inertia ixx="0.00101" ixy="0.00023" ixz="0.00042" iyy="0.00305" iyz="-0.00011" izz="0.00274" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l4_visuals_arm_l4_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l4_collisions_arm_l4_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="R_arm_l5">
+    <inertial>
+      <origin xyz="0.06457 0.0025 -0.000013" rpy="0. 0. 0." />
+      <mass value="0.64582" />
+      <inertia ixx="0.00034" ixy="-0.0000054" ixz="0.0000002" iyy="0.00056" iyz="0." izz="0.00052" />
+    </inertial>
+    <visual>
+      <origin xyz="-0. -0. -0." rpy="3.14159 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l5_visuals_arm_l5_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0. -0. -0." rpy="3.14159 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l5_collisions_arm_l5_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="R_arm_l7">
+    <inertial>
+      <origin xyz="0.03048 0.0000512 -0.01709 " rpy="0. 0. 0." />
+      <mass value="0.35802" />
+      <inertia ixx="0.0002" ixy="-0." ixz="0.0000806" iyy="0.00031" iyz="-0." izz="0.00034" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. -0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l7_visuals_arm_l7_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. -0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l7_collisions_arm_l7_0_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. 0. -0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l7_collisions_arm_l7_1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="R_arm_l8">
+    <inertial>
+      <origin xyz="-0.01782 0.000001 0.00027 " rpy="0. 0. 0." />
+      <mass value="0.20064" />
+      <inertia ixx="0.0000925" ixy="-0.0000001" ixz="0.0000003" iyy="0.0000573" iyz="0.0000002" izz="0.0000568" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. -0." rpy="0. -1.57079 0. " />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l8_visuals_arm_l8_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. -0." rpy="0. -1.57079 0. " />
+      <geometry>
+        <mesh filename="./meshes/R_arm_l8_collisions_arm_l8_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="R_base_cam">
+    <inertial>
+      <origin xyz="-0.00857 0. -0.001 " rpy="0. 0. 0." />
+      <mass value="0.00309" />
+      <inertia ixx="0.0000002" ixy="0." ixz="0." iyy="0.0000001" iyz="0." izz="0.0000001" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0.0000001" />
+      <geometry>
+        <mesh filename="./meshes/R_base_cam_visuals_base_cam_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+  </link>
+  <link name="R_ee">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <mass value="1." />
+      <inertia ixx="0.0001" ixy="0." ixz="0." iyy="0.0001" iyz="0." izz="0.0001" />
+    </inertial>
+  </link>
+  <link name="R_wheel_l1">
+    <inertial>
+      <origin xyz="0.0000746 0.03713 -0.03504 " rpy="0. 0. 0." />
+      <mass value="0.358" />
+      <inertia ixx="0.000664" ixy="0.0000002" ixz="-0.0000011" iyy="0.0005757" iyz="0.0002181" izz="0.0003543" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="3.1415927 0. 0.0000025" />
+      <geometry>
+        <mesh filename="./meshes/R_wheel_l1_visuals_wheel_l1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+  </link>
+  <link name="R_wheel_l2">
+    <inertial>
+      <origin xyz="0. -0.03937 0. " rpy="0. 0. 0." />
+      <mass value="3.7" />
+      <inertia ixx="0.00676" ixy="0." ixz="0." iyy="0.01139" iyz="0." izz="0.00676" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="-3.1415927 0. -3.14159 " />
+      <geometry>
+        <mesh filename="./meshes/R_wheel_l2_visuals_wheel_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="-3.1415927 0. -3.14159 " />
+      <geometry>
+        <mesh filename="./meshes/R_wheel_l2_collisions_wheel_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="arm_center">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <mass value="1." />
+      <inertia ixx="0.0001" ixy="0." ixz="0." iyy="0.0001" iyz="0." izz="0.0001" />
+    </inertial>
+  </link>
+  <link name="vega_1p_B_wheel_l1">
+    <inertial>
+      <origin xyz="-0.00642 0.00016 -0.01986" rpy="0. 0. 0." />
+      <mass value="0.2" />
+      <inertia ixx="0.000117" ixy="-0.0000003" ixz="-0.0000227" iyy="0.0001096" iyz="0.000001" izz="0.0001304" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="3.1415927 0. 3.1415927" />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_B_wheel_l1_visuals_B_wheel_l1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+  </link>
+  <link name="vega_1p_B_wheel_l2">
+    <inertial>
+      <origin xyz="-0.00068 -0.01498 0. " rpy="0. 0. 0." />
+      <mass value="0.3" />
+      <inertia ixx="0.0001345" ixy="0.0000042" ixz="0." iyy="0.0002201" iyz="0." izz="0.0001343" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. -1.5256109" />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_B_wheel_l2_visuals_B_wheel_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. -1.5256109" />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_B_wheel_l2_collisions_B_wheel_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="vega_1p_L_arm_l1">
+    <inertial>
+      <origin xyz="0.0285 0.05287 0.00576" rpy="0. 0. 0." />
+      <mass value="1.41351" />
+      <inertia ixx="0.00168" ixy="-0.00031" ixz="-0.0000683" iyy="0.00185" iyz="-0.0000545" izz="0.00212" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_L_arm_l1_visuals_L_arm_l1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_L_arm_l1_collisions_L_arm_l1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="vega_1p_L_arm_l6">
+    <inertial>
+      <origin xyz="0.05526 -0.02615 -0.00267" rpy="0. 0. 0." />
+      <mass value="0.5542" />
+      <inertia ixx="0.00029" ixy="0.0000489" ixz="0.0000018" iyy="0.00042" iyz="-0.0000014" izz="0.00038" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_L_arm_l6_visuals_L_arm_l6_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_L_arm_l6_collisions_L_arm_l6_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="vega_1p_R_arm_l1">
+    <inertial>
+      <origin xyz="0.02833 -0.05 0.0054 " rpy="0. 0. 0." />
+      <mass value="1.42401" />
+      <inertia ixx="0.00159" ixy="0.00028" ixz="-0.0000407" iyy="0.00166" iyz="0.0000434" izz="0.00202" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_R_arm_l1_visuals_R_arm_l1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_R_arm_l1_collisions_R_arm_l1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="vega_1p_R_arm_l6">
+    <inertial>
+      <origin xyz="0.05525 0.02614 -0.00267" rpy="0. 0. 0." />
+      <mass value="0.55372" />
+      <inertia ixx="0.00029" ixy="-0.0000491" ixz="0.0000019" iyy="0.00042" iyz="0.0000015" izz="0.00038" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_R_arm_l6_visuals_R_arm_l6_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_R_arm_l6_collisions_R_arm_l6_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="vega_1p_back_lidar">
+    <inertial>
+      <origin xyz="-0.00548 0.0000348 -0.00608 " rpy="0. 0. 0." />
+      <mass value="0.00423" />
+      <inertia ixx="0.0002076" ixy="-0.0000003" ixz="-0.0000136" iyy="0.0001159" iyz="0.0000006" izz="0.0001448" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_back_lidar_visuals_back_lidar_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+  </link>
+  <link name="vega_1p_base">
+    <inertial>
+      <origin xyz="0.01375 0.00093 0.11383" rpy="0. 0. 0." />
+      <mass value="88.4348679" />
+      <inertia ixx="0.9988399" ixy="0.00219" ixz="-0.08177" iyy="1.0714799" iyz="0.00018" izz="1.8010401" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_base_visuals_base_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/base_0_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/base_1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/base_2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="vega_1p_front_lidar">
+    <inertial>
+      <origin xyz="-0.00019 0.000001 -0.010489" rpy="0. 0. 0." />
+      <mass value="0.151" />
+      <inertia ixx="0.0000704" ixy="-0." ixz="0.0000006" iyy="0.000071" iyz="-0." izz="0.0000625" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_front_lidar_visuals_front_lidar_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+  </link>
+  <link name="vega_1p_head_l1">
+    <inertial>
+      <origin xyz="0.000013 0.07221 -0.02629 " rpy="0. 0. 0." />
+      <mass value="0.4378" />
+      <inertia ixx="0.00043" ixy="0." ixz="0.0000001" iyy="0.00025" iyz="-0.000001" izz="0.00051" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_head_l1_visuals_head_l1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/head_l1_0_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/head_l1_1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/head_l1_2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="vega_1p_head_l2">
+    <inertial>
+      <origin xyz="0.0000353 0.01618 0.03389 " rpy="0. 0. 0." />
+      <mass value="0.60772" />
+      <inertia ixx="0.00052" ixy="0.0000001" ixz="-0." iyy="0.00039" iyz="-0.0001" izz="0.0005" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_head_l2_visuals_head_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_head_l2_collisions_head_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="vega_1p_head_l3">
+    <inertial>
+      <origin xyz="0.00816 -0.00315 0.03745" rpy="0. 0. 0." />
+      <mass value="0.63278" />
+      <inertia ixx="0.00083" ixy="-0.0000022" ixz="-0.0000097" iyy="0.00034" iyz="-0.0000091" izz="0.00078" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0. 0." rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_head_l3_visuals_head_l3_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/head_l3_0_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. 0. 0." rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/head_l3_1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="vega_1p_torso_l1">
+    <inertial>
+      <origin xyz="0.17712 -0.06463 0.03987" rpy="0. 0. 0." />
+      <mass value="8.8323402" />
+      <inertia ixx="0.03291" ixy="-0.00068" ixz="-0.03389" iyy="0.22172" iyz="-0.00057" izz="0.20771" />
+    </inertial>
+    <visual>
+      <origin xyz="0. -0.08 0. " rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_torso_l1_visuals_torso_l1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. -0.08 0. " rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_torso_l1_collisions_torso_l1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="vega_1p_torso_l2">
+    <inertial>
+      <origin xyz="-0.19819 -0.02173 0.04732" rpy="0. 0. 0." />
+      <mass value="14.5892601" />
+      <inertia ixx="0.05538" ixy="-0.00091" ixz="0.07372" iyy="0.42465" iyz="0.00023" izz="0.39283" />
+    </inertial>
+    <visual>
+      <origin xyz="0. 0.02 -0. " rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_torso_l2_visuals_torso_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. 0.02 -0. " rpy="0. 0. 0." />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_torso_l2_collisions_torso_l2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="vega_1p_torso_l3">
+    <inertial>
+      <origin xyz="-0.05623 -0.08424 0.25675" rpy="0. 0. 0." />
+      <mass value="5.3288598" />
+      <inertia ixx="0.11076" ixy="-0.00246" ixz="0.015" iyy="0.10555" iyz="0.01137" izz="0.02731" />
+    </inertial>
+    <visual>
+      <origin xyz="0. -0.0775 -0. " rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/vega_1p_torso_l3_visuals_torso_l3_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0. -0.0775 -0. " rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/torso_l3_0_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. -0.0775 -0. " rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/torso_l3_1_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. -0.0775 -0. " rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/torso_l3_2_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. -0.0775 -0. " rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/torso_l3_3_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. -0.0775 -0. " rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/torso_l3_4_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. -0.0775 -0. " rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/torso_l3_5_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. -0.0775 -0. " rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/torso_l3_6_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. -0.0775 -0. " rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/torso_l3_7_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0. -0.0775 -0. " rpy="3.1415927 0. 0. " />
+      <geometry>
+        <mesh filename="./meshes/torso_l3_8_mesh.obj" scale="1. 1. 1." />
+      </geometry>
+    </collision>
+  </link>
+  <link name="zed_depth_frame">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <mass value="1." />
+      <inertia ixx="0.0001" ixy="0." ixz="0." iyy="0.0001" iyz="0." izz="0.0001" />
+    </inertial>
+  </link>
+  <link name="zed_left_camera">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <mass value="1." />
+      <inertia ixx="0.0001" ixy="0." ixz="0." iyy="0.0001" iyz="0." izz="0.0001" />
+    </inertial>
+  </link>
+  <link name="zed_right_camera">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+      <mass value="1." />
+      <inertia ixx="0.0001" ixy="0." ixz="0." iyy="0.0001" iyz="0." izz="0.0001" />
+    </inertial>
+  </link>
+</robot>

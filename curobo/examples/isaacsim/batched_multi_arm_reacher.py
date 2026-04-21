@@ -65,7 +65,7 @@ parser.add_argument(
 parser.add_argument(
     "--robot",
     type=str,
-    default="dual_ur10e.yml",
+    default="magicsim_vega1p_sharpa_mobile.yml",
     help="cuRobo v2 robot YAML. Must declare tool_frames with len >= 2.",
 )
 parser.add_argument(
@@ -136,7 +136,7 @@ def main() -> None:
 
     # ---- Scene / stage setup -----------------------------------------------
     my_world = World(stage_units_in_meters=1.0)
-    my_world.scene.add_default_ground_plane()
+    # my_world.scene.add_default_ground_plane()
     stage = my_world.stage
     stage.DefinePrim("/World", "Xform").GetStage().SetDefaultPrim(
         stage.GetPrimAtPath("/World")
@@ -395,8 +395,14 @@ def main() -> None:
             if result is not None and bool(result.success.any().item()):
                 interp = result.interpolated_trajectory       # (B, 1, max_H, dof_full)
                 last = result.interpolated_last_tstep         # (B, 1)
+                status = getattr(result, "status", None)
                 for s in range(result.success.shape[0]):
                     if not bool(result.success[s].any().item()):
+                        reason = status if status else "planner returned success=False"
+                        print(
+                            f"[plan] env_{s} failed — {reason} "
+                            f"(likely start/goal self-collision or unreachable IK)"
+                        )
                         cmd_plan[s] = None
                         continue
                     env_traj = interp[s].squeeze(0)           # (max_H, dof_full)
