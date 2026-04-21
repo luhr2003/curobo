@@ -1,3 +1,13 @@
+# FK-only links (migrated from v1 ``kinematics.extra_link_names``).
+# Placed at YAML top level so cuRobo v2's RobotCfg loader ignores it;
+# PlannerManager reads + merges them into kinematics.tool_frames before
+# building the solver, then applies ToolPoseCriteria.disabled() so they
+# contribute zero cost to both IK and MotionGen trajopt.
+extra_fk_link: ["pelvis_contour_link", "imu_in_torso"]
+
+# Position-mode FK readout order (migrated from v1 top-level info_links).
+info_links: ["pelvis_contour_link", "imu_in_torso", "right_hand_palm_link", "left_hand_palm_link"]
+
 kinematics:
   urdf_path: robot/g1_simple/g1_simple.urdf
   asset_root_path: robot/g1_simple

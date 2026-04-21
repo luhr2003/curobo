@@ -1,3 +1,6 @@
+# Position-mode FK readout order (migrated from v1 top-level info_links).
+info_links: ["R_SO101_gripper", "L_SO101_gripper"]
+
 robot_cfg:
   kinematics:
     add_object_link: false

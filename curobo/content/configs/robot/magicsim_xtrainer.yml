@@ -1,3 +1,6 @@
+# Position-mode FK readout order (migrated from v1 top-level info_links).
+info_links: ["J1_6", "J2_6"]
+
 robot_cfg:
   kinematics:
     add_object_link: false

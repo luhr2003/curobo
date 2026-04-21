@@ -415,6 +415,45 @@ def get_sphere_attrs(prim, cache=None, transform=None) -> Sphere:
     return Sphere(name=str(prim.GetPath()), pose=pose, radius=radius, position=pose[:3])
 
 
+def triangulate_mesh_faces(faces, face_count):
+    """Fan-triangulate a USD-style mixed-polygon face buffer.
+
+    Ported from MagicCurobo v1's ``util/usd_helper.triangulate_mesh_faces``
+    (minus the optional Warp GPU path). Quads split on the v0-v2 diagonal;
+    n-gons fan from v0. Raises ``ValueError`` on malformed input so callers
+    can fall back to dropping the mesh.
+
+    Returns
+    -------
+    (tri_faces, tri_face_count) : Tuple[List[int], List[int]]
+        Flat triangle-index buffer plus a face-count list of all 3s.
+    """
+    if not faces or not face_count:
+        raise ValueError("empty face data")
+    expected = sum(face_count)
+    if len(faces) != expected:
+        raise ValueError(
+            f"face data inconsistent: {len(faces)} indices vs face_count sum {expected}"
+        )
+    if any(c < 3 for c in face_count):
+        raise ValueError("found face with < 3 vertices")
+
+    new_faces = []
+    idx = 0
+    for count in face_count:
+        if count == 3:
+            new_faces.extend(faces[idx : idx + 3])
+        elif count == 4:
+            q = faces[idx : idx + 4]
+            new_faces.extend([q[0], q[1], q[2], q[0], q[2], q[3]])
+        else:
+            v0 = faces[idx]
+            for i in range(1, count - 1):
+                new_faces.extend([v0, faces[idx + i], faces[idx + i + 1]])
+        idx += count
+    return new_faces, [3] * (len(new_faces) // 3)
+
+
 def get_mesh_attrs(prim, cache=None, transform=None) -> Mesh:
     # read cube information
     # scale = prim.GetAttribute("size").Get()
@@ -425,15 +464,17 @@ def get_mesh_attrs(prim, cache=None, transform=None) -> Mesh:
     faces = list(prim.GetAttribute("faceVertexIndices").Get())
 
     face_count = list(prim.GetAttribute("faceVertexCounts").Get())
-    # assume faces are 3:
+    # Handle non-triangle faces: quad / n-gon meshes are common in USD exports
+    # from DCC tools. v1 triangulated; v2 originally dropped them silently
+    # with a warning. Re-align with v1 by triangulating.
     if len(faces) / 3 != len(face_count):
-        log_warn(
-            "Mesh faces "
-            + str(len(faces) / 3)
-            + " are not matching faceVertexCounts "
-            + str(len(face_count))
-        )
-        return None
+        try:
+            faces, face_count = triangulate_mesh_faces(faces, face_count)
+        except ValueError as exc:
+            log_warn(
+                f"Mesh {prim.GetPath()} triangulation failed ({exc}); dropping"
+            )
+            return None
     faces = np.array(faces).reshape(len(face_count), 3).tolist()
     if prim.GetAttribute("xformOp:scale").IsValid():
         scale = list(prim.GetAttribute("xformOp:scale").Get())
@@ -466,7 +507,6 @@ def get_mesh_attrs(prim, cache=None, transform=None) -> Mesh:
         faces=faces,
         scale=scale,
     )
-    # print(len(m.vertices), max(m.faces))
 
     return m
 

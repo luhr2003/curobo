@@ -1,3 +1,13 @@
+# FK-only links (migrated from v1 ``kinematics.extra_link_names``).
+# Placed at YAML top level so cuRobo v2's RobotCfg loader ignores it;
+# PlannerManager reads + merges them into kinematics.tool_frames before
+# building the solver, then applies ToolPoseCriteria.disabled() so they
+# contribute zero cost to both IK and MotionGen trajopt.
+extra_fk_link: ["base_link", "link2"]
+
+# Position-mode FK readout order (migrated from v1 top-level info_links).
+info_links: ["base_link", "link2", "link20_tip", "link11_tip"]
+
 robot_cfg:
   kinematics:
     add_object_link: false
