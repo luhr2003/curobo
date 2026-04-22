@@ -18,6 +18,7 @@ from curobo._src.rollout.cost_manager.cost_manager_robot_cfg import RobotCostMan
 from curobo._src.solver.solver_core_cfg import (
     SolverCoreCfg,
     create_solver_core_cfg,
+    enable_per_env_tool_pose,
     resolve_yaml_configs,
 )
 from curobo._src.transition.robot_state_transition_cfg import (
@@ -213,6 +214,11 @@ class TrajOptSolverCfg:
             transition_model_config_instance_type=transition_model_config_instance_type,
             cost_manager_config_instance_type=cost_manager_config_instance_type,
         )
+
+        # 3b. Auto-enable per-env tool-pose buffers when batch_env mode is on.
+        # See ``IKSolverCfg.create`` for rationale.
+        if multi_env:
+            enable_per_env_tool_pose(core_cfg, max_batch_size)
 
         return TrajOptSolverCfg(
             core_cfg=core_cfg,

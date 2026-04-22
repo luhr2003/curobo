@@ -447,13 +447,41 @@ class SolverCore:
         self.auxiliary_rollout.update_params_cost_managers(pose_cost_metric=pose_cost_metric)
 
     def update_tool_pose_criteria(self, tool_pose_criteria: Dict[str, ToolPoseCriteria]):
-        """Update tool pose criteria for all rollouts."""
+        """Update tool pose criteria for all rollouts (broadcast to every env)."""
         self.metrics_rollout.update_params_cost_managers(tool_pose_criteria=tool_pose_criteria)
         for rollout in self.additional_metrics_rollouts.values():
             rollout.update_params_cost_managers(tool_pose_criteria=tool_pose_criteria)
         for rollout in self.optimizer_rollouts:
             rollout.update_params_cost_managers(tool_pose_criteria=tool_pose_criteria)
         self.auxiliary_rollout.update_params_cost_managers(tool_pose_criteria=tool_pose_criteria)
+
+    def update_tool_pose_criteria_per_env(
+        self,
+        env_idx: int,
+        tool_pose_criteria: Dict[str, ToolPoseCriteria],
+    ):
+        """Update tool pose criteria for one env row across all rollouts.
+
+        Requires the underlying ``ToolPoseCost`` to have been built with
+        ``per_env=True`` (auto-set when the parent
+        :class:`InverseKinematicsCfg` / :class:`MotionPlannerCfg` has
+        ``multi_env=True``). Other env rows are not touched.
+        """
+        payload = {"env_idx": env_idx, "criteria": tool_pose_criteria}
+        self.metrics_rollout.update_params_cost_managers(
+            tool_pose_criteria_per_env=payload
+        )
+        for rollout in self.additional_metrics_rollouts.values():
+            rollout.update_params_cost_managers(
+                tool_pose_criteria_per_env=payload
+            )
+        for rollout in self.optimizer_rollouts:
+            rollout.update_params_cost_managers(
+                tool_pose_criteria_per_env=payload
+            )
+        self.auxiliary_rollout.update_params_cost_managers(
+            tool_pose_criteria_per_env=payload
+        )
 
     # -----------------------------------------------------------------------
     # Sample configs (collision activation distance passed as arg)

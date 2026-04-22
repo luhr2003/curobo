@@ -618,6 +618,21 @@ class BatchMotionPlanner:
         self.ik_solver.update_tool_pose_criteria(tool_pose_criteria)
         self.trajopt_solver.update_tool_pose_criteria(tool_pose_criteria)
 
+    def update_tool_pose_criteria_per_env(
+        self,
+        env_idx: int,
+        tool_pose_criteria: Dict[str, "ToolPoseCriteria"],
+    ):
+        """Per-env row update, propagates to BOTH IK and TrajOpt stages.
+
+        Required when the planner cfg has ``multi_env=True``. See
+        :meth:`MotionPlanner.update_tool_pose_criteria_per_env`.
+        """
+        self.ik_solver.update_tool_pose_criteria_per_env(env_idx, tool_pose_criteria)
+        self.trajopt_solver.update_tool_pose_criteria_per_env(
+            env_idx, tool_pose_criteria
+        )
+
     def update_link_inertial(
         self,
         link_name: str,

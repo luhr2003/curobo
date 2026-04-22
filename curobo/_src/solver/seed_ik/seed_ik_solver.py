@@ -811,6 +811,16 @@ class SeedIKSolver:
     def update_tool_pose_criteria(self, tool_pose_criteria: Dict[str, ToolPoseCriteria]):
         self.error_calculator.update_tool_pose_criteria(tool_pose_criteria)
 
+    def update_tool_pose_criteria_per_env(
+        self,
+        env_idx: int,
+        tool_pose_criteria: Dict[str, ToolPoseCriteria],
+    ):
+        """Per-env row update for the seed IK's error calculator."""
+        self.error_calculator.update_tool_pose_criteria_per_env(
+            env_idx, tool_pose_criteria
+        )
+
     def reset_seed(self):
         self.act_sample_gen.reset()
 

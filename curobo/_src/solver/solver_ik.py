@@ -161,6 +161,12 @@ class IKSolver:
                     orientation_weight=self.config.seed_orientation_weight,
                     velocity_weight=self.config.seed_velocity_weight,
                     acceleration_weight=self.config.seed_acceleration_weight,
+                    # Mirror the parent IK solver's per-env mode so the seed
+                    # IK's own ToolPoseCost matches; otherwise
+                    # ``update_tool_pose_criteria_per_env`` would raise on
+                    # the seed stage even though the main solver supports it.
+                    per_env=self.config.multi_env,
+                    num_envs=self.config.max_batch_size if self.config.multi_env else 1,
                 )
             )
 
@@ -297,6 +303,24 @@ class IKSolver:
         if self.seed_ik_solver is not None:
             self.seed_ik_solver.update_tool_pose_criteria(tool_pose_criteria)
         self.core.update_tool_pose_criteria(tool_pose_criteria)
+
+    def update_tool_pose_criteria_per_env(
+        self,
+        env_idx: int,
+        tool_pose_criteria: Dict[str, ToolPoseCriteria],
+    ):
+        """Per-env row update for both the seed IK solver and the main solver.
+
+        Requires the IK cfg to have been built with ``multi_env=True``
+        (auto-enables ``per_env`` on the tool-pose cost). Use this to
+        let env ``env_idx`` disable a different subset of tool frames
+        than other envs in the same batch.
+        """
+        if self.seed_ik_solver is not None:
+            self.seed_ik_solver.update_tool_pose_criteria_per_env(
+                env_idx, tool_pose_criteria
+            )
+        self.core.update_tool_pose_criteria_per_env(env_idx, tool_pose_criteria)
 
     def reset_seed(self):
         if self.config.use_lm_seed:

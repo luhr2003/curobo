@@ -359,3 +359,32 @@ def create_solver_core_cfg(
         random_seed=random_seed,
         store_debug=store_debug,
     )
+
+
+def enable_per_env_tool_pose(core_cfg: SolverCoreCfg, num_envs: int) -> None:
+    """Walk every rollout cfg in ``core_cfg`` and enable per-env tool-pose
+    weight buffers on each ``tool_pose_cfg`` (if present).
+
+    Idempotent + permissive: rollouts without a ``tool_pose_cfg`` slot
+    are skipped silently. Called by ``IKSolverCfg.create`` /
+    ``MotionPlannerCfg.create`` when ``multi_env=True`` so the per-env
+    warp kernel path is automatically active.
+
+    Args:
+        core_cfg: the freshly built SolverCoreCfg.
+        num_envs: env count to size the per-env weight tensors with
+            (typically ``max_batch_size``).
+    """
+    if num_envs <= 0:
+        return
+
+    rollouts = [core_cfg.metrics_rollout_config] + list(
+        core_cfg.optimizer_rollout_configs
+    )
+    for rollout_cfg in rollouts:
+        for cm_cfg in rollout_cfg.get_cost_manager_configs():
+            tp_cfg = getattr(cm_cfg, "tool_pose_cfg", None)
+            if tp_cfg is None:
+                continue
+            tp_cfg.per_env = True
+            tp_cfg.num_envs = num_envs

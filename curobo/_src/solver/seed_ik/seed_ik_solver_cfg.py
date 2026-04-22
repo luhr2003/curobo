@@ -97,6 +97,18 @@ class SeedIKSolverCfg:
     ``a = ((q - q_current)/dt - v_current) / dt``. Disabled when velocity is
     not available on current_state."""
 
+    per_env: bool = False
+    """When True, the seed IK's internal :class:`ToolPoseCost` is built with
+    per-env weight buffers. Auto-set by :meth:`IKSolverCfg.create` whenever
+    ``multi_env=True`` so per-env disabling propagates to the seed IK stage
+    (which has its own ``ToolPoseCost`` instance separate from the main
+    optimizer rollouts).
+    """
+
+    num_envs: int = 1
+    """Number of envs in the per-env layout. Only meaningful when
+    ``per_env=True``; equal to ``max_batch_size`` of the parent IK solver."""
+
     @staticmethod
     def create(
         robot: Union[str, Dict, RobotCfg],

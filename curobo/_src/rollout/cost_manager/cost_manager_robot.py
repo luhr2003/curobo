@@ -373,6 +373,21 @@ class RobotCostManager:
                 return
             if tool_pose_cost is not None:
                 tool_pose_cost.update_tool_pose_criteria(tool_pose_criteria)
+        if "tool_pose_criteria_per_env" in kwargs:
+            # Payload contract: {"env_idx": int, "criteria": Dict[str, ToolPoseCriteria]}
+            payload = kwargs["tool_pose_criteria_per_env"]
+            if not isinstance(payload, dict) or "env_idx" not in payload or "criteria" not in payload:
+                log_and_raise(
+                    "tool_pose_criteria_per_env must be a dict with keys "
+                    "'env_idx' and 'criteria'"
+                )
+                return
+            tool_pose_cost = self.get_cost("tool_pose")
+            if tool_pose_cost is not None:
+                tool_pose_cost.update_tool_pose_criteria_per_env(
+                    env_idx=int(payload["env_idx"]),
+                    tool_pose_criteria=payload["criteria"],
+                )
         if "dt" in kwargs:
             self.update_dt(kwargs["dt"])
 

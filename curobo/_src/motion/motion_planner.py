@@ -630,3 +630,20 @@ class MotionPlanner:
     def update_tool_pose_criteria(self, tool_pose_criteria: Dict[str, ToolPoseCriteria]):
         self.ik_solver.update_tool_pose_criteria(tool_pose_criteria)
         self.trajopt_solver.update_tool_pose_criteria(tool_pose_criteria)
+
+    def update_tool_pose_criteria_per_env(
+        self,
+        env_idx: int,
+        tool_pose_criteria: Dict[str, ToolPoseCriteria],
+    ):
+        """Per-env row update, propagates to BOTH IK and TrajOpt stages.
+
+        Required when the planner cfg has ``multi_env=True`` (which
+        auto-enables ``per_env`` on the tool-pose cost). Lets each env
+        disable a different subset of tool frames in a single
+        ``plan_pose`` call.
+        """
+        self.ik_solver.update_tool_pose_criteria_per_env(env_idx, tool_pose_criteria)
+        self.trajopt_solver.update_tool_pose_criteria_per_env(
+            env_idx, tool_pose_criteria
+        )

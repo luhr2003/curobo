@@ -112,13 +112,19 @@ class SeedIKErrorCalculator:
                 device_cfg=self.device_cfg,
             )
 
-        # Create cost configuration
+        # Create cost configuration. When the parent IK solver was built with
+        # ``multi_env=True`` (which sets ``self.config.per_env``), build the
+        # seed IK's own pose cost with per-env weight buffers too — otherwise
+        # ``update_tool_pose_criteria_per_env`` would raise on the seed IK
+        # stage even though the main solver supports it.
         cost_config = ToolPoseCostCfg(
             weight=[self.config.position_weight, self.config.orientation_weight],
             tool_frames=self.robot_model.tool_frames,
             tool_pose_criteria=tool_pose_criteria,
             device_cfg=self.device_cfg,
             use_lie_group=False,
+            per_env=getattr(self.config, "per_env", False),
+            num_envs=getattr(self.config, "num_envs", 1),
         )
 
         # Create and return cost function
@@ -496,6 +502,14 @@ class SeedIKErrorCalculator:
 
     def update_tool_pose_criteria(self, tool_pose_criteria: Dict[str, ToolPoseCriteria]):
         self.pose_cost.update_tool_pose_criteria(tool_pose_criteria)
+
+    def update_tool_pose_criteria_per_env(
+        self,
+        env_idx: int,
+        tool_pose_criteria: Dict[str, ToolPoseCriteria],
+    ):
+        """Per-env row update for the seed IK's pose cost."""
+        self.pose_cost.update_tool_pose_criteria_per_env(env_idx, tool_pose_criteria)
 
     def stream_context(self, stream_name: str):
         """Context manager for computation with optional CUDA streams.

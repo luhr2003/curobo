@@ -33,6 +33,17 @@ class ToolPoseCostCfg(BaseCostCfg):
     #: If true, the rotation distance and gradient is computed using the Lie group.
     use_lie_group: bool = False
 
+    #: Enable per-env weight buffers in the stacked criteria (and route to the
+    #: per-env warp kernel). Auto-set when the parent
+    #: :class:`InverseKinematicsCfg` / :class:`MotionPlannerCfg` has
+    #: ``multi_env=True``; can be left False for non-multi_env callers to
+    #: keep the stock kernel path.
+    per_env: bool = False
+
+    #: Number of envs in the per-env layout. Only meaningful when
+    #: ``per_env=True``. Set by the factory to ``max_batch_size``.
+    num_envs: int = 1
+
     _terminal_pose_convergence_tolerance: Optional[Union[torch.Tensor, List[float]]] = None
     _non_terminal_pose_convergence_tolerance: Optional[Union[torch.Tensor, List[float]]] = None
     _terminal_pose_axes_weight_factor: Optional[Union[torch.Tensor, List[float]]] = None
@@ -68,6 +79,8 @@ class ToolPoseCostCfg(BaseCostCfg):
                 for link_name in self.tool_frames
             },
             use_lie_group=self.use_lie_group,
+            per_env=self.per_env,
+            num_envs=self.num_envs,
             _pose_criteria=self._pose_criteria.clone() if self._pose_criteria is not None else None,
         )
 
