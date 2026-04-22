@@ -931,6 +931,330 @@ def create_goalset_pose_distance_kernel_per_env_with_constants(
     return goalset_pose_distance_per_env
 
 
+def create_goalset_pose_distance_kernel_per_env_paired_with_constants(
+    num_goalset: int,
+    rotation_method: int = 0,
+):
+    """Paired per-env variant of ``goalset_pose_distance_per_env``.
+
+    Same tensor signatures as the per-env kernel, but the argmin over
+    goalset candidates is **shared across all links in the group**
+    instead of per-link. That is:
+
+    * Unpaired:  for each (b, h, link) → ``best_g_link = argmin_g d(current, goal_link[g])``
+    * Paired:    for each (b, h)       → ``best_g      = argmin_g Σ_link d(current_link, goal_link[g])``
+
+    Thread layout differs: threads = ``batch_size * horizon``
+    (NOT ``* num_links``). Each thread handles ONE (b, h) pair and
+    loops over all links internally — in two passes:
+
+    1. **Search pass** (outer ``g``, inner ``link``): sum per-link
+       weighted distances for candidate ``g``, track ``best_g`` that
+       minimises the SUM.
+    2. **Write-out pass** (single ``g = best_g``, inner ``link``):
+       recompute per-link position/rotation distance + gradient +
+       output writes. Uses a second forward pass through the link
+       loop instead of caching per-link state in per-thread arrays
+       (Warp doesn't support runtime-sized local arrays cleanly).
+
+    Per-link outputs (`out_distance`, `out_position_distance`,
+    `out_rotation_distance`, `out_position_gradient`,
+    `out_rotation_gradient`) retain shape
+    ``(batch_size, horizon, num_links, ...)`` so downstream code is
+    byte-compatible with the unpaired path.
+    ``out_goalset_idx[b, h, link]`` is set to the same ``best_g`` for
+    every link in the group.
+
+    Per-env disable composes naturally: a link with
+    ``terminal_pose_axes_weight_factor[env, link, :] == 0`` contributes
+    zero to the summed cost for that (b, h), so the paired argmin is
+    driven only by the active links. An env with ALL paired links
+    disabled yields ``total == 0`` across all ``g`` → ``best_g``
+    defaults to 0, distances are 0, gradients are 0 (free).
+    """
+
+    @wp.kernel
+    def goalset_pose_distance_per_env_paired(
+        current_position: wp.array(dtype=wp.vec3),
+        current_quat: wp.array(dtype=wp.vec4),
+        goal_position: wp.array(dtype=wp.vec3),
+        goal_quat: wp.array(dtype=wp.vec4),
+        idxs_goal: wp.array(dtype=wp.int32),
+        position_orientation_weight: wp.array(dtype=wp.float32),
+        terminal_pose_axes_weight_factor: wp.array(dtype=wp.float32),
+        non_terminal_pose_axes_weight_factor: wp.array(dtype=wp.float32),
+        terminal_pose_convergence_tolerance: wp.array(dtype=wp.float32),
+        non_terminal_pose_convergence_tolerance: wp.array(dtype=wp.float32),
+        project_distance_to_goal: wp.array(dtype=wp.uint8),
+        out_distance: wp.array(dtype=wp.float32),
+        out_position_distance: wp.array(dtype=wp.float32),
+        out_rotation_distance: wp.array(dtype=wp.float32),
+        out_position_gradient: wp.array(dtype=wp.vec3),
+        out_rotation_gradient: wp.array(dtype=wp.vec4),
+        out_goalset_idx: wp.array(dtype=wp.int32),
+        batch_size: wp.int32,
+        horizon: wp.int32,
+        num_links: wp.int32,
+    ):
+        # Thread dim: batch_size * horizon. One thread per (b, h) pair,
+        # iterates over all links internally.
+        tid = wp.tid()
+        if tid >= batch_size * horizon:
+            return
+
+        b_idx = tid / horizon
+        h_idx = tid - b_idx * horizon
+
+        goal_idx = idxs_goal[b_idx]
+        position_weight = position_orientation_weight[0]
+        rotation_weight = position_orientation_weight[1]
+
+        # ---- Pass 1: search for best_g by summing over links ----------
+        best_total = wp.float32(-1)
+        best_g = wp.int32(0)
+
+        for g_idx in range(num_goalset):
+            total = wp.float32(0.0)
+            for link_idx in range(num_links):
+                weight_base = goal_idx * num_links * 6 + link_idx * 6
+                tol_base = goal_idx * num_links * 2 + link_idx * 2
+                proj_base = goal_idx * num_links + link_idx
+
+                if h_idx < (horizon - 1) and horizon > 1:
+                    position_axes_weight = wp.vec3(
+                        non_terminal_pose_axes_weight_factor[weight_base + 0],
+                        non_terminal_pose_axes_weight_factor[weight_base + 1],
+                        non_terminal_pose_axes_weight_factor[weight_base + 2],
+                    )
+                    rotation_axes_weight = wp.vec3(
+                        non_terminal_pose_axes_weight_factor[weight_base + 3],
+                        non_terminal_pose_axes_weight_factor[weight_base + 4],
+                        non_terminal_pose_axes_weight_factor[weight_base + 5],
+                    )
+                    convergence_tolerance = wp.vec2(
+                        non_terminal_pose_convergence_tolerance[tol_base + 0],
+                        non_terminal_pose_convergence_tolerance[tol_base + 1],
+                    )
+                else:
+                    position_axes_weight = wp.vec3(
+                        terminal_pose_axes_weight_factor[weight_base + 0],
+                        terminal_pose_axes_weight_factor[weight_base + 1],
+                        terminal_pose_axes_weight_factor[weight_base + 2],
+                    )
+                    rotation_axes_weight = wp.vec3(
+                        terminal_pose_axes_weight_factor[weight_base + 3],
+                        terminal_pose_axes_weight_factor[weight_base + 4],
+                        terminal_pose_axes_weight_factor[weight_base + 5],
+                    )
+                    convergence_tolerance = wp.vec2(
+                        terminal_pose_convergence_tolerance[tol_base + 0],
+                        terminal_pose_convergence_tolerance[tol_base + 1],
+                    )
+                convergence_tolerance[0] = convergence_tolerance[0] ** 2.0
+                convergence_tolerance[1] = convergence_tolerance[1] ** 2.0
+
+                local_project_distance_to_goal = project_distance_to_goal[proj_base]
+
+                c_position = current_position[
+                    b_idx * horizon * num_links + h_idx * num_links + link_idx
+                ]
+                c_quat = current_quat[
+                    b_idx * horizon * num_links + h_idx * num_links + link_idx
+                ]
+                c_quaternion = wp.quaternion(c_quat[1], c_quat[2], c_quat[3], c_quat[0])
+
+                g_goal_position = goal_position[
+                    goal_idx * num_links * num_goalset + link_idx * num_goalset + g_idx
+                ]
+                g_goal_quat = goal_quat[
+                    goal_idx * num_links * num_goalset + link_idx * num_goalset + g_idx
+                ]
+                g_goal_quaternion = wp.quaternion(
+                    g_goal_quat[1], g_goal_quat[2], g_goal_quat[3], g_goal_quat[0]
+                )
+
+                if local_project_distance_to_goal == 1:
+                    g_transform = wp.transform(g_goal_position, g_goal_quaternion)
+                    c_transform = wp.transform(c_position, c_quaternion)
+                    c_in_g_frame = wp.transform_multiply(
+                        wp.transform_inverse(g_transform), c_transform
+                    )
+                    current_position_in_frame = wp.transform_get_translation(c_in_g_frame)
+                    current_quaternion_in_frame = wp.transform_get_rotation(c_in_g_frame)
+                    goal_position_in_frame = wp.vec3(0.0, 0.0, 0.0)
+                    goal_quaternion_in_frame = wp.quat(0.0, 0.0, 0.0, 1.0)
+                else:
+                    current_position_in_frame = c_position
+                    current_quaternion_in_frame = c_quaternion
+                    goal_position_in_frame = g_goal_position
+                    goal_quaternion_in_frame = g_goal_quaternion
+
+                position_distance, position_gradient = compute_position_error(
+                    current_position_in_frame,
+                    goal_position_in_frame,
+                    position_axes_weight,
+                    position_weight,
+                    convergence_tolerance[0],
+                )
+                angular_distance, gradient_as_angular_velocity, angle = compute_rotation_error(
+                    current_quaternion_in_frame,
+                    goal_quaternion_in_frame,
+                    rotation_axes_weight,
+                    rotation_weight,
+                    convergence_tolerance[1],
+                    rotation_method,
+                )
+                total += position_distance + angular_distance
+
+            if best_total < 0.0 or total < best_total:
+                best_total = total
+                best_g = g_idx
+
+        # ---- Pass 2: write out per-link outputs evaluated at best_g ----
+        for link_idx in range(num_links):
+            weight_base = goal_idx * num_links * 6 + link_idx * 6
+            tol_base = goal_idx * num_links * 2 + link_idx * 2
+            proj_base = goal_idx * num_links + link_idx
+
+            if h_idx < (horizon - 1) and horizon > 1:
+                position_axes_weight = wp.vec3(
+                    non_terminal_pose_axes_weight_factor[weight_base + 0],
+                    non_terminal_pose_axes_weight_factor[weight_base + 1],
+                    non_terminal_pose_axes_weight_factor[weight_base + 2],
+                )
+                rotation_axes_weight = wp.vec3(
+                    non_terminal_pose_axes_weight_factor[weight_base + 3],
+                    non_terminal_pose_axes_weight_factor[weight_base + 4],
+                    non_terminal_pose_axes_weight_factor[weight_base + 5],
+                )
+                convergence_tolerance = wp.vec2(
+                    non_terminal_pose_convergence_tolerance[tol_base + 0],
+                    non_terminal_pose_convergence_tolerance[tol_base + 1],
+                )
+            else:
+                position_axes_weight = wp.vec3(
+                    terminal_pose_axes_weight_factor[weight_base + 0],
+                    terminal_pose_axes_weight_factor[weight_base + 1],
+                    terminal_pose_axes_weight_factor[weight_base + 2],
+                )
+                rotation_axes_weight = wp.vec3(
+                    terminal_pose_axes_weight_factor[weight_base + 3],
+                    terminal_pose_axes_weight_factor[weight_base + 4],
+                    terminal_pose_axes_weight_factor[weight_base + 5],
+                )
+                convergence_tolerance = wp.vec2(
+                    terminal_pose_convergence_tolerance[tol_base + 0],
+                    terminal_pose_convergence_tolerance[tol_base + 1],
+                )
+            convergence_tolerance[0] = convergence_tolerance[0] ** 2.0
+            convergence_tolerance[1] = convergence_tolerance[1] ** 2.0
+
+            local_project_distance_to_goal = project_distance_to_goal[proj_base]
+
+            c_position = current_position[
+                b_idx * horizon * num_links + h_idx * num_links + link_idx
+            ]
+            c_quat = current_quat[
+                b_idx * horizon * num_links + h_idx * num_links + link_idx
+            ]
+            c_quaternion = wp.quaternion(c_quat[1], c_quat[2], c_quat[3], c_quat[0])
+
+            g_goal_position = goal_position[
+                goal_idx * num_links * num_goalset + link_idx * num_goalset + best_g
+            ]
+            g_goal_quat = goal_quat[
+                goal_idx * num_links * num_goalset + link_idx * num_goalset + best_g
+            ]
+            g_goal_quaternion = wp.quaternion(
+                g_goal_quat[1], g_goal_quat[2], g_goal_quat[3], g_goal_quat[0]
+            )
+
+            best_g_transform = wp.transform(
+                wp.vec3(0.0, 0.0, 0.0), wp.quat(0.0, 0.0, 0.0, 1.0)
+            )
+            if local_project_distance_to_goal == 1:
+                g_transform = wp.transform(g_goal_position, g_goal_quaternion)
+                c_transform = wp.transform(c_position, c_quaternion)
+                c_in_g_frame = wp.transform_multiply(
+                    wp.transform_inverse(g_transform), c_transform
+                )
+                current_position_in_frame = wp.transform_get_translation(c_in_g_frame)
+                current_quaternion_in_frame = wp.transform_get_rotation(c_in_g_frame)
+                goal_position_in_frame = wp.vec3(0.0, 0.0, 0.0)
+                goal_quaternion_in_frame = wp.quat(0.0, 0.0, 0.0, 1.0)
+                best_g_transform = g_transform
+            else:
+                current_position_in_frame = c_position
+                current_quaternion_in_frame = c_quaternion
+                goal_position_in_frame = g_goal_position
+                goal_quaternion_in_frame = g_goal_quaternion
+
+            position_distance, position_gradient = compute_position_error(
+                current_position_in_frame,
+                goal_position_in_frame,
+                position_axes_weight,
+                position_weight,
+                convergence_tolerance[0],
+            )
+            angular_distance, gradient_as_angular_velocity, angle = compute_rotation_error(
+                current_quaternion_in_frame,
+                goal_quaternion_in_frame,
+                rotation_axes_weight,
+                rotation_weight,
+                convergence_tolerance[1],
+                rotation_method,
+            )
+
+            if local_project_distance_to_goal == 1:
+                position_gradient = wp.transform_vector(best_g_transform, position_gradient)
+                gradient_as_angular_velocity = wp.transform_vector(
+                    best_g_transform, gradient_as_angular_velocity
+                )
+
+            geometric_position_distance = (
+                wp.sqrt(2.0 * position_distance / position_weight)
+                if position_weight > 0.0
+                else 0.0
+            )
+            geometric_rotation_distance = angle
+
+            quaternion_rate_gradient = convert_angular_velocity_to_quaternion_rate(
+                gradient_as_angular_velocity, c_quaternion
+            )
+
+            out_distance[
+                2 * (b_idx * horizon * num_links + h_idx * num_links + link_idx)
+            ] = position_distance
+            out_distance[
+                2 * (b_idx * horizon * num_links + h_idx * num_links + link_idx) + 1
+            ] = angular_distance
+            # Paired: EVERY link in the group writes the SAME best_g.
+            out_goalset_idx[
+                b_idx * horizon * num_links + h_idx * num_links + link_idx
+            ] = best_g
+
+            out_position_distance[
+                b_idx * horizon * num_links + h_idx * num_links + link_idx
+            ] = geometric_position_distance
+            out_rotation_distance[
+                b_idx * horizon * num_links + h_idx * num_links + link_idx
+            ] = geometric_rotation_distance
+
+            out_position_gradient[
+                b_idx * horizon * num_links + h_idx * num_links + link_idx
+            ] = position_gradient
+            out_rotation_gradient[
+                b_idx * horizon * num_links + h_idx * num_links + link_idx
+            ] = wp.vec4(
+                quaternion_rate_gradient[3],
+                quaternion_rate_gradient[0],
+                quaternion_rate_gradient[1],
+                quaternion_rate_gradient[2],
+            )
+
+    return goalset_pose_distance_per_env_paired
+
+
 class ToolPoseDistance(torch.autograd.Function):
     @staticmethod
     def forward(
@@ -1358,6 +1682,252 @@ class ToolPoseDistancePerEnv(torch.autograd.Function):
             if ctx.needs_input_grad[0] or ctx.needs_input_grad[1]:
                 out_position_gradient, out_rotation_gradient = ctx.saved_tensors
 
+            if ctx.needs_input_grad[0]:
+                if use_grad_input:
+                    grad_pos = grad_distance[:, :, 0::2].unsqueeze(-1)
+                    pos_grad = out_position_gradient * grad_pos
+                else:
+                    pos_grad = out_position_gradient
+            if ctx.needs_input_grad[1]:
+                if use_grad_input:
+                    grad_ori = grad_distance[:, :, 1::2].unsqueeze(-1)
+                    quat_grad = out_rotation_gradient * grad_ori
+                else:
+                    quat_grad = out_rotation_gradient
+
+        return (
+            pos_grad,
+            quat_grad,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )
+
+
+class ToolPoseDistancePerEnvPaired(torch.autograd.Function):
+    """Paired per-env variant of :class:`ToolPoseDistancePerEnv`.
+
+    Identical input / output shapes and identical gradient flow as
+    ``ToolPoseDistancePerEnv``. The ONLY runtime difference is the
+    underlying warp kernel:
+
+    * ``ToolPoseDistancePerEnv``       — per-link argmin (independent g per link).
+    * ``ToolPoseDistancePerEnvPaired`` — shared g across all links in
+      the goalset group; ``out_goalset_idx[..., link]`` reports the
+      same chosen ``g`` for every link in the group.
+
+    Launch dimension is ``b * h`` (NOT ``* num_links``); the kernel
+    iterates over ``num_links`` internally in two passes (search
+    + write-out). See ``create_goalset_pose_distance_kernel_per_env_paired_with_constants``.
+    """
+
+    @staticmethod
+    def forward(
+        ctx,
+        current_position: torch.Tensor,
+        current_quat: torch.Tensor,
+        goal_position: torch.Tensor,
+        goal_quat: torch.Tensor,
+        idxs_goal: torch.Tensor,
+        position_orientation_weight: torch.Tensor,
+        terminal_pose_axes_weight_factor: torch.Tensor,
+        non_terminal_pose_axes_weight_factor: torch.Tensor,
+        terminal_pose_convergence_tolerance: torch.Tensor,
+        non_terminal_pose_convergence_tolerance: torch.Tensor,
+        project_distance_to_goal: torch.Tensor,
+        out_distance: torch.Tensor,
+        out_position_distance: torch.Tensor,
+        out_rotation_distance: torch.Tensor,
+        out_position_gradient: torch.Tensor,
+        out_rotation_gradient: torch.Tensor,
+        out_goalset_idx: torch.Tensor,
+        use_grad_input: bool,
+        warp_kernel,
+    ):
+        # Same validation as ToolPoseDistancePerEnv.forward — copied
+        # rather than refactored to a helper to keep autograd
+        # save_for_backward / mark_non_differentiable ordering local
+        # and explicit.
+        ctx.set_materialize_grads(False)
+        if current_position.ndim != 4:
+            log_and_raise("current_position must be a 4D tensor")
+        if current_quat.ndim != 4:
+            log_and_raise("current_quat must be a 4D tensor")
+        if goal_position.ndim != 4:
+            log_and_raise(
+                "goal_position must be a 4D tensor with shape (-1, num_links, num_goalset, 3): got {}".format(
+                    goal_position.shape
+                )
+            )
+        if goal_quat.ndim != 4:
+            log_and_raise(
+                "goal_quat must be a 4D tensor with shape (-1, num_links, num_goalset, 4): got {}".format(
+                    goal_quat.shape
+                )
+            )
+
+        b, h, num_links, _ = current_position.shape
+        if current_position.shape != (b, h, num_links, 3):
+            log_and_raise("current_position must have shape (b, h, num_links, 3)")
+        if current_quat.shape != (b, h, num_links, 4):
+            log_and_raise("current_quat must have shape (b, h, num_links, 4)")
+        if idxs_goal.shape != (b, 1):
+            log_and_raise(
+                "idxs_goal must have shape ({},1)".format(b) + " but got {}".format(idxs_goal.shape)
+            )
+        if position_orientation_weight.shape != (2,):
+            log_and_raise("position_orientation_weight must have shape (2,)")
+
+        if (
+            terminal_pose_axes_weight_factor.ndim != 3
+            or terminal_pose_axes_weight_factor.shape[1] != num_links
+            or terminal_pose_axes_weight_factor.shape[2] != 6
+        ):
+            log_and_raise(
+                "terminal_pose_axes_weight_factor must be 3D with shape (num_envs, num_links, 6); got {}".format(
+                    terminal_pose_axes_weight_factor.shape
+                )
+            )
+        if non_terminal_pose_axes_weight_factor.shape != terminal_pose_axes_weight_factor.shape:
+            log_and_raise(
+                "non_terminal_pose_axes_weight_factor shape must match terminal: got {} vs {}".format(
+                    non_terminal_pose_axes_weight_factor.shape,
+                    terminal_pose_axes_weight_factor.shape,
+                )
+            )
+        if (
+            terminal_pose_convergence_tolerance.ndim != 3
+            or terminal_pose_convergence_tolerance.shape[1] != num_links
+            or terminal_pose_convergence_tolerance.shape[2] != 2
+        ):
+            log_and_raise(
+                "terminal_pose_convergence_tolerance must be 3D with shape (num_envs, num_links, 2); got {}".format(
+                    terminal_pose_convergence_tolerance.shape
+                )
+            )
+        if (
+            non_terminal_pose_convergence_tolerance.shape
+            != terminal_pose_convergence_tolerance.shape
+        ):
+            log_and_raise(
+                "non_terminal_pose_convergence_tolerance shape must match terminal: got {} vs {}".format(
+                    non_terminal_pose_convergence_tolerance.shape,
+                    terminal_pose_convergence_tolerance.shape,
+                )
+            )
+        if (
+            project_distance_to_goal.ndim != 3
+            or project_distance_to_goal.shape[1] != num_links
+            or project_distance_to_goal.shape[2] != 1
+        ):
+            log_and_raise(
+                "project_distance_to_goal must be 3D with shape (num_envs, num_links, 1); got {}".format(
+                    project_distance_to_goal.shape
+                )
+            )
+
+        if out_position_gradient.shape != (b, h, num_links, 3):
+            log_and_raise("out_position_gradient must have shape (b, h, num_links, 3)")
+        if out_rotation_gradient.shape != (b, h, num_links, 4):
+            log_and_raise("out_rotation_gradient must have shape (b, h, num_links, 4)")
+        if out_distance.shape != (b, h, num_links * 2):
+            log_and_raise("out_distance must have shape (b, h, num_links*2)")
+        if out_position_distance.shape != (b, h, num_links):
+            log_and_raise("out_position_distance must have shape (b, h, num_links)")
+        if out_rotation_distance.shape != (b, h, num_links):
+            log_and_raise("out_rotation_distance must have shape (b, h, num_links)")
+        if out_goalset_idx.shape != (b, h, num_links):
+            log_and_raise("out_goalset_idx must have shape (b, h, num_links)")
+
+        ctx.use_grad_input = use_grad_input
+        wp_device, wp_stream = get_warp_device_stream(current_position)
+
+        # Paired launch: one thread per (b, h) pair. The kernel loops
+        # over num_links internally (search + write-out passes) — see
+        # goalset_pose_distance_per_env_paired.
+        dim = b * h
+
+        wp.launch(
+            kernel=warp_kernel,
+            dim=dim,
+            inputs=[
+                wp.from_torch(current_position.detach().view(-1, 3), dtype=wp.vec3),
+                wp.from_torch(current_quat.detach().view(-1, 4), dtype=wp.vec4),
+                wp.from_torch(goal_position.detach().view(-1, 3), dtype=wp.vec3),
+                wp.from_torch(goal_quat.detach().view(-1, 4), dtype=wp.vec4),
+                wp.from_torch(idxs_goal.detach().view(-1), dtype=wp.int32),
+                wp.from_torch(position_orientation_weight.view(-1), dtype=wp.float32),
+                wp.from_torch(terminal_pose_axes_weight_factor.view(-1), dtype=wp.float32),
+                wp.from_torch(non_terminal_pose_axes_weight_factor.view(-1), dtype=wp.float32),
+                wp.from_torch(terminal_pose_convergence_tolerance.view(-1), dtype=wp.float32),
+                wp.from_torch(non_terminal_pose_convergence_tolerance.view(-1), dtype=wp.float32),
+                wp.from_torch(project_distance_to_goal.view(-1), dtype=wp.uint8),
+                wp.from_torch(out_distance.view(-1), dtype=wp.float32),
+                wp.from_torch(out_position_distance.view(-1), dtype=wp.float32),
+                wp.from_torch(out_rotation_distance.view(-1), dtype=wp.float32),
+                wp.from_torch(out_position_gradient.view(-1, 3), dtype=wp.vec3),
+                wp.from_torch(out_rotation_gradient.view(-1, 4), dtype=wp.vec4),
+                wp.from_torch(out_goalset_idx.view(-1), dtype=wp.int32),
+                b,
+                h,
+                num_links,
+            ],
+            device=wp_device,
+            stream=wp_stream,
+            adjoint=False,
+        )
+
+        ctx.mark_non_differentiable(
+            out_position_distance,
+            out_rotation_distance,
+            out_goalset_idx,
+            goal_position,
+            goal_quat,
+            idxs_goal,
+            position_orientation_weight,
+            terminal_pose_axes_weight_factor,
+            non_terminal_pose_axes_weight_factor,
+            terminal_pose_convergence_tolerance,
+            non_terminal_pose_convergence_tolerance,
+            project_distance_to_goal,
+        )
+        ctx.save_for_backward(out_position_gradient, out_rotation_gradient)
+
+        return out_distance, out_position_distance, out_rotation_distance, out_goalset_idx
+
+    @staticmethod
+    @torch.autograd.function.once_differentiable
+    def backward(
+        ctx,
+        grad_distance,
+        grad_position_distance,
+        grad_rotation_distance,
+        grad_goalset_idx,
+    ):
+        # Identical to ToolPoseDistancePerEnv.backward — gradient flows
+        # through current_position / current_quat using the per-link
+        # best-g position/rotation gradients written by the kernel's
+        # write-out pass.
+        use_grad_input = ctx.use_grad_input
+        pos_grad = None
+        quat_grad = None
+        if grad_distance is not None:
+            if ctx.needs_input_grad[0] or ctx.needs_input_grad[1]:
+                out_position_gradient, out_rotation_gradient = ctx.saved_tensors
             if ctx.needs_input_grad[0]:
                 if use_grad_input:
                     grad_pos = grad_distance[:, :, 0::2].unsqueeze(-1)

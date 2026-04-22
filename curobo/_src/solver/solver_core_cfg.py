@@ -388,3 +388,28 @@ def enable_per_env_tool_pose(core_cfg: SolverCoreCfg, num_envs: int) -> None:
                 continue
             tp_cfg.per_env = True
             tp_cfg.num_envs = num_envs
+
+
+def enable_paired_tool_pose(core_cfg: SolverCoreCfg) -> None:
+    """Walk every rollout cfg in ``core_cfg`` and flip the tool-pose cost
+    into paired mode (shared ``g_idx`` across all tool_frames in the
+    cost per ``(env, horizon)`` pair instead of per-link argmin).
+
+    Sibling to :func:`enable_per_env_tool_pose`. Call AFTER the per-env
+    helper — paired dispatch requires ``per_env=True`` (see
+    ``ToolPoseCost.forward``; non-per-env paired is intentionally not
+    wired).
+
+    Args:
+        core_cfg: the freshly built SolverCoreCfg. Rollouts without a
+            ``tool_pose_cfg`` slot are skipped silently.
+    """
+    rollouts = [core_cfg.metrics_rollout_config] + list(
+        core_cfg.optimizer_rollout_configs
+    )
+    for rollout_cfg in rollouts:
+        for cm_cfg in rollout_cfg.get_cost_manager_configs():
+            tp_cfg = getattr(cm_cfg, "tool_pose_cfg", None)
+            if tp_cfg is None:
+                continue
+            tp_cfg.paired = True

@@ -15,6 +15,8 @@ from curobo._src.cost.tool_pose_criteria import StackedToolPoseCriteria, ToolPos
 from curobo._src.cost.wp_tool_pose import (
     ToolPoseDistance,
     ToolPoseDistancePerEnv,
+    ToolPoseDistancePerEnvPaired,
+    create_goalset_pose_distance_kernel_per_env_paired_with_constants,
     create_goalset_pose_distance_kernel_per_env_with_constants,
     create_goalset_pose_distance_kernel_with_constants,
 )
@@ -123,12 +125,33 @@ class ToolPoseCost(BaseCost):
         )
         if self._constants != constants:
             self._constants = constants
-            if self._stacked_tool_pose_criteria.per_env:
+            # Kernel pick is purely a build-time decision based on
+            # ``per_env`` / ``paired`` cfg flags — these are FIXED at
+            # ToolPoseCost construction. We re-JIT only when num_goalset
+            # / rotation_method change (which already happens today).
+            # Per-env paired is the only paired path we ship; non-per-env
+            # paired isn't wired (every multi-link solve_pose we use is
+            # in multi_env mode, which auto-enables per_env).
+            if self._stacked_tool_pose_criteria.per_env and self.config.paired:
+                self._warp_kernel = (
+                    create_goalset_pose_distance_kernel_per_env_paired_with_constants(
+                        num_goalset,
+                        self.config.rotation_method,
+                    )
+                )
+            elif self._stacked_tool_pose_criteria.per_env:
                 self._warp_kernel = (
                     create_goalset_pose_distance_kernel_per_env_with_constants(
                         num_goalset,
                         self.config.rotation_method,
                     )
+                )
+            elif self.config.paired:
+                log_and_raise(
+                    "ToolPoseCostCfg.paired=True requires per_env=True "
+                    "(non-per-env paired kernel is intentionally not "
+                    "implemented — every multi-link solve_pose runs in "
+                    "multi_env mode in production)."
                 )
             else:
                 self._warp_kernel = create_goalset_pose_distance_kernel_with_constants(
@@ -139,7 +162,9 @@ class ToolPoseCost(BaseCost):
         warp_kernel = self._warp_kernel
         goal_pos = goal_tool_poses.position.squeeze(1)
         goal_quat = goal_tool_poses.quaternion.squeeze(1)
-        if self._stacked_tool_pose_criteria.per_env:
+        if self._stacked_tool_pose_criteria.per_env and self.config.paired:
+            apply_fn = ToolPoseDistancePerEnvPaired.apply
+        elif self._stacked_tool_pose_criteria.per_env:
             apply_fn = ToolPoseDistancePerEnv.apply
         else:
             apply_fn = ToolPoseDistance.apply
@@ -199,3 +224,12 @@ class ToolPoseCost(BaseCost):
     @property
     def num_envs(self) -> int:
         return self._stacked_tool_pose_criteria.num_envs
+
+    @property
+    def paired(self) -> bool:
+        """Whether this cost was built with paired-goalset semantics.
+
+        Fixed at construction from ``config.paired``; does not change
+        at runtime.
+        """
+        return bool(self.config.paired)

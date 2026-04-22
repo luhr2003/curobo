@@ -44,6 +44,19 @@ class ToolPoseCostCfg(BaseCostCfg):
     #: ``per_env=True``. Set by the factory to ``max_batch_size``.
     num_envs: int = 1
 
+    #: Use the **paired** kernel — every link in this cost's
+    #: ``tool_frames`` shares a single ``g_idx`` per (env, horizon-step)
+    #: instead of picking independent indices. Only meaningful when
+    #: ``len(tool_frames) >= 2`` AND ``num_goalset >= 2``; otherwise the
+    #: paired kernel reduces to the unpaired one.
+    #:
+    #: When True AND ``per_env=True``, dispatch goes through
+    #: :class:`~curobo._src.cost.wp_tool_pose.ToolPoseDistancePerEnvPaired`.
+    #: ``per_env=False`` + ``paired=True`` is intentionally not wired
+    #: today — every multi-link ``solve_pose`` we ship runs in
+    #: ``multi_env=True`` (which auto-enables ``per_env``).
+    paired: bool = False
+
     _terminal_pose_convergence_tolerance: Optional[Union[torch.Tensor, List[float]]] = None
     _non_terminal_pose_convergence_tolerance: Optional[Union[torch.Tensor, List[float]]] = None
     _terminal_pose_axes_weight_factor: Optional[Union[torch.Tensor, List[float]]] = None
@@ -81,6 +94,7 @@ class ToolPoseCostCfg(BaseCostCfg):
             use_lie_group=self.use_lie_group,
             per_env=self.per_env,
             num_envs=self.num_envs,
+            paired=self.paired,
             _pose_criteria=self._pose_criteria.clone() if self._pose_criteria is not None else None,
         )
 
