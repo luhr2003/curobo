@@ -804,8 +804,13 @@ robot_cfg:
       - 0.0
       - 0.0
       - 0.0
+      # torso_j1, torso_j2: relaxed from (0.5, 1.0) to (0.3, 0.5) so the
+      # three torso links don't crowd each other's self-collision
+      # spheres at the retract pose. Helps cold-start MotionGen
+      # convergence. Mirror of the same change in
+      # magicsim_vega1p_sharpa.yml — keep these in sync.
+      - 0.3
       - 0.5
-      - 1.0
       - 0.0
       - 0.0
       - 0.0

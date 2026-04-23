@@ -701,8 +701,13 @@ robot_cfg:
       - R_arm_j6
       - R_arm_j7
       default_joint_position:
+      # torso_j1, torso_j2: relaxed from (0.5, 1.0) to (0.3, 0.5) so the
+      # three torso links don't crowd each other's self-collision
+      # spheres at the retract pose. Helps cold-start MotionGen
+      # convergence — the prior values placed the torso in a folded
+      # pose where IK-seeded TrajOpt landed in a 0.012m local minimum.
+      - 0.3
       - 0.5
-      - 1.0
       - 0.0
       - 0.0
       - 0.0
