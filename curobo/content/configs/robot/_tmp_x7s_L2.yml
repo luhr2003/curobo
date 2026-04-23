@@ -1,18 +1,13 @@
-# FK-only links (migrated from v1 ``kinematics.extra_link_names``).
-# Placed at YAML top level so cuRobo v2's RobotCfg loader ignores it;
-# PlannerManager reads + merges them into kinematics.tool_frames before
-# building the solver, then applies ToolPoseCriteria.disabled() so they
-# contribute zero cost to both IK and MotionGen trajopt.
-extra_fk_link: ["base_link", "link2"]
-
-# Position-mode FK readout order (migrated from v1 top-level info_links).
-info_links: ["base_link", "link2", "link20_tip", "link11_tip"]
-
+info_links:
+- base_link
+- link2
+- link20_tip
+- link11_tip
 robot_cfg:
   kinematics:
     add_object_link: false
     asset_root_path: robot/x7s_mobile
-    base_link: x7s_mobile
+    base_link: base_link
     collision_link_names: &id001
     - base_link
     - link1
@@ -1228,139 +1223,6 @@ robot_cfg:
         - 0.0002599562576506287
         radius: 0.02745497226715088
     cspace:
-      joint_names:
-      - dummy_base_prismatic_x_joint
-      - dummy_base_prismatic_y_joint
-      - dummy_base_revolute_z_joint
-      - joint1
-      - joint2
-      - joint3
-      - joint4
-      - joint5
-      - joint6
-      - joint7
-      - joint8
-      - joint9
-      - joint10
-      - joint11
-      - joint14
-      - joint15
-      - joint16
-      - joint17
-      - joint18
-      - joint19
-      - joint20
-      null_space_weight:
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      cspace_distance_weight:
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      - 1
-      position_limit_clip: -0.2
-      max_acceleration:
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      - 15.0
-      max_jerk:
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      default_joint_position:
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
       acceleration_scale:
       - 1.0
       - 1.0
@@ -1383,7 +1245,8 @@ robot_cfg:
       - 1.0
       - 1.0
       - 1.0
-      velocity_scale:
+      - 1.0
+      cspace_distance_weight:
       - 1.0
       - 1.0
       - 1.0
@@ -1405,6 +1268,30 @@ robot_cfg:
       - 1.0
       - 1.0
       - 1.0
+      - 1.0
+      default_joint_position:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.02199999988079071
+      - 0.02199999988079071
+      - 0.02199999988079071
+      - 0.02199999988079071
       jerk_scale:
       - 1.0
       - 1.0
@@ -1427,7 +1314,125 @@ robot_cfg:
       - 1.0
       - 1.0
       - 1.0
+      - 1.0
+      joint_names:
+      - joint1
+      - joint2
+      - joint5
+      - joint6
+      - joint7
+      - joint8
+      - joint9
+      - joint10
+      - joint11
+      - joint14
+      - joint15
+      - joint16
+      - joint17
+      - joint18
+      - joint19
+      - joint20
+      - joint3
+      - joint4
+      - joint12
+      - joint13
+      - joint21
+      - joint22
+      max_acceleration:
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      - 10.0
+      max_jerk:
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
+      - 500.0
       null_space_maximum_distance:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      null_space_weight:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      position_limit_clip: 0.0
+      velocity_scale:
+      - 1.0
       - 1.0
       - 1.0
       - 1.0
@@ -1453,20 +1458,7 @@ robot_cfg:
     external_asset_path: null
     external_robot_configs_path: null
     extra_collision_spheres: null
-    extra_links:
-      attached_object:
-        parent_link_name: link20
-        link_name: attached_object
-        fixed_transform:
-        - 0
-        - 0
-        - 0
-        - 1
-        - 0
-        - 0
-        - 0
-        joint_type: FIXED
-        joint_name: attach_joint
+    extra_links: {}
     format_version: 2.0
     grasp_contact_link_names: null
     load_meshes: false
@@ -1608,7 +1600,7 @@ robot_cfg:
     tool_frames:
     - link20_tip
     - link11_tip
-    urdf_path: robot/x7s_mobile/x7s_mobile.urdf
+    urdf_path: robot/x7s_mobile/x7s_mobile_fix.urdf
     use_external_assets: false
     use_global_cumul: true
   load_dynamics: false

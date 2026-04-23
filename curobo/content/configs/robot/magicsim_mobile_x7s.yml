@@ -1603,8 +1603,8 @@ robot_cfg:
       x7s_mobile:
       - dummy_base_x_link
     tool_frames:
-    - link11_tip
     - link20_tip
+    - link11_tip
     urdf_path: robot/x7s_mobile/x7s_mobile_fix.urdf
     use_external_assets: false
     use_global_cumul: true

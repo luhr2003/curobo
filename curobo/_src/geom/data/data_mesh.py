@@ -283,11 +283,13 @@ class MeshData:
         return WarpMeshCache(mesh.name, new_mesh.id, v, f, new_mesh)
 
     def _load_mesh_into_cache(self, mesh: Mesh) -> WarpMeshCache:
-        """Load a mesh into the Warp cache, reusing existing if already loaded."""
+        """Load a mesh into the Warp cache, reusing existing if already loaded.
+
+        Cache hits are intentional (each per-env slot load re-submits the
+        same mesh names) and non-noisy — no warning emitted.
+        """
         if mesh.name not in self.wp_cache:
             self.wp_cache[mesh.name] = self._load_mesh_to_warp(mesh)
-        else:
-            log_warn(f"Mesh already in cache, reusing existing instance: {mesh.name}")
         return self.wp_cache[mesh.name]
 
     def load_batch(self, meshes: List[Mesh], env_idx: int) -> None:
