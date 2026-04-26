@@ -2,8 +2,8 @@
 <robot name="dual_franka">
   <!--
     Dual Franka UMI arms, spaced to match MagicSim fling/fold scene:
-      L arm : y = +0.9, yaw = -90° (faces -Y)
-      R arm : y = -0.9, yaw = +90° (faces +Y)
+      L arm : y = +0.7, yaw = -90° (faces -Y)
+      R arm : y = -0.7, yaw = +90° (faces +Y)
     Each subtree is a verbatim copy of franka_umi.urdf with L_/R_
     prefixed on every link and joint. Mesh paths are relative and
     resolve under asset_root_path=robot/franka_description.
@@ -18,7 +18,7 @@
 
   <!-- ================= LEFT ARM (L_) ================= -->
   <joint name="base_to_L_panda_link0" type="fixed">
-    <origin rpy="0 0 -1.57079632679" xyz="0 0.9 0"/>
+    <origin rpy="0 0 -1.57079632679" xyz="0 0.7 0"/>
     <parent link="base_link"/>
     <child link="L_panda_link0"/>
   </joint>
@@ -278,7 +278,7 @@
 
   <!-- ================= RIGHT ARM (R_) ================= -->
   <joint name="base_to_R_panda_link0" type="fixed">
-    <origin rpy="0 0 1.57079632679" xyz="0 -0.9 0"/>
+    <origin rpy="0 0 1.57079632679" xyz="0 -0.7 0"/>
     <parent link="base_link"/>
     <child link="R_panda_link0"/>
   </joint>
