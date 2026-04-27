@@ -701,31 +701,33 @@ robot_cfg:
       - R_arm_j6
       - R_arm_j7
       default_joint_position:
-      # torso_j1, torso_j2: relaxed from (0.5, 1.0) to (0.3, 0.5) so the
-      # three torso links don't crowd each other's self-collision
-      # spheres at the retract pose. Helps cold-start MotionGen
-      # convergence — the prior values placed the torso in a folded
-      # pose where IK-seeded TrajOpt landed in a 0.012m local minimum.
-      - 0.3
-      - 0.5
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.0
+      # cspace order (locked, no virtual base): [torso_j1, torso_j2,
+      # torso_j3, head_j1, head_j2, head_j3, L_arm_j1..j7, R_arm_j1..j7].
+      # Synced with vega_1p_sharpa.usd's authored
+      # ``drive:angular:physics:targetPosition`` so the cuRobo retract
+      # matches the IsaacLab spawn pose (see
+      # ``Vega1pSharpaCfg.init_state.joint_pos`` in vega1psharpa.py).
+      # Mirror of magicsim_vega1p_sharpa_mobile.yml — keep them in sync.
+      - 1.0472    # torso_j1   (USD 60°)
+      - 1.5708    # torso_j2   (USD 90°)
+      - -0.4363   # torso_j3   (USD -25°)
+      - 0.0       # head_j1
+      - 0.0       # head_j2
+      - 0.0       # head_j3
+      - -0.7854   # L_arm_j1   (USD -45°)
+      - 0.0       # L_arm_j2
+      - 0.0       # L_arm_j3
+      - 0.0       # L_arm_j4
+      - 0.0       # L_arm_j5
+      - 0.0       # L_arm_j6
+      - 0.0       # L_arm_j7
+      - 0.7854    # R_arm_j1   (USD +45°)
+      - 0.0       # R_arm_j2
+      - 0.0       # R_arm_j3
+      - 0.0       # R_arm_j4
+      - 0.0       # R_arm_j5
+      - 0.0       # R_arm_j6
+      - 0.0       # R_arm_j7
       null_space_weight:
       - 1
       - 1

@@ -18,7 +18,7 @@
 
   <!-- ================= LEFT ARM (L_) ================= -->
   <joint name="base_to_L_panda_link0" type="fixed">
-    <origin rpy="0 0 -1.57079632679" xyz="0 0.7 0"/>
+    <origin rpy="0 0 -1.57079632679" xyz="0 0.5 0"/>
     <parent link="base_link"/>
     <child link="L_panda_link0"/>
   </joint>
@@ -278,7 +278,7 @@
 
   <!-- ================= RIGHT ARM (R_) ================= -->
   <joint name="base_to_R_panda_link0" type="fixed">
-    <origin rpy="0 0 1.57079632679" xyz="0 -0.7 0"/>
+    <origin rpy="0 0 1.57079632679" xyz="0 -0.5 0"/>
     <parent link="base_link"/>
     <child link="R_panda_link0"/>
   </joint>
