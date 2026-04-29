@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  g1_simple.urdf
-  Simplified version of g1.urdf (no mobile base):
+  g1_simple_mobile.urdf
+  Simplified version of g1_mobile_xyh_tz.urdf:
     - Hand finger joints/links removed, merged into one sphere per hand (fixed to palm)
     - Hip pitch joint kept (revolute), hip roll/yaw merged into one box per leg (fixed to hip_pitch) 
     - Ankle joints removed, ankle links merged into one sphere per leg (fixed to knee)
@@ -9,7 +9,77 @@
     - Waist chain fully preserved
     - Arm chain fully preserved
 -->
-<robot name="g1_29dof_with_hand_rev_1_0">
+<robot name="g1_simple_mobile">
+
+  <!-- ==================== MOBILE BASE ==================== -->
+  <link name="g1_mobile"/>
+  <link name="base_link_x">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.0001"/>
+      <inertia ixx="0.001" ixy="0." ixz="0." iyy="0.001" iyz="0." izz="0.001"/>
+    </inertial>
+  </link>
+  <link name="base_link_y">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.0001"/>
+      <inertia ixx="0.001" ixy="0." ixz="0." iyy="0.001" iyz="0." izz="0.001"/>
+    </inertial>
+  </link>
+  <link name="base_link_h">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.0001"/>
+      <inertia ixx="0.001" ixy="0." ixz="0." iyy="0.001" iyz="0." izz="0.001"/>
+    </inertial>
+  </link>
+  <link name="base_link_z">
+    <inertial>
+      <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
+      <mass value="0.0001"/>
+      <inertia ixx="0.001" ixy="0." ixz="0." iyy="0.001" iyz="0." izz="0.001"/>
+    </inertial>
+  </link>
+
+  <joint name="base_x" type="prismatic">
+    <origin rpy="0 0 0.0" xyz="0 0 0.0"/>
+    <parent link="g1_mobile"/>
+    <child link="base_link_x"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="10.0"/>
+    <limit effort="87" lower="-2" upper="2" velocity="1.0"/>
+  </joint>
+  <joint name="base_y" type="prismatic">
+    <origin rpy="0 0 0.0" xyz="0 0 0.0"/>
+    <parent link="base_link_x"/>
+    <child link="base_link_y"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="10.0"/>
+    <limit effort="87" lower="-2" upper="2" velocity="1.0"/>
+  </joint>
+  <joint name="base_h" type="prismatic">
+    <origin rpy="0 0 0.0" xyz="0 0 0.0"/>
+    <parent link="base_link_y"/>
+    <child link="base_link_h"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="10.0"/>
+    <limit effort="87" lower="-1" upper="1" velocity="1.50"/>
+  </joint>
+  <joint name="base_z" type="revolute">
+    <origin rpy="0 0 0.0" xyz="0 0 0.0"/>
+    <parent link="base_link_h"/>
+    <child link="base_link_z"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="10.0"/>
+    <limit effort="87" lower="-180" upper="180" velocity="1.50"/>
+  </joint>
+  <joint name="base_fixed" type="fixed">
+    <origin rpy="0 0 0.0" xyz="0 0 0.0"/>
+    <parent link="base_link_z"/>
+    <child link="g1_29dof_with_hand_rev_1_0"/>
+    <axis xyz="0 0 0"/>
+  </joint>
 
   <!-- ==================== PELVIS ==================== -->
   <link name="g1_29dof_with_hand_rev_1_0">
@@ -66,7 +136,7 @@
     <parent link="g1_29dof_with_hand_rev_1_0"/>
     <child link="waist_yaw_link"/>
     <axis xyz="0. 0. 1."/>
-    <limit lower="-1.618" upper="1.618" effort="88." velocity="32.0000004"/>
+    <limit lower="-2.618" upper="2.618" effort="88." velocity="32.0000004"/>
   </joint>
   <link name="waist_yaw_link">
     <inertial>
@@ -87,7 +157,7 @@
     <parent link="waist_yaw_link"/>
     <child link="waist_roll_link"/>
     <axis xyz="1. 0. 0."/>
-    <limit lower="-0.1199999" upper="0.1199999" effort="50." velocity="37.0000001"/>
+    <limit lower="-1.0" upper="1.0" effort="50" velocity="37.0"/>
   </joint>
   <link name="waist_roll_link">
     <inertial>
@@ -108,7 +178,7 @@
     <parent link="waist_roll_link"/>
     <child link="torso_link"/>
     <axis xyz="0. 1. 0."/>
-    <limit lower="-0.1199999" upper="0.3199999" effort="50." velocity="37.0000001"/>
+    <limit lower="-1.5" upper="1.5" effort="50" velocity="37.0"/>
   </joint>
   <link name="torso_link">
     <inertial>
@@ -287,7 +357,9 @@
     <axis xyz="0. 1. 0."/>
     <limit lower="-0.087267" upper="2.8797999" effort="139." velocity="20.000001"/>
   </joint>
-  <!-- Left shin: box 0.08x0.08x0.22, centered at (0.005,0,-0.13) -->
+  <!-- Left shin: box 0.08x0.08x0.22, centered at (0.005,0,-0.13)
+       Top edge at z=-0.02 (gap 0.038 from upper_leg box bottom)
+       Bottom edge at z=-0.24 (gap 0.02 from foot sphere top) -->
   <link name="left_knee_link">
     <inertial>
       <origin xyz="0.005 0. -0.13" rpy="0. 0. 0."/>
@@ -396,7 +468,9 @@
     <axis xyz="0. 1. 0."/>
     <limit lower="-0.087267" upper="2.8797999" effort="139." velocity="20.000001"/>
   </joint>
-  <!-- Right shin: box 0.08x0.08x0.22, centered at (0.005,0,-0.13) -->
+  <!-- Right shin: box 0.08x0.08x0.22, centered at (0.005,0,-0.13)
+       Top edge at z=-0.02 (gap 0.038 from upper_leg box bottom)
+       Bottom edge at z=-0.24 (gap 0.02 from foot sphere top) -->
   <link name="right_knee_link">
     <inertial>
       <origin xyz="0.005 0. -0.13" rpy="0. 0. 0."/>

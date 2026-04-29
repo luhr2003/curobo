@@ -221,7 +221,7 @@
     <parent link="vega_1p_base" />
     <child link="vega_1p_torso_l1" />
     <axis xyz="0. 1. 0." />
-    <limit lower="0." upper="0.785" effort="700." velocity="0.8999999" />
+    <limit lower="0." upper="1.5699999" effort="700." velocity="0.8999999" />
   </joint>
   <joint name="torso_j2" type="revolute">
     <origin xyz="0.396 0. -0.082" rpy="3.1415927 0. 0. " />

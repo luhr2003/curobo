@@ -29,6 +29,65 @@ from curobo._src.types.tool_pose import GoalToolPose, ToolPose
 from curobo._src.util.logging import log_and_raise
 
 
+# MagicSim patch: per-joint Gaussian noise std (radians) used by
+# :func:`_anchor_ik_seeds_to_current_state` to perturb the seed
+# replicas so the LM seed solver still gets per-seed diversity. ~0.10
+# rad ≈ 5.7°. Picked to mirror the same constant
+# ``_SEED_CONFIG_NOISE_STD = 0.10`` baked into MagicSim's
+# ``IKServer._build_seed_config`` patch (Env/Planner/Services/IKServer.py).
+_MAGICSIM_IK_SEED_NOISE_STD = 0.10
+
+
+def _anchor_ik_seeds_to_current_state(
+    current_state: JointState, num_seeds: int,
+) -> torch.Tensor:
+    """MagicSim patch — anchor every IK seed at ``current_state`` with
+    a small per-joint Gaussian perturbation.
+
+    cuRobo's default :meth:`IKSolver.solve_pose` only uses
+    ``current_state`` as a SINGLE seed and fills the remaining
+    ``num_seeds-1`` slots with random-action seeds (see
+    ``solver_ik.py:731`` and ``manager_seed.py:130``). For motion
+    planning that means the LM seed solver finds ``num_seeds`` IK
+    solutions scattered across the workspace, the trajopt then has to
+    drive ``current_state → goal`` through whichever solution the
+    optimizer selects — frequently a config far from start in joint
+    space, which manifests as the planner output making a big detour.
+
+    Replicating ``current_state`` across all seeds (with tiny noise on
+    seed[1:] for LM diversity) keeps the IK results clustered near the
+    live joint config, which trajopt then connects with a short
+    natural path.
+
+    Args:
+        current_state: live JointState ``(B, dof)`` passed by
+            :meth:`MotionPlanner._plan_pose_single` /
+            :meth:`MotionPlanner._plan_pose_goalset`.
+        num_seeds: required IK seed count. Use
+            ``max(return_seeds, ik_solver.config.num_seeds)`` —
+            ``solve_pose`` internally bumps ``num_seeds`` up to
+            ``return_seeds`` (``solver_ik.py:684-689``).
+
+    Returns:
+        ``(B, num_seeds, dof)`` seed config the caller passes verbatim
+        to ``ik_solver.solve_pose(seed_config=...)``. ``seed[0]`` is
+        the exact current state (anchor); ``seed[1:]`` is
+        ``current_state + N(0, _MAGICSIM_IK_SEED_NOISE_STD)``.
+    """
+    pos = current_state.position
+    B, dof = pos.shape
+    seed = pos.unsqueeze(1).expand(B, num_seeds, dof).contiguous().clone()
+    if num_seeds > 1:
+        noise = (
+            torch.randn(
+                B, num_seeds - 1, dof, device=pos.device, dtype=pos.dtype,
+            )
+            * _MAGICSIM_IK_SEED_NOISE_STD
+        )
+        seed[:, 1:] = seed[:, 1:] + noise
+    return seed
+
+
 def _axis_string_to_vector(axis: str) -> List[float]:
     if axis == "x":
         return [1.0, 0.0, 0.0]
@@ -246,10 +305,17 @@ class MotionPlanner:
 
         for current_attempt in range(max_attempts):
             current_state = og_current_state.clone()
+            # MagicSim patch — anchor IK seeds at current_state so the
+            # trajectory doesn't detour through a random IK config.
+            # See ``_anchor_ik_seeds_to_current_state`` for details.
+            _ik_n = max(num_seeds, int(self.ik_solver.config.num_seeds))
             ik_result = self.ik_solver.solve_pose(
                 goal_tool_poses,
                 return_seeds=num_seeds,
                 current_state=current_state,
+                seed_config=_anchor_ik_seeds_to_current_state(
+                    current_state, _ik_n,
+                ),
             )
             total_time += ik_result.total_time
             solve_time += ik_result.solve_time
@@ -303,10 +369,17 @@ class MotionPlanner:
     ) -> Optional[TrajOptSolverResult]:
         """Goalset planning: IK + TrajOpt, no graph seeding."""
         for _ in range(max_attempts):
+            # MagicSim patch — anchor IK seeds at current_state. Same
+            # rationale as ``_plan_pose_single``.
+            _trajopt_n = self.trajopt_solver.config.num_seeds
+            _ik_n = max(_trajopt_n, int(self.ik_solver.config.num_seeds))
             ik_result = self.ik_solver.solve_pose(
                 goal_tool_poses,
-                return_seeds=self.trajopt_solver.config.num_seeds,
+                return_seeds=_trajopt_n,
                 current_state=current_state,
+                seed_config=_anchor_ik_seeds_to_current_state(
+                    current_state, _ik_n,
+                ),
             )
             if torch.count_nonzero(ik_result.success) == 0:
                 return None

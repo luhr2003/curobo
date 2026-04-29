@@ -115,6 +115,13 @@ EMBODIMENTS: List[Embodiment] = [
         v1_fixed_yaml="magicsim_franka_umi.yml",
     ),
     Embodiment(
+        name="franka_xhand",
+        asset_dir="franka_description",
+        fixed_urdf="franka_xhand.urdf",
+        tool_frames=["right_hand_link"],
+        v1_fixed_yaml="magicsim_franka_xhand.yml",
+    ),
+    Embodiment(
         # frankarobotiq.urdf sits at robot/ top level and references
         # 2f_85_urdf/ + 2f_85_mount/ + franka_description/, so asset_path
         # needs to be robot/. Use a synthetic asset_dir="" and let

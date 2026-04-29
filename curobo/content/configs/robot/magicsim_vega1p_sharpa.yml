@@ -11,6 +11,27 @@ info_links:
 - arm_center
 - R_ee
 - L_ee
+
+# Per-arm joint groups + ``pin_inactive_arm`` flag. See the matching
+# block in magicsim_vega1p_sharpa_mobile.yml — same semantics.
+left_arm_joints:
+- L_arm_j1
+- L_arm_j2
+- L_arm_j3
+- L_arm_j4
+- L_arm_j5
+- L_arm_j6
+- L_arm_j7
+right_arm_joints:
+- R_arm_j1
+- R_arm_j2
+- R_arm_j3
+- R_arm_j4
+- R_arm_j5
+- R_arm_j6
+- R_arm_j7
+pin_inactive_arm: true
+
 robot_cfg:
   kinematics:
     urdf_path: robot/vega_1p_sharpa/vega_1p_sharpa_fix.urdf
@@ -43,6 +64,45 @@ robot_cfg:
     - vega_1p_R_arm_l6
     - R_arm_l7
     - R_arm_l8
+    # Sharpa hand finger phalanxes — added so cuRobo's IK / MotionGen
+    # collision check can keep finger tips from clipping through the
+    # table during dex grasps. Sphere data ported from
+    # ``~/sharpa_right.yml`` / ``~/sharpa_left.yaml`` (BODex Sharpa
+    # spheres, mirrored for left). Link names match the URDF.
+    - right_hand_C_MC
+    - right_thumb_MC
+    - right_thumb_PP
+    - right_thumb_DP
+    - right_index_PP
+    - right_index_MP
+    - right_index_DP
+    - right_middle_PP
+    - right_middle_MP
+    - right_middle_DP
+    - right_ring_PP
+    - right_ring_MP
+    - right_ring_DP
+    - right_pinky_MC
+    - right_pinky_PP
+    - right_pinky_MP
+    - right_pinky_DP
+    - left_hand_C_MC
+    - left_thumb_MC
+    - left_thumb_PP
+    - left_thumb_DP
+    - left_index_PP
+    - left_index_MP
+    - left_index_DP
+    - left_middle_PP
+    - left_middle_MP
+    - left_middle_DP
+    - left_ring_PP
+    - left_ring_MP
+    - left_ring_DP
+    - left_pinky_MC
+    - left_pinky_PP
+    - left_pinky_MP
+    - left_pinky_DP
     - attached_object
     collision_spheres:
       vega_1p_base:
@@ -503,6 +563,117 @@ robot_cfg:
         - -0.006867587100714445
         - -0.037491366267204285
         radius: 0.00156586233060807
+      # ====== Sharpa hand sphere data ============================
+      # Right hand — values from ``~/sharpa_right.yml``.
+      right_hand_C_MC:
+      - {center: [-0.004, -0.005,  0.059], radius: 0.0227}
+      - {center: [-0.005, -0.002,  0.021], radius: 0.0227}
+      - {center: [-0.007,  0.016,  0.057], radius: 0.0212}
+      - {center: [-0.005, -0.022,  0.018], radius: 0.0197}
+      right_thumb_MC:
+      - {center: [ 0.045, -0.010,  0.008], radius: 0.0180}
+      - {center: [ 0.030, -0.008,  0.012], radius: 0.0167}
+      right_thumb_PP:
+      - {center: [ 0.017,  0.000, -0.002], radius: 0.0116}
+      - {center: [ 0.030, -0.000, -0.003], radius: 0.0109}
+      right_thumb_DP:
+      - {center: [ 0.007, -0.002,  0.000], radius: 0.0086}
+      - {center: [ 0.018, -0.004, -0.001], radius: 0.0080}
+      right_index_PP:
+      - {center: [ 0.023, -0.001, -0.001], radius: 0.0120}
+      - {center: [ 0.039, -0.000, -0.005], radius: 0.0112}
+      right_index_MP:
+      - {center: [ 0.014, -0.001, -0.000], radius: 0.0096}
+      - {center: [ 0.024, -0.005, -0.000], radius: 0.0096}
+      right_index_DP:
+      - {center: [ 0.017, -0.003, -0.000], radius: 0.0079}
+      - {center: [ 0.007, -0.003, -0.001], radius: 0.0079}
+      right_middle_PP:
+      - {center: [ 0.019,  0.000, -0.001], radius: 0.0110}
+      - {center: [ 0.039, -0.000, -0.004], radius: 0.0102}
+      right_middle_MP:
+      - {center: [ 0.011, -0.001, -0.000], radius: 0.0096}
+      - {center: [ 0.024, -0.004, -0.000], radius: 0.0096}
+      right_middle_DP:
+      - {center: [ 0.006, -0.003, -0.001], radius: 0.0079}
+      - {center: [ 0.016, -0.003, -0.000], radius: 0.0079}
+      right_ring_PP:
+      - {center: [ 0.022,  0.000, -0.001], radius: 0.0110}
+      - {center: [ 0.036, -0.000, -0.003], radius: 0.0102}
+      right_ring_MP:
+      - {center: [ 0.014, -0.001, -0.000], radius: 0.0096}
+      - {center: [ 0.024, -0.005,  0.000], radius: 0.0096}
+      right_ring_DP:
+      - {center: [ 0.015, -0.003, -0.000], radius: 0.0079}
+      - {center: [ 0.006, -0.003, -0.001], radius: 0.0079}
+      right_pinky_MC:
+      - {center: [ 0.006,  0.002, -0.041], radius: 0.0148}
+      - {center: [ 0.005,  0.007, -0.026], radius: 0.0142}
+      - {center: [ 0.008,  0.007, -0.012], radius: 0.0142}
+      right_pinky_PP:
+      - {center: [ 0.024,  0.000, -0.001], radius: 0.0110}
+      - {center: [ 0.040, -0.000, -0.002], radius: 0.0102}
+      right_pinky_MP:
+      - {center: [ 0.010, -0.002, -0.000], radius: 0.0096}
+      - {center: [ 0.025, -0.003,  0.000], radius: 0.0096}
+      right_pinky_DP:
+      - {center: [ 0.005, -0.003,  0.001], radius: 0.0079}
+      - {center: [ 0.015, -0.003,  0.000], radius: 0.0079}
+      # Left hand — mirrored from right via Y-axis (sharpa_left.yaml).
+      left_hand_C_MC:
+      - {center: [-0.004,  0.005,  0.059], radius: 0.0227}
+      - {center: [-0.005,  0.002,  0.021], radius: 0.0227}
+      - {center: [-0.007, -0.016,  0.057], radius: 0.0212}
+      - {center: [-0.005,  0.022,  0.018], radius: 0.0197}
+      left_thumb_MC:
+      - {center: [ 0.045, -0.010, -0.008], radius: 0.0180}
+      - {center: [ 0.030, -0.008, -0.012], radius: 0.0167}
+      left_thumb_PP:
+      - {center: [ 0.017,  0.000,  0.002], radius: 0.0116}
+      - {center: [ 0.030,  0.000,  0.003], radius: 0.0109}
+      left_thumb_DP:
+      - {center: [ 0.007, -0.002,  0.000], radius: 0.0086}
+      - {center: [ 0.018, -0.004,  0.001], radius: 0.0080}
+      left_index_PP:
+      - {center: [ 0.023, -0.001,  0.001], radius: 0.0120}
+      - {center: [ 0.039,  0.000,  0.005], radius: 0.0112}
+      left_index_MP:
+      - {center: [ 0.014, -0.001,  0.000], radius: 0.0096}
+      - {center: [ 0.024, -0.005,  0.000], radius: 0.0096}
+      left_index_DP:
+      - {center: [ 0.017, -0.003,  0.000], radius: 0.0079}
+      - {center: [ 0.007, -0.003,  0.001], radius: 0.0079}
+      left_middle_PP:
+      - {center: [ 0.019,  0.000,  0.001], radius: 0.0110}
+      - {center: [ 0.039,  0.000,  0.004], radius: 0.0102}
+      left_middle_MP:
+      - {center: [ 0.011, -0.001,  0.000], radius: 0.0096}
+      - {center: [ 0.024, -0.004,  0.000], radius: 0.0096}
+      left_middle_DP:
+      - {center: [ 0.006, -0.003,  0.001], radius: 0.0079}
+      - {center: [ 0.016, -0.003,  0.000], radius: 0.0079}
+      left_ring_PP:
+      - {center: [ 0.022,  0.000,  0.001], radius: 0.0110}
+      - {center: [ 0.036,  0.000,  0.003], radius: 0.0102}
+      left_ring_MP:
+      - {center: [ 0.014, -0.001,  0.000], radius: 0.0096}
+      - {center: [ 0.024, -0.005,  0.000], radius: 0.0096}
+      left_ring_DP:
+      - {center: [ 0.015, -0.003,  0.000], radius: 0.0079}
+      - {center: [ 0.006, -0.003,  0.001], radius: 0.0079}
+      left_pinky_MC:
+      - {center: [ 0.006,  0.002,  0.041], radius: 0.0148}
+      - {center: [ 0.005,  0.007,  0.026], radius: 0.0142}
+      - {center: [ 0.008,  0.007,  0.012], radius: 0.0142}
+      left_pinky_PP:
+      - {center: [ 0.024,  0.000,  0.001], radius: 0.0110}
+      - {center: [ 0.040,  0.000,  0.002], radius: 0.0102}
+      left_pinky_MP:
+      - {center: [ 0.010, -0.002,  0.000], radius: 0.0096}
+      - {center: [ 0.025, -0.003,  0.000], radius: 0.0096}
+      left_pinky_DP:
+      - {center: [ 0.005, -0.003, -0.001], radius: 0.0079}
+      - {center: [ 0.015, -0.003,  0.000], radius: 0.0079}
     self_collision_ignore:
       vega_1p_base:
       - vega_1p_torso_l1
@@ -609,6 +780,7 @@ robot_cfg:
       - L_arm_l7
       - vega_1p_L_arm_l6
       - attached_object
+      - left_hand_C_MC
       vega_1p_R_arm_l1:
       - vega_1p_torso_l1
       - vega_1p_torso_l2
@@ -647,15 +819,257 @@ robot_cfg:
       - R_arm_l7
       - vega_1p_R_arm_l6
       - attached_object
+      - right_hand_C_MC
+      # Sharpa hand self-collision ignore — palm to all finger-base links,
+      # plus parent-child phalanx pairs along each finger. Without these
+      # the new finger spheres collide with the palm at the default
+      # neutral pose and IK feasibility fails. Mirror right ↔ left.
+      right_hand_C_MC:
+      - R_arm_l8
+      - right_thumb_MC
+      - right_thumb_PP
+      - right_index_PP
+      - right_index_MP
+      - right_middle_PP
+      - right_middle_MP
+      - right_ring_PP
+      - right_ring_MP
+      - right_pinky_MC
+      - right_pinky_PP
+      right_thumb_MC:
+      - right_hand_C_MC
+      - right_thumb_PP
+      - right_thumb_DP
+      right_thumb_PP:
+      - right_thumb_MC
+      - right_thumb_DP
+      - right_hand_C_MC
+      right_thumb_DP:
+      - right_thumb_PP
+      - right_thumb_MC
+      right_index_PP:
+      - right_hand_C_MC
+      - right_index_MP
+      - right_index_DP
+      right_index_MP:
+      - right_index_PP
+      - right_index_DP
+      - right_hand_C_MC
+      right_index_DP:
+      - right_index_MP
+      - right_index_PP
+      right_middle_PP:
+      - right_hand_C_MC
+      - right_middle_MP
+      - right_middle_DP
+      right_middle_MP:
+      - right_middle_PP
+      - right_middle_DP
+      - right_hand_C_MC
+      right_middle_DP:
+      - right_middle_MP
+      - right_middle_PP
+      right_ring_PP:
+      - right_hand_C_MC
+      - right_ring_MP
+      - right_ring_DP
+      right_ring_MP:
+      - right_ring_PP
+      - right_ring_DP
+      - right_hand_C_MC
+      right_ring_DP:
+      - right_ring_MP
+      - right_ring_PP
+      right_pinky_MC:
+      - right_hand_C_MC
+      - right_pinky_PP
+      - right_pinky_MP
+      right_pinky_PP:
+      - right_pinky_MC
+      - right_pinky_MP
+      - right_pinky_DP
+      - right_hand_C_MC
+      right_pinky_MP:
+      - right_pinky_PP
+      - right_pinky_DP
+      - right_pinky_MC
+      right_pinky_DP:
+      - right_pinky_MP
+      - right_pinky_PP
+      left_hand_C_MC:
+      - L_arm_l8
+      - left_thumb_MC
+      - left_thumb_PP
+      - left_index_PP
+      - left_index_MP
+      - left_middle_PP
+      - left_middle_MP
+      - left_ring_PP
+      - left_ring_MP
+      - left_pinky_MC
+      - left_pinky_PP
+      left_thumb_MC:
+      - left_hand_C_MC
+      - left_thumb_PP
+      - left_thumb_DP
+      left_thumb_PP:
+      - left_thumb_MC
+      - left_thumb_DP
+      - left_hand_C_MC
+      left_thumb_DP:
+      - left_thumb_PP
+      - left_thumb_MC
+      left_index_PP:
+      - left_hand_C_MC
+      - left_index_MP
+      - left_index_DP
+      left_index_MP:
+      - left_index_PP
+      - left_index_DP
+      - left_hand_C_MC
+      left_index_DP:
+      - left_index_MP
+      - left_index_PP
+      left_middle_PP:
+      - left_hand_C_MC
+      - left_middle_MP
+      - left_middle_DP
+      left_middle_MP:
+      - left_middle_PP
+      - left_middle_DP
+      - left_hand_C_MC
+      left_middle_DP:
+      - left_middle_MP
+      - left_middle_PP
+      left_ring_PP:
+      - left_hand_C_MC
+      - left_ring_MP
+      - left_ring_DP
+      left_ring_MP:
+      - left_ring_PP
+      - left_ring_DP
+      - left_hand_C_MC
+      left_ring_DP:
+      - left_ring_MP
+      - left_ring_PP
+      left_pinky_MC:
+      - left_hand_C_MC
+      - left_pinky_PP
+      - left_pinky_MP
+      left_pinky_PP:
+      - left_pinky_MC
+      - left_pinky_MP
+      - left_pinky_DP
+      - left_hand_C_MC
+      left_pinky_MP:
+      - left_pinky_PP
+      - left_pinky_DP
+      - left_pinky_MC
+      left_pinky_DP:
+      - left_pinky_MP
+      - left_pinky_PP
     self_collision_buffer:
-      vega_1p_base: -0.05
-      vega_1p_torso_l1: -0.05
-      vega_1p_torso_l2: -0.05
+      vega_1p_base: -0.1
+      vega_1p_torso_l1: -0.1
+      vega_1p_torso_l2: -0.1
       vega_1p_torso_l3: -0.03
       vega_1p_L_arm_l1: -0.02
       vega_1p_R_arm_l1: -0.02
       attached_object: 0.0
-    lock_joints: {}
+      # Sharpa finger spheres: -0.05 buffer makes effective self-coll
+      # radius negative (< sphere geometry radius of 0.008-0.023), so
+      # they're skipped by the self-collision kernel. World collision
+      # (against the desk / objects) still uses the full radius. Since
+      # all 44 finger joints are locked at 0 the spheres never move
+      # relative to each other anyway — no useful info from finger ↔
+      # finger self checks.
+      right_hand_C_MC: -0.1
+      right_thumb_MC: -0.1
+      right_thumb_PP: -0.1
+      right_thumb_DP: -0.1
+      right_index_PP: -0.1
+      right_index_MP: -0.1
+      right_index_DP: -0.1
+      right_middle_PP: -0.1
+      right_middle_MP: -0.1
+      right_middle_DP: -0.1
+      right_ring_PP: -0.1
+      right_ring_MP: -0.1
+      right_ring_DP: -0.1
+      right_pinky_MC: -0.1
+      right_pinky_PP: -0.1
+      right_pinky_MP: -0.1
+      right_pinky_DP: -0.1
+      left_hand_C_MC: -0.1
+      left_thumb_MC: -0.1
+      left_thumb_PP: -0.1
+      left_thumb_DP: -0.1
+      left_index_PP: -0.1
+      left_index_MP: -0.1
+      left_index_DP: -0.1
+      left_middle_PP: -0.1
+      left_middle_MP: -0.1
+      left_middle_DP: -0.1
+      left_ring_PP: -0.1
+      left_ring_MP: -0.1
+      left_ring_DP: -0.1
+      left_pinky_MC: -0.1
+      left_pinky_PP: -0.1
+      left_pinky_MP: -0.1
+      left_pinky_DP: -0.1
+    # Sharpa finger joints — locked at 0 because they're driven by the
+    # IsaacLab eef action term, not cuRobo. Locking them keeps them out
+    # of the IK / MotionGen DoF while still letting their collision
+    # spheres ride along on the kinematic chain. Without this, adding
+    # the finger phalanx collision links (right_*_PP, etc.) trips
+    # ``KinematicsLoader.initialize_tensors`` because the joint chain
+    # to those links pulls in the finger joint names but cspace doesn't
+    # list them.
+    lock_joints:
+      right_thumb_CMC_FE: 0.0
+      right_thumb_CMC_AA: 0.0
+      right_thumb_MCP_FE: 0.0
+      right_thumb_MCP_AA: 0.0
+      right_thumb_IP: 0.0
+      right_index_MCP_FE: 0.0
+      right_index_MCP_AA: 0.0
+      right_index_PIP: 0.0
+      right_index_DIP: 0.0
+      right_middle_MCP_FE: 0.0
+      right_middle_MCP_AA: 0.0
+      right_middle_PIP: 0.0
+      right_middle_DIP: 0.0
+      right_ring_MCP_FE: 0.0
+      right_ring_MCP_AA: 0.0
+      right_ring_PIP: 0.0
+      right_ring_DIP: 0.0
+      right_pinky_CMC: 0.0
+      right_pinky_MCP_FE: 0.0
+      right_pinky_MCP_AA: 0.0
+      right_pinky_PIP: 0.0
+      right_pinky_DIP: 0.0
+      left_thumb_CMC_FE: 0.0
+      left_thumb_CMC_AA: 0.0
+      left_thumb_MCP_FE: 0.0
+      left_thumb_MCP_AA: 0.0
+      left_thumb_IP: 0.0
+      left_index_MCP_FE: 0.0
+      left_index_MCP_AA: 0.0
+      left_index_PIP: 0.0
+      left_index_DIP: 0.0
+      left_middle_MCP_FE: 0.0
+      left_middle_MCP_AA: 0.0
+      left_middle_PIP: 0.0
+      left_middle_DIP: 0.0
+      left_ring_MCP_FE: 0.0
+      left_ring_MCP_AA: 0.0
+      left_ring_PIP: 0.0
+      left_ring_DIP: 0.0
+      left_pinky_CMC: 0.0
+      left_pinky_MCP_FE: 0.0
+      left_pinky_MCP_AA: 0.0
+      left_pinky_PIP: 0.0
+      left_pinky_DIP: 0.0
     extra_links:
       attached_object:
         parent_link_name: R_arm_l8
