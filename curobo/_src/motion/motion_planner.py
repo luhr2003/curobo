@@ -307,15 +307,20 @@ class MotionPlanner:
             current_state = og_current_state.clone()
             # MagicSim patch — anchor IK seeds at current_state so the
             # trajectory doesn't detour through a random IK config.
-            # See ``_anchor_ik_seeds_to_current_state`` for details.
+            # See ``_anchor_ik_seeds_to_current_state`` for details. Gated
+            # by ``MotionPlannerCfg.anchor_ik_seeds_to_current_state`` —
+            # when False, fall back to vanilla cuRobo (1 anchor + N-1 random).
             _ik_n = max(num_seeds, int(self.ik_solver.config.num_seeds))
+            _seed_cfg = (
+                _anchor_ik_seeds_to_current_state(current_state, _ik_n)
+                if self.config.anchor_ik_seeds_to_current_state
+                else None
+            )
             ik_result = self.ik_solver.solve_pose(
                 goal_tool_poses,
                 return_seeds=num_seeds,
                 current_state=current_state,
-                seed_config=_anchor_ik_seeds_to_current_state(
-                    current_state, _ik_n,
-                ),
+                seed_config=_seed_cfg,
             )
             total_time += ik_result.total_time
             solve_time += ik_result.solve_time
@@ -370,16 +375,20 @@ class MotionPlanner:
         """Goalset planning: IK + TrajOpt, no graph seeding."""
         for _ in range(max_attempts):
             # MagicSim patch — anchor IK seeds at current_state. Same
-            # rationale as ``_plan_pose_single``.
+            # rationale as ``_plan_pose_single``. Gated by
+            # ``MotionPlannerCfg.anchor_ik_seeds_to_current_state``.
             _trajopt_n = self.trajopt_solver.config.num_seeds
             _ik_n = max(_trajopt_n, int(self.ik_solver.config.num_seeds))
+            _seed_cfg = (
+                _anchor_ik_seeds_to_current_state(current_state, _ik_n)
+                if self.config.anchor_ik_seeds_to_current_state
+                else None
+            )
             ik_result = self.ik_solver.solve_pose(
                 goal_tool_poses,
                 return_seeds=_trajopt_n,
                 current_state=current_state,
-                seed_config=_anchor_ik_seeds_to_current_state(
-                    current_state, _ik_n,
-                ),
+                seed_config=_seed_cfg,
             )
             if torch.count_nonzero(ik_result.success) == 0:
                 return None

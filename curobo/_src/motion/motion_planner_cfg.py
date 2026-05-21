@@ -32,6 +32,11 @@ class MotionPlannerCfg:
     graph_planner_config: PRMGraphPlannerCfg = None
     scene_collision_cfg: Optional[SceneCollisionCfg] = None
     device_cfg: DeviceCfg = DeviceCfg()
+    # MagicSim patch — when True, every IK seed is anchored at
+    # ``current_state`` with small Gaussian noise (see
+    # ``_anchor_ik_seeds_to_current_state`` in motion_planner.py). Default
+    # False = vanilla cuRobo behavior (one anchored seed + N-1 random).
+    anchor_ik_seeds_to_current_state: bool = False
 
     @staticmethod
     def create(
@@ -68,6 +73,7 @@ class MotionPlannerCfg:
         max_batch_size: int = 1,
         multi_env: bool = False,
         max_goalset: int = 1,
+        anchor_ik_seeds_to_current_state: bool = False,
     ) -> MotionPlannerCfg:
         """Create MotionPlannerCfg from flexible inputs.
 
@@ -203,4 +209,5 @@ class MotionPlannerCfg:
             graph_planner_config=graph_planner_cfg,
             scene_collision_cfg=scene_collision_cfg,
             device_cfg=device_cfg,
+            anchor_ik_seeds_to_current_state=anchor_ik_seeds_to_current_state,
         )
