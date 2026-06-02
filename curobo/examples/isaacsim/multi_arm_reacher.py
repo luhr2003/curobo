@@ -63,7 +63,7 @@ parser.add_argument(
 parser.add_argument(
     "--robot",
     type=str,
-    default="dual_ur10e.yml",
+    default="magicsim_xtrainer.yml",
     help="cuRobo v2 robot YAML. Must declare tool_frames with len >= 2.",
 )
 parser.add_argument(
@@ -80,6 +80,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--visualize_spheres",
+    default=True,
     action="store_true",
     help="Render the robot's collision spheres as green spheres under /curobo.",
 )
@@ -359,7 +360,7 @@ def main() -> None:
         cu_js = cu_js.reorder(planner.kinematics.joint_names)
 
         if args.visualize_spheres and step_index % 2 == 0:
-            sph_list = planner.kinematics.get_robot_as_spheres(cu_js.position)
+            sph_list = planner.kinematics.get_robot_as_spheres(cu_js.position.unsqueeze(0))
             if spheres is None:
                 spheres = []
                 for si, s in enumerate(sph_list[0]):
