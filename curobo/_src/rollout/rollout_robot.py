@@ -31,7 +31,7 @@ from curobo._src.rollout.metrics import (
 from curobo._src.rollout.rollout_robot_cfg import RobotRolloutCfg
 from curobo._src.state.state_joint import JointState
 from curobo._src.state.state_robot import RobotState
-from curobo._src.util.cuda_graph_util import create_graph_executor, GraphExecutor
+from curobo._src.util.cuda_graph_util import GraphExecutor, create_graph_executor
 from curobo._src.util.logging import log_and_raise
 from curobo._src.util.sampling.sample_buffer import SampleBuffer
 

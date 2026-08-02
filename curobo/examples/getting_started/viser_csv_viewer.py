@@ -28,7 +28,6 @@ import torch
 from curobo.types import ContentPath, JointState
 from curobo.viewer import ViserVisualizer
 
-
 VIRTUAL_BASE_JOINTS = [
     "base_j_x", "base_j_y", "base_j_z",
     "base_j_xtheta", "base_j_ytheta", "base_j_ztheta",

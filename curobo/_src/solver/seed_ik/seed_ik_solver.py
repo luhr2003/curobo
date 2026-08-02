@@ -25,7 +25,7 @@ from curobo._src.optim.util.levenberg_marquardt_step import (
 from curobo._src.robot.kinematics.kinematics import Kinematics
 from curobo._src.solver.solver_ik_result import IKSolverResult
 from curobo._src.state.state_joint import JointState
-from curobo._src.types.tool_pose import GoalToolPose, ToolPose
+from curobo._src.types.tool_pose import GoalToolPose
 from curobo._src.util.cuda_event_timer import CudaEventTimer
 from curobo._src.util.cuda_graph_util import GraphExecutor, create_graph_executor
 from curobo._src.util.logging import log_and_raise, log_info

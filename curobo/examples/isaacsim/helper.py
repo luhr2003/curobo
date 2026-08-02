@@ -28,21 +28,20 @@ except ImportError:
     try:
         from omni.importer.urdf import _urdf  # Isaac Sim 2023.1+
     except ImportError:
-        from omni.isaac.urdf import _urdf      # Isaac Sim 2022.2
+        from omni.isaac.urdf import _urdf  # Isaac Sim 2022.2
     _ISAAC_SIM_45 = False
 
 from omni.isaac.core.utils.extensions import enable_extension
-
-from curobo.config_io import get_filename, get_path_of_dir, join_path
-from curobo.content import get_assets_path
-from curobo.logging import log_warn
-from curobo.scene import Scene
-from curobo.viewer import UsdWriter
 
 # Only USD helper not re-exported publicly in v2: transform-op setter used to
 # position the just-imported URDF root. Pull it from the shared _src utility
 # module. UsdWriter itself comes from the public ``curobo.viewer`` namespace.
 from curobo._src.util.usd_util import set_prim_transform
+from curobo.config_io import get_filename, get_path_of_dir, join_path
+from curobo.content import get_assets_path
+from curobo.logging import log_warn
+from curobo.scene import Scene
+from curobo.viewer import UsdWriter
 
 
 def add_extensions(simulation_app, headless_mode: Optional[str] = None) -> bool:
@@ -115,8 +114,8 @@ def _add_robot_from_usd(
     Skips URDF parsing + conversion entirely; much faster startup than the
     URDF importer path.
     """
-    import omni.usd
     import omni.kit.app
+    import omni.usd
 
     if usd_path is None:
         raise ValueError(
@@ -226,9 +225,9 @@ def _add_robot_from_urdf(
     filename = get_filename(full_path)
 
     if _ISAAC_SIM_45:
-        from isaacsim.core.utils.extensions import get_extension_path_from_name  # noqa: F401
         import omni.kit.commands
         import omni.usd
+        from isaacsim.core.utils.extensions import get_extension_path_from_name  # noqa: F401
 
         dest_path = join_path(
             robot_root, get_filename(filename, remove_extension=True) + "_temp.usd"

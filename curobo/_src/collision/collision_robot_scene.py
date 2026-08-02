@@ -12,13 +12,16 @@ from typing import Optional, Tuple
 import torch
 
 from curobo._src.collision.collision_robot_scene_cfg import RobotSceneCollisionCfg
+from curobo._src.curobolib.cuda_ops.tensor_checks import (
+    check_float16_tensors,
+    check_float32_tensors,
+)
 from curobo._src.geom.types import SceneCfg
 
 # CuRobo
 from curobo._src.robot.kinematics.kinematics import KinematicsState
 from curobo._src.state.state_joint import JointState
 from curobo._src.types.pose import Pose
-from curobo._src.curobolib.cuda_ops.tensor_checks import check_float16_tensors, check_float32_tensors
 from curobo._src.util.logging import log_and_raise
 from curobo._src.util.torch_util import get_torch_jit_decorator
 

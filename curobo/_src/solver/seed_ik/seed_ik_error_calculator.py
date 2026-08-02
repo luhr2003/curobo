@@ -19,12 +19,12 @@ import torch.autograd.profiler as profiler
 
 # CuRobo
 from curobo._src.cost.cost_tool_pose import ToolPoseCost
-from curobo._src.state.state_joint import JointState
 from curobo._src.cost.cost_tool_pose_cfg import (
     ToolPoseCostCfg,
 )
 from curobo._src.cost.tool_pose_criteria import ToolPoseCriteria
 from curobo._src.geom.transform import quaternion_rate_to_axis_angle_rate
+from curobo._src.state.state_joint import JointState
 from curobo._src.types.tool_pose import GoalToolPose, ToolPose
 from curobo._src.util.cuda_stream_util import (
     create_cuda_stream_pair,

@@ -164,9 +164,9 @@ This workflow is useful for:
 """
 
 import argparse
+import copy
 import sys
 import time
-import copy
 
 import numpy as np
 import torch
@@ -323,7 +323,6 @@ def collision_free_ik_example():
 
 def interactive_ik_example(robot_file="franka.yml", port=8080):
     """Launch an interactive Viser viewer for real-time IK solving."""
-
     viser_viz = ViserVisualizer(
         content_path=ContentPath(robot_config_file=robot_file),
         connect_ip="0.0.0.0",
@@ -446,7 +445,6 @@ def differential_ik_example(robot_file="franka.yml", port=8080):
     - Velocity regularization (damping, prevents overshoot)
     - Acceleration regularization (smoothing, prevents jerky transitions)
     """
-
     viser_viz = ViserVisualizer(
         content_path=ContentPath(robot_config_file=robot_file),
         connect_ip="0.0.0.0",
@@ -883,7 +881,7 @@ def main():
         print()
 
     if args.mode in ("batch", "all"):
-        print(f"=== Batched IK (100 poses) ===")
+        print("=== Batched IK (100 poses) ===")
         batched_ik_example()
         print()
 

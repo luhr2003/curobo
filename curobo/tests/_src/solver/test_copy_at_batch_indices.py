@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Unit tests for BaseSolverResult.copy_at_batch_indices and
-TrajOptSolverResult.copy_at_batch_indices."""
+TrajOptSolverResult.copy_at_batch_indices.
+"""
 
-import pytest
 import torch
 
 from curobo._src.solver.solver_base_result import BaseSolverResult

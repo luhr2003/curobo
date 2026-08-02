@@ -69,7 +69,6 @@ simulation_app = SimulationApp(
 
 # ---- Post-SimulationApp imports ------------------------------------------
 import numpy as np
-
 from omni.isaac.core import World
 from omni.isaac.core.objects import cuboid
 from omni.isaac.core.utils.types import ArticulationAction
@@ -84,7 +83,6 @@ from curobo.examples.isaacsim.helper import add_extensions, add_robot_to_scene
 from curobo.logging import log_and_raise, setup_logger
 from curobo.motion_planner import MotionPlannerCfg
 from curobo.types import GoalToolPose, JointState, Pose
-
 
 ROBOT_YAML = "dual_ur10e.yml"
 

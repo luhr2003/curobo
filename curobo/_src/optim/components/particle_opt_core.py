@@ -12,7 +12,7 @@ Composed by MPPI and EvolutionStrategies.
 
 from __future__ import annotations
 
-import math
+from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
 
 import torch
@@ -21,11 +21,9 @@ import torch.autograd.profiler as profiler
 from curobo._src.optim.components.action_bounds import ActionBounds
 from curobo._src.optim.components.debug_recorder import DebugRecorder
 from curobo._src.optim.components.gaussian_distribution import (
-    CovType,
     GaussianDistribution,
 )
 from curobo._src.optim.optimization_iteration_state import OptimizationIterationState
-from enum import Enum
 
 
 class SampleMode(Enum):
@@ -44,19 +42,13 @@ class SampleMode(Enum):
     SAMPLE = "SAMPLE"
     """Draw a fresh sample from the fitted distribution."""
 from curobo._src.optim.particle.particle_opt_utils import (
-    SquashType,
-    gaussian_entropy,
     scale_ctrl,
-)
-from curobo._src.optim.particle.sample_strategies.particle_sampler_cfg import (
-    ParticleSamplerCfg,
 )
 from curobo._src.rollout.metrics import RolloutResult
 from curobo._src.rollout.rollout_protocol import Rollout
 from curobo._src.util.cuda_event_timer import CudaEventTimer
 from curobo._src.util.cuda_graph_util import GraphExecutor, create_graph_executor
 from curobo._src.util.logging import log_and_raise
-from curobo._src.util.torch_util import get_torch_jit_decorator
 
 
 class ParticleOptCore:

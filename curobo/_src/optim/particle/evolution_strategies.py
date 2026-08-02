@@ -10,15 +10,14 @@ natural gradient mean updates instead of the softmax weighting used by MPPI.
 
 from __future__ import annotations
 
-from copy import deepcopy
-from dataclasses import dataclass, fields
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass
+from typing import List
 
 import torch
 import torch.autograd.profiler as profiler
 
 from curobo._src.optim.components.gaussian_distribution import CovType
-from curobo._src.optim.components.particle_opt_core import ParticleOptCore
+from curobo._src.optim.components.particle_opt_core import ParticleOptCore, SampleMode
 from curobo._src.optim.particle.mppi import (
     MPPICfg,
     jit_blend_cov,
@@ -26,15 +25,8 @@ from curobo._src.optim.particle.mppi import (
     jit_compute_total_cost,
     jit_diag_a_cov_update,
 )
-from curobo._src.optim.components.particle_opt_core import SampleMode
-from curobo._src.optim.particle.particle_opt_utils import (
-    SquashType,
-    gaussian_entropy,
-    scale_ctrl,
-)
 from curobo._src.rollout.metrics import RolloutResult
 from curobo._src.rollout.rollout_protocol import Rollout
-from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.util.logging import log_and_raise
 from curobo._src.util.tensor_util import stable_topk
 from curobo._src.util.torch_util import get_torch_jit_decorator

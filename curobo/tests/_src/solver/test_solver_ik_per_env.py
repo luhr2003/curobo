@@ -104,7 +104,7 @@ class TestIKPerEnvSingle:
     def test_single_mode_disabled_arm_does_not_drive_solution(
         self, per_env_ik_solver, cuda_device_cfg
     ):
-        """env 0 disables tool1 (link 0), env 1 disables tool0 (link 1),
+        """Env 0 disables tool1 (link 0), env 1 disables tool0 (link 1),
         envs 2/3 keep both. All four envs solved in one ``solve_pose``.
 
         Indifference check: with the same seed, varying the disabled

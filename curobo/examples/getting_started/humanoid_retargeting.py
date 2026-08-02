@@ -612,7 +612,8 @@ def visualize_motion(
             set to ``steps_per_target * interpolation_steps`` to play back
             at the original input frame rate.
     """
-    from curobo.types import ContentPath, JointState as JS
+    from curobo.types import ContentPath
+    from curobo.types import JointState as JS
     from curobo.viewer import ViserVisualizer
 
     viz = ViserVisualizer(

@@ -18,7 +18,6 @@ from curobo._src.curobolib.backends.cuda_core_backend.launch_helper import launc
 from curobo._src.curobolib.backends.cuda_core_backend.util import ceil_div
 from curobo._src.util.logging import log_and_raise
 
-
 COLLISION_PAIR_SIZE = 8  # sizeof(CollisionPair): float(4) + int16(2) + int16(2)
 STATIC_SMEM_OVERHEAD = COLLISION_PAIR_SIZE * 33  # block_reduce_shared_data[32] + reduced_max_d
 

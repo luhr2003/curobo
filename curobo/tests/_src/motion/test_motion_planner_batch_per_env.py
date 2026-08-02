@@ -21,8 +21,6 @@ from curobo._src.cost.tool_pose_criteria import ToolPoseCriteria
 from curobo._src.motion.motion_planner_batch import BatchMotionPlanner
 from curobo._src.motion.motion_planner_cfg import MotionPlannerCfg
 from curobo._src.types.device_cfg import DeviceCfg
-from curobo._src.types.pose import Pose
-from curobo._src.types.tool_pose import GoalToolPose
 
 
 @pytest.fixture(scope="module")

@@ -35,7 +35,6 @@ from curobo._src.util.cuda_event_timer import CudaEventTimer
 from curobo._src.util.cuda_graph_util import create_graph_executor
 from curobo.content import get_robot_configs_path
 
-
 DEFAULT_ROBOTS = ["franka.yml", "dual_ur10e.yml", "unitree_g1.yml"]
 
 

@@ -16,8 +16,8 @@ import torch
 from curobo._src.cost.cost_self_collision import SelfCollisionCost
 from curobo._src.cost.cost_self_collision_cfg import SelfCollisionCostCfg
 from curobo._src.robot.kinematics.kinematics import Kinematics
-from curobo._src.state.state_joint import JointState
 from curobo._src.robot.kinematics.kinematics_cfg import KinematicsCfg
+from curobo._src.state.state_joint import JointState
 from curobo._src.types.content_path import ContentPath
 from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.util.logging import log_info, log_warn

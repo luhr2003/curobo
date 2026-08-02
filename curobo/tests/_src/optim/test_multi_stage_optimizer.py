@@ -17,7 +17,12 @@ import torch
 from curobo._src.optim.gradient.gradient_descent import GradientDescentOpt, GradientDescentOptCfg
 from curobo._src.optim.gradient.lbfgs import LBFGSOpt, LBFGSOptCfg
 from curobo._src.optim.multi_stage_optimizer import MultiStageOptimizer
-from curobo._src.rollout.metrics import CostCollection, CostsAndConstraints, RolloutMetrics, RolloutResult
+from curobo._src.rollout.metrics import (
+    CostCollection,
+    CostsAndConstraints,
+    RolloutMetrics,
+    RolloutResult,
+)
 from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.util.sampling.sample_buffer import SampleBuffer
 

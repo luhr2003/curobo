@@ -10,7 +10,7 @@ can use it interchangeably with single-stage optimizers.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 import torch
 import torch.autograd.profiler as profiler

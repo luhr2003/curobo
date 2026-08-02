@@ -310,7 +310,8 @@ class TestEdgeCases:
 
     def test_different_image_size(self, filter_default, device):
         """Filter initialised at (480, 640) still works on a different shape
-        by allocating fresh buffers for that call."""
+        by allocating fresh buffers for that call.
+        """
         small_depth = torch.full((1, 240, 320), 2.0, dtype=torch.float32, device=device)
 
         filtered_depth, mask = filter_default(small_depth)

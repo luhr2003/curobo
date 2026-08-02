@@ -830,15 +830,7 @@ robot_cfg:
       - 1.0
       - 1.0
       - 1.0
-      - 1.0
-      - 1.0
-      - 1.0
-      - 1.0
       cspace_distance_weight:
-      - 1.0
-      - 1.0
-      - 1.0
-      - 1.0
       - 1.0
       - 1.0
       - 1.0
@@ -864,15 +856,7 @@ robot_cfg:
       - 0.0
       - 0.7
       - 0.0
-      - 0.025
-      - -0.025
-      - 0.025
-      - -0.025
       jerk_scale:
-      - 1.0
-      - 1.0
-      - 1.0
-      - 1.0
       - 1.0
       - 1.0
       - 1.0
@@ -898,15 +882,7 @@ robot_cfg:
       - R_joint4
       - R_joint5
       - R_joint6
-      - L_joint7
-      - L_joint8
-      - R_joint7
-      - R_joint8
       max_acceleration:
-      - 10.0
-      - 10.0
-      - 10.0
-      - 10.0
       - 10.0
       - 10.0
       - 10.0
@@ -932,10 +908,6 @@ robot_cfg:
       - 500.0
       - 500.0
       - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
-      - 500.0
       null_space_maximum_distance:
       - 1.0
       - 1.0
@@ -949,15 +921,7 @@ robot_cfg:
       - 1.0
       - 1.0
       - 1.0
-      - 1.0
-      - 1.0
-      - 1.0
-      - 1.0
       null_space_weight:
-      - 1.0
-      - 1.0
-      - 1.0
-      - 1.0
       - 1.0
       - 1.0
       - 1.0
@@ -984,10 +948,6 @@ robot_cfg:
       - 1.0
       - 1.0
       - 1.0
-      - 1.0
-      - 1.0
-      - 1.0
-      - 1.0
     debug: null
     external_asset_path: null
     external_robot_configs_path: null
@@ -997,7 +957,14 @@ robot_cfg:
     grasp_contact_link_names: null
     load_meshes: false
     load_tool_frames_with_mesh: false
-    lock_joints: null
+    # Gripper DOFs are driven by the eef binary action, not arm IK —
+    # lock them like dual_franka fingers so cspace matches the 12 arm joints
+    # DualCuroboIKActionCfg controls.
+    lock_joints:
+      L_joint7: 0.025
+      L_joint8: -0.025
+      R_joint7: 0.025
+      R_joint8: -0.025
     mesh_link_names: *id001
     self_collision_buffer:
       L_base_link: 0.0

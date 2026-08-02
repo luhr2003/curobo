@@ -12,7 +12,10 @@ from curobo._src.cost.cost_base_cfg import BaseCostCfg
 from curobo._src.cost.cost_cspace_position import PositionCSpaceCost
 from curobo._src.cost.cost_cspace_state import StateCSpaceCost
 from curobo._src.cost.cost_cspace_type import CSpaceCostType
-from curobo._src.curobolib.cuda_ops.tensor_checks import check_float16_tensors, check_float32_tensors
+from curobo._src.curobolib.cuda_ops.tensor_checks import (
+    check_float16_tensors,
+    check_float32_tensors,
+)
 
 # CuRobo
 from curobo._src.robot.types.joint_limits import JointLimits

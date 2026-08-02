@@ -20,16 +20,16 @@ import torch
 import torch.autograd.profiler as profiler
 
 import curobo._src.runtime as curobo_runtime
+from curobo._src.collision.attachment_manager import AttachmentManager
 from curobo._src.cost.cost_pose_metric import PoseCostMetric
 from curobo._src.cost.tool_pose_criteria import ToolPoseCriteria
-from curobo._src.collision.attachment_manager import AttachmentManager
 from curobo._src.geom.collision import (
     SceneCollision,
     create_collision_checker,
 )
 from curobo._src.optim.multi_stage_optimizer import MultiStageOptimizer
-from curobo._src.optim.optimizer_protocol import Optimizer
 from curobo._src.optim.optim_factory import create_optimizer
+from curobo._src.optim.optimizer_protocol import Optimizer
 from curobo._src.robot.kinematics.kinematics import Kinematics, KinematicsState
 from curobo._src.rollout.goal_registry import GoalRegistry
 from curobo._src.rollout.rollout_robot import RobotRollout

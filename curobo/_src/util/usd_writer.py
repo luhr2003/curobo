@@ -34,7 +34,6 @@ from curobo._src.types.tool_pose import GoalToolPose
 from curobo._src.util.logging import log_and_raise, log_info, log_warn
 from curobo._src.util_file import (
     file_exists,
-    get_assets_path,
     get_filename,
     get_files_from_dir,
     get_robot_configs_path,
@@ -423,7 +422,7 @@ def triangulate_mesh_faces(faces, face_count):
     n-gons fan from v0. Raises ``ValueError`` on malformed input so callers
     can fall back to dropping the mesh.
 
-    Returns
+    Returns:
     -------
     (tri_faces, tri_face_count) : Tuple[List[int], List[int]]
         Flat triangle-index buffer plus a face-count list of all 3s.

@@ -17,7 +17,12 @@ from curobo._src.optim.gradient.gradient_descent import GradientDescentOpt, Grad
 from curobo._src.optim.gradient.lbfgs import LBFGSOptCfg
 from curobo._src.optim.optim_factory import create_optimization_config, create_optimizer
 from curobo._src.optim.particle.mppi import MPPI, MPPICfg
-from curobo._src.rollout.metrics import CostCollection, CostsAndConstraints, RolloutMetrics, RolloutResult
+from curobo._src.rollout.metrics import (
+    CostCollection,
+    CostsAndConstraints,
+    RolloutMetrics,
+    RolloutResult,
+)
 from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.util.sampling.sample_buffer import SampleBuffer
 

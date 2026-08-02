@@ -92,7 +92,6 @@ import pathlib
 
 import carb
 import numpy as np
-
 from omni.isaac.core import World
 from omni.isaac.core.objects import cuboid, sphere
 from omni.isaac.core.utils.types import ArticulationAction
@@ -106,7 +105,7 @@ from curobo.examples.isaacsim.helper import (
     add_extensions,
     add_robot_to_scene,
 )
-from curobo.logging import log_warn, setup_logger
+from curobo.logging import setup_logger
 from curobo.motion_planner import MotionPlannerCfg
 from curobo.scene import Scene
 from curobo.types import GoalToolPose, JointState, Pose

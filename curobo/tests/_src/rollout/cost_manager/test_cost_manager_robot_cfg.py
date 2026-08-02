@@ -15,8 +15,6 @@ import torch
 from curobo._src.cost.cost_cspace_cfg import CSpaceCostCfg
 from curobo._src.cost.cost_cspace_dist_cfg import CSpaceDistCostCfg
 from curobo._src.cost.cost_cspace_type import CSpaceCostType
-from curobo._src.cost.cost_scene_collision_cfg import SceneCollisionCostCfg
-from curobo._src.cost.cost_self_collision_cfg import SelfCollisionCostCfg
 from curobo._src.cost.cost_tool_pose_cfg import ToolPoseCostCfg
 from curobo._src.rollout.cost_manager.cost_manager_robot import RobotCostManager
 from curobo._src.rollout.cost_manager.cost_manager_robot_cfg import RobotCostManagerCfg

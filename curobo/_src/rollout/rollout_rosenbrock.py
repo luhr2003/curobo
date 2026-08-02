@@ -18,14 +18,14 @@ import torch
 
 # CuRobo
 from curobo._src.rollout.metrics import (
+    CostCollection,
     CostsAndConstraints,
     RolloutMetrics,
     RolloutResult,
-    CostCollection,
 )
 from curobo._src.state.state_joint import JointState
 from curobo._src.types.device_cfg import DeviceCfg
-from curobo._src.util.cuda_graph_util import create_graph_executor, GraphExecutor
+from curobo._src.util.cuda_graph_util import GraphExecutor, create_graph_executor
 from curobo._src.util.logging import log_and_raise
 from curobo._src.util.sampling.sample_buffer import SampleBuffer
 

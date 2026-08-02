@@ -50,7 +50,6 @@ _ = torch.zeros(4, device="cuda:0")
 
 import argparse
 
-
 parser = argparse.ArgumentParser(description="cuRobo v2 batched MPC reacher")
 parser.add_argument(
     "--headless_mode",
@@ -94,6 +93,10 @@ from pxr import Gf, UsdGeom  # noqa: E402
 
 from curobo.config_io import load_yaml  # noqa: E402
 from curobo.content import get_robot_configs_path  # noqa: E402
+from curobo.examples.isaacsim.helper import (  # noqa: E402
+    add_extensions,
+    add_robot_to_scene,
+)
 from curobo.logging import setup_logger  # noqa: E402
 from curobo.model_predictive_control import (  # noqa: E402
     ModelPredictiveControl,
@@ -102,12 +105,6 @@ from curobo.model_predictive_control import (  # noqa: E402
 from curobo.scene import Scene  # noqa: E402
 from curobo.types import DeviceCfg, GoalToolPose, JointState, Pose  # noqa: E402
 from curobo.viewer import UsdWriter  # noqa: E402
-
-from curobo.examples.isaacsim.helper import (  # noqa: E402
-    add_extensions,
-    add_robot_to_scene,
-)
-
 
 _SCENES_DIR = pathlib.Path(__file__).parent / "scenes"
 

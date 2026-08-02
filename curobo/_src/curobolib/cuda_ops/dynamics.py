@@ -27,8 +27,8 @@ from torch.autograd import Function
 from curobo._src.curobolib.backends import dynamics as dynamics_cu
 from curobo._src.curobolib.cuda_ops.tensor_checks import (
     check_float32_tensors,
-    check_int16_tensors,
     check_int8_tensors,
+    check_int16_tensors,
 )
 from curobo._src.types.device_cfg import DeviceCfg
 

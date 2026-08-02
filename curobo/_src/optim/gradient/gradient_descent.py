@@ -10,13 +10,12 @@ from __future__ import annotations
 
 import math
 from copy import deepcopy
-from dataclasses import dataclass, field, fields
-from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass, fields
+from typing import Any, Dict, List, Optional
 
 import torch
 import torch.autograd.profiler as profiler
 
-import curobo._src.runtime as curobo_runtime
 from curobo._src.optim.components.action_bounds import ActionBounds
 from curobo._src.optim.components.best_tracker import BestTracker
 from curobo._src.optim.components.debug_recorder import DebugRecorder

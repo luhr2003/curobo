@@ -19,7 +19,6 @@ import torch
 import warp as wp
 
 from curobo._src.curobolib.cuda_ops.tensor_checks import check_float32_tensors
-
 from curobo._src.util.warp import get_warp_device_stream
 
 

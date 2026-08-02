@@ -47,12 +47,9 @@ from curobo._src.perception.mapper.kernel.wp_integrate_common import (
     compute_tsdf_weight,
     floor_div,
     floor_mod,
-    quat_from_wxyz_array,
     vec3_from_array,
 )
 from curobo._src.util.warp import get_warp_device_stream
-
-
 
 # =============================================================================
 # Phase 3: Allocate Unique Blocks (Zero Contention)

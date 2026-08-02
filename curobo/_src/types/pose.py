@@ -13,6 +13,11 @@ import torch
 import torch.autograd.profiler as profiler
 from torch.profiler import record_function
 
+from curobo._src.curobolib.cuda_ops.tensor_checks import (
+    check_float16_tensors,
+    check_float32_tensors,
+)
+
 # CuRobo
 from curobo._src.geom.quaternion import (
     angular_distance_axis_angle,
@@ -29,10 +34,6 @@ from curobo._src.geom.transform import (
     pose_to_matrix,
     quaternion_to_matrix,
     transform_points,
-)
-from curobo._src.curobolib.cuda_ops.tensor_checks import (
-    check_float16_tensors,
-    check_float32_tensors,
 )
 from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.types.tensor import T_BPosition, T_BQuaternion, T_BRotation

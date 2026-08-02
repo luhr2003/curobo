@@ -24,8 +24,8 @@ from curobo._src.state.state_joint import JointState
 from curobo._src.types.control_space import ControlSpace
 from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.types.pose import Pose
-from curobo._src.types.tool_pose import GoalToolPose
 from curobo._src.types.robot import RobotCfg
+from curobo._src.types.tool_pose import GoalToolPose
 from curobo._src.util.benchmark_metrics import CuroboGroupMetrics, CuroboMetrics
 from curobo._src.util.logging import setup_curobo_logger
 from curobo._src.util.usd_writer import UsdWriter
