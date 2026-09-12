@@ -336,6 +336,7 @@ class MotionRetargeter:
         override_num_iters = {"lbfgs": cfg.global_ik_num_iters}
         ik_config = IKSolverCfg.create(
             robot=cfg.robot,
+            max_batch_size=cfg.num_envs,
             num_seeds=cfg.num_seeds_global,
             position_tolerance=cfg.position_tolerance,
             orientation_tolerance=cfg.orientation_tolerance,
@@ -359,6 +360,7 @@ class MotionRetargeter:
         override_num_iters = {"lbfgs": cfg.local_ik_num_iters}
         ik_config = IKSolverCfg.create(
             robot=cfg.robot,
+            max_batch_size=cfg.num_envs,
             optimizer_configs=cfg.ik_optimizer_configs,
             num_seeds=cfg.num_seeds_local,
             position_tolerance=cfg.position_tolerance,
@@ -385,6 +387,7 @@ class MotionRetargeter:
         cfg = self._config
         mpc_config = MPCSolverCfg.create(
             robot=cfg.robot,
+            max_batch_size=cfg.num_envs,
             optimization_dt=cfg.optimization_dt,
             self_collision_check=cfg.self_collision_check,
             scene_model=cfg.scene_model,

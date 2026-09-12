@@ -175,6 +175,38 @@ class TestMotionRetargeterMPC:
         assert result.trajectory.position.shape[2] == retargeter_mpc.num_dof
 
 
+@pytest.mark.parametrize("use_mpc", [False, True])
+def test_batched_retarget_tracks_distinct_reachable_goals(use_mpc):
+    """Both cold and warm solvers must support the configured batch capacity."""
+    if not torch.cuda.is_available():
+        pytest.skip("CUDA required for MotionRetargeter")
+    from curobo._src.state.state_joint import JointState
+
+    retargeter = MotionRetargeter(MotionRetargeterCfg.create(
+        robot=ROBOT_CFG, tool_pose_criteria=_criteria(), num_envs=2,
+        use_mpc=use_mpc, self_collision_check=False, steps_per_target=2,
+    ))
+    positions = retargeter.default_joint_state.position.reshape(1, 1, -1).repeat(2, 3, 1)
+    elbow = retargeter.joint_names.index("left_elbow_joint")
+    positions[1, :, elbow] += 0.1
+    poses = retargeter.kinematics.compute_kinematics(
+        JointState.from_position(positions, joint_names=retargeter.joint_names)
+    ).tool_poses.clone()
+    sequence = SequenceGoalToolPose(
+        tool_frames=TOOL_FRAMES,
+        position=poses.position.transpose(0, 1).unsqueeze(-2).contiguous(),
+        quaternion=poses.quaternion.transpose(0, 1).unsqueeze(-2).contiguous(),
+    )
+    for frame in range(3):
+        result = retargeter.solve_frame(sequence.get_frame(frame))
+        assert result.joint_state.position.shape == (2, retargeter.action_dim)
+        assert torch.isfinite(result.joint_state.position).all()
+        actual = retargeter.kinematics.compute_kinematics(result.joint_state).tool_poses
+        error = torch.linalg.vector_norm(actual.position[:, 0] - poses.position[:, frame], dim=-1)
+        assert error.max() < 0.01
+    assert abs(result.joint_state.position[0, elbow] - result.joint_state.position[1, elbow]) > 0.05
+
+
 class TestRetargetResult:
 
     def test_ik_result_no_trajectory(self):
