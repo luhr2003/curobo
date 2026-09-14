@@ -175,7 +175,9 @@ def swept_sphere_obstacle_collision_kernel(
     local_current = wp.transform_point(inv_t, query.center)
 
     # Process current timestep
-    sdf_result = compute_local_sdf_with_grad(obs, env_idx, obs_local_idx, local_current)
+    sdf_result = compute_local_sdf_with_grad(
+        obs, env_idx, obs_local_idx, local_current, radius_adjusted
+    )
     penetration = -sdf_result[0] + radius_adjusted
 
     if penetration > 0.0:
@@ -201,11 +203,13 @@ def swept_sphere_obstacle_collision_kernel(
             t = 1.0 - 0.5 * jump * inv_half_dist
             local_pt = t * local_current + (1.0 - t) * local_prev
 
-            sdf = compute_local_sdf(obs, env_idx, obs_local_idx, local_pt)
+            sdf = compute_local_sdf(obs, env_idx, obs_local_idx, local_pt, radius_adjusted)
             penetration = -sdf + radius_adjusted
 
             if penetration > 0.0:
-                sdf_result = compute_local_sdf_with_grad(obs, env_idx, obs_local_idx, local_pt)
+                sdf_result = compute_local_sdf_with_grad(
+                    obs, env_idx, obs_local_idx, local_pt, radius_adjusted
+                )
                 activation_result = apply_collision_activation(penetration, eta)
                 cost_sum += activation_result[0]
                 grad_sum_local += activation_result[1] * wp.vec3(sdf_result[1], sdf_result[2], sdf_result[3])
@@ -231,11 +235,13 @@ def swept_sphere_obstacle_collision_kernel(
             t = 1.0 - 0.5 * jump * inv_half_dist
             local_pt = t * local_current + (1.0 - t) * local_next
 
-            sdf = compute_local_sdf(obs, env_idx, obs_local_idx, local_pt)
+            sdf = compute_local_sdf(obs, env_idx, obs_local_idx, local_pt, radius_adjusted)
             penetration = -sdf + radius_adjusted
 
             if penetration > 0.0:
-                sdf_result = compute_local_sdf_with_grad(obs, env_idx, obs_local_idx, local_pt)
+                sdf_result = compute_local_sdf_with_grad(
+                    obs, env_idx, obs_local_idx, local_pt, radius_adjusted
+                )
                 activation_result = apply_collision_activation(penetration, eta)
                 cost_sum += activation_result[0]
                 grad_sum_local += activation_result[1] * wp.vec3(sdf_result[1], sdf_result[2], sdf_result[3])

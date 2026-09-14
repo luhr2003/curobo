@@ -1125,6 +1125,7 @@ def compute_local_sdf(
     env_idx: wp.int32,
     local_idx: wp.int32,
     local_pt: wp.vec3,
+    query_radius: wp.float32 = 0.0,
 ) -> wp.float32:
     """Compute SDF value for a voxel grid obstacle using trilinear interpolation.
 
@@ -1139,6 +1140,7 @@ def compute_local_sdf(
         env_idx: Environment index.
         local_idx: Local index of the grid within the environment.
         local_pt: Query point in obstacle local frame.
+        query_radius: Accepted for the shared obstacle-kernel interface; unused.
 
     Returns:
         ESDF value (negative inside, positive outside).
@@ -1165,6 +1167,7 @@ def compute_local_sdf_with_grad(
     env_idx: wp.int32,
     local_idx: wp.int32,
     local_pt: wp.vec3,
+    query_radius: wp.float32 = 0.0,
 ) -> wp.vec4:
     """Compute SDF and gradient for a voxel grid obstacle in local frame.
 
@@ -1181,6 +1184,7 @@ def compute_local_sdf_with_grad(
         env_idx: Environment index.
         local_idx: Local index of the grid within the environment.
         local_pt: Query point in obstacle local frame.
+        query_radius: Accepted for the shared obstacle-kernel interface; unused.
 
     Returns:
         vec4(sdf, grad_local_x, grad_local_y, grad_local_z).
