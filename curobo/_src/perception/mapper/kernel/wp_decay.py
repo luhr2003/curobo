@@ -23,10 +23,6 @@ from curobo._src.perception.mapper.kernel.warp_types import (
 from curobo._src.perception.mapper.kernel.wp_hash import (
     free_list_push,
 )
-from curobo._src.perception.mapper.kernel.wp_integrate_common import (
-    quat_from_wxyz_array,
-    vec3_from_array,
-)
 from curobo._src.util.warp import get_warp_device_stream
 
 # =============================================================================

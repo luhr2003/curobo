@@ -24,14 +24,13 @@ import argparse
 import copy
 import json
 import os
-import shutil
 import subprocess
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 import yaml
 
@@ -321,7 +320,8 @@ def _v2_kin(cfg: dict) -> dict:
 
     Handles both top-level ``kinematics:`` (builder output) and wrapped
     ``robot_cfg: kinematics:`` (canonical v2 style). Does NOT create a
-    stray ``robot_cfg`` wrapper if one isn't present already."""
+    stray ``robot_cfg`` wrapper if one isn't present already.
+    """
     if "kinematics" in cfg:
         return cfg["kinematics"]
     if "robot_cfg" in cfg:
@@ -436,7 +436,8 @@ _ASSETS_ROBOT_ABS = str(ASSETS_ROBOT) + "/"
 def _relativize_paths(kin: dict) -> None:
     """Rewrite urdf_path / asset_root_path to content-relative (``robot/…``)
     so yamls match the style of the bundled v2 configs and don't hard-code
-    absolute paths."""
+    absolute paths.
+    """
     u = kin.get("urdf_path")
     if isinstance(u, str) and u.startswith(_ASSETS_ROBOT_ABS):
         kin["urdf_path"] = "robot/" + u[len(_ASSETS_ROBOT_ABS):]
@@ -456,7 +457,8 @@ def _relativize_paths(kin: dict) -> None:
 
 def _wrap_robot_cfg(cfg: dict) -> dict:
     """Wrap a top-level-`kinematics` cfg under `robot_cfg:` (v2 canonical
-    style, matches bundled ridgebackfranka_mobile.yml)."""
+    style, matches bundled ridgebackfranka_mobile.yml).
+    """
     if "robot_cfg" in cfg:
         return cfg
     if "kinematics" not in cfg:

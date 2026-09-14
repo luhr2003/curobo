@@ -9,7 +9,7 @@ approximation instead of the two-loop recursion used by L-BFGS.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 import torch
 import torch.autograd.profiler as profiler

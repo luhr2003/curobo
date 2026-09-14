@@ -125,7 +125,6 @@ simulation_app = SimulationApp(
 # ---- Everything that touches pxr / omni.isaac.* goes after SimulationApp --
 import carb
 import numpy as np
-
 from omni.isaac.core import World
 from omni.isaac.core.objects import cuboid, sphere
 from omni.isaac.core.utils.types import ArticulationAction

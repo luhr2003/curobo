@@ -55,9 +55,9 @@ To confirm the pin holds, after ``SimulationApp()`` runs::
 # contains the pip versions and later ``wp.torch.<x>`` attribute access hits
 # the cache instead of triggering a fresh ``warp.__path__`` lookup.
 import warp  # noqa: F401
-import warp.torch  # noqa: F401
-import warp.context  # noqa: F401
 import warp.config  # noqa: F401
+import warp.context  # noqa: F401
+import warp.torch  # noqa: F401
 
 # Also initialize Warp now so ``warp.context.runtime`` is set (it stays None
 # until ``wp.init()`` runs). cuRobo eventually calls ``init_warp()`` itself,

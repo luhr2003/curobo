@@ -17,7 +17,6 @@ from curobo._src.rollout.rollout_protocol import Rollout
 from curobo._src.rollout.rollout_rosenbrock import RosenbrockCfg, RosenbrockRollout
 from curobo._src.types.device_cfg import DeviceCfg
 
-
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------

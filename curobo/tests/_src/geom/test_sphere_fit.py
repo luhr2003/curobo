@@ -5,7 +5,6 @@
 """Comprehensive tests for sphere fitting functions."""
 
 # Third Party
-import numpy as np
 import pytest
 
 # CuRobo

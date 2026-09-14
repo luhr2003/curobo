@@ -35,7 +35,12 @@ from curobo._src.optim.particle.mppi import (
 )
 from curobo._src.optim.particle.particle_opt_utils import SquashType
 from curobo._src.optim.particle.sample_strategies.particle_sampler_cfg import ParticleSamplerCfg
-from curobo._src.rollout.metrics import CostCollection, CostsAndConstraints, RolloutMetrics, RolloutResult
+from curobo._src.rollout.metrics import (
+    CostCollection,
+    CostsAndConstraints,
+    RolloutMetrics,
+    RolloutResult,
+)
 from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.util.sampling.sample_buffer import SampleBuffer
 

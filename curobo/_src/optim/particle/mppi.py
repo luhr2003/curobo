@@ -14,16 +14,19 @@ from __future__ import annotations
 # Standard Library
 import math
 from copy import deepcopy
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, fields
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 
 # Third Party
 import torch
 import torch.autograd.profiler as profiler
 
 from curobo._src.optim.components.gaussian_distribution import CovType
-from curobo._src.optim.components.particle_opt_core import ParticleOptCore
+from curobo._src.optim.components.particle_opt_core import (
+    ParticleOptCore,
+    SampleMode,  # canonical location
+)
 from curobo._src.optim.particle.particle_opt_utils import (
     SquashType,
     gaussian_entropy,
@@ -38,9 +41,6 @@ from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.util.logging import log_and_raise
 from curobo._src.util.tensor_util import stable_topk
 from curobo._src.util.torch_util import get_torch_jit_decorator
-
-
-from curobo._src.optim.components.particle_opt_core import SampleMode  # canonical location
 
 
 class BaseActionType(Enum):

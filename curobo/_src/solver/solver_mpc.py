@@ -23,7 +23,7 @@ from curobo._src.solver.solver_ik_cfg import IKSolverCfg
 from curobo._src.solver.solver_mpc_cfg import MPCSolverCfg
 from curobo._src.solver.solver_mpc_result import MPCSolverResult
 from curobo._src.state.state_joint import JointState
-from curobo._src.types.tool_pose import GoalToolPose, ToolPose
+from curobo._src.types.tool_pose import GoalToolPose
 from curobo._src.util.cuda_event_timer import CudaEventTimer
 from curobo._src.util.logging import log_and_raise, log_info
 from curobo._src.util.trajectory_execution_manager import TrajectoryExecutionManager

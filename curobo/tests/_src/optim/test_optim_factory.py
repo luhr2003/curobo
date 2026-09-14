@@ -21,9 +21,9 @@ from curobo._src.optim.gradient.conjugate_gradient import (
 )
 from curobo._src.optim.gradient.gradient_descent import (
     GradientDescentOpt,
+    GradientDescentOptCfg,
     LineSearchGradientDescentOpt,
 )
-from curobo._src.optim.gradient.gradient_descent import GradientDescentOptCfg
 from curobo._src.optim.gradient.lbfgs import LBFGSOpt, LBFGSOptCfg
 from curobo._src.optim.gradient.lsr1 import LSR1Opt
 from curobo._src.optim.optim_factory import create_optimization_config, create_optimizer
@@ -32,7 +32,12 @@ from curobo._src.optim.particle.evolution_strategies import (
     EvolutionStrategiesCfg,
 )
 from curobo._src.optim.particle.mppi import MPPI, MPPICfg
-from curobo._src.rollout.metrics import CostCollection, CostsAndConstraints, RolloutMetrics, RolloutResult
+from curobo._src.rollout.metrics import (
+    CostCollection,
+    CostsAndConstraints,
+    RolloutMetrics,
+    RolloutResult,
+)
 from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.util.sampling.sample_buffer import SampleBuffer
 

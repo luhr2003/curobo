@@ -9,7 +9,7 @@ builds the full config from YAML paths or dictionaries.
 from __future__ import annotations
 
 # Standard Library
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Type, Union
 
 # CuRobo

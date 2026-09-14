@@ -32,7 +32,6 @@ from curobo._src.rollout.rollout_protocol import Rollout
 from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.util.logging import log_and_raise
 
-
 # Config mapping: solver_type string -> config class
 _SOLVER_CONFIG_MAP = {
     "lbfgs": LBFGSOptCfg,

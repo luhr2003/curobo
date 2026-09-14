@@ -37,7 +37,6 @@ from curobo.motion_planner import MotionPlannerCfg
 from curobo.scene import Scene
 from curobo.types import DeviceCfg, GoalToolPose, JointState, Pose
 
-
 ROBOT_YAML = "magicsim_mobile_x7s.yml"  # fixed-base variant
 B = 1                                     # one problem
 
@@ -139,7 +138,7 @@ def main() -> None:
         )
         print(f"  success={success.tolist()}")
         print(f"  pos_err_max={pos_err:.4f}m  rot_err_max={rot_err:.4f}rad")
-        print(f"  thresholds (for reference): pos<=0.005m rot<=0.05rad")
+        print("  thresholds (for reference): pos<=0.005m rot<=0.05rad")
 
         traj = getattr(result, "interpolated_trajectory", None)
         if traj is not None and getattr(traj, "position", None) is not None:

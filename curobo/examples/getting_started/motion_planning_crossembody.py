@@ -24,13 +24,10 @@ import argparse
 import json
 import traceback
 from pathlib import Path
-from typing import Dict, List, Optional
-
-import torch
+from typing import Dict, List
 
 from curobo.motion_planner import MotionPlanner, MotionPlannerCfg
 from curobo.types import GoalToolPose, JointState, Pose
-
 
 ROBOTS: List[str] = [
     "magicsim_arx_x5.yml",

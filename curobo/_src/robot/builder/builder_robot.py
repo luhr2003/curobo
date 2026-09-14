@@ -22,9 +22,9 @@ from curobo._src.geom.sphere_fit import SphereFitType, fit_spheres_to_mesh
 from curobo._src.geom.sphere_fit.types import SphereFitMetrics
 from curobo._src.robot.kinematics.kinematics import Kinematics
 from curobo._src.robot.kinematics.kinematics_cfg import KinematicsCfg
-from curobo._src.state.state_joint import JointState
 from curobo._src.robot.loader.kinematics_loader_cfg import KinematicsLoaderCfg
 from curobo._src.robot.parser.parser_urdf import UrdfRobotParser
+from curobo._src.state.state_joint import JointState
 from curobo._src.types.content_path import ContentPath
 from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.util.logging import log_and_raise, log_info, log_warn

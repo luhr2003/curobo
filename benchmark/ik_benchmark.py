@@ -19,7 +19,6 @@ from curobo._src.solver.solver_ik import IKSolver
 from curobo._src.solver.solver_ik_cfg import IKSolverCfg
 from curobo._src.state.state_joint import JointState
 from curobo._src.types.device_cfg import DeviceCfg
-
 from curobo._src.util.cuda_event_timer import CudaEventTimer
 from curobo._src.util.logging import setup_curobo_logger
 

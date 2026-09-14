@@ -10,7 +10,7 @@ solution ranking. Supports both Cartesian-space (solve_pose) and configuration-s
 from __future__ import annotations
 
 # Standard Library
-from typing import Dict, Optional, Tuple
+from typing import Optional, Tuple
 
 # Third Party
 import torch
@@ -29,7 +29,7 @@ from curobo._src.solver.solver_trajopt_cfg import TrajOptSolverCfg
 from curobo._src.solver.solver_trajopt_result import TrajOptSolverResult
 from curobo._src.state.state_joint import JointState
 from curobo._src.types.control_space import ControlSpace
-from curobo._src.types.tool_pose import GoalToolPose, ToolPose
+from curobo._src.types.tool_pose import GoalToolPose
 from curobo._src.util.cuda_event_timer import CudaEventTimer
 from curobo._src.util.logging import log_and_raise, log_info, log_warn
 from curobo._src.util.torch_util import get_torch_jit_decorator, is_cuda_graph_reset_available

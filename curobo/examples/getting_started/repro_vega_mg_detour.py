@@ -33,7 +33,6 @@ distribution or somewhere else (trajopt / null space / etc.).
 from __future__ import annotations
 
 import argparse
-import math
 from typing import List, Tuple
 
 import torch
@@ -44,7 +43,6 @@ from curobo.config_io import join_path, load_yaml
 from curobo.content import get_robot_configs_path
 from curobo.motion_planner import MotionPlanner, MotionPlannerCfg
 from curobo.types import DeviceCfg, GoalToolPose, JointState, Pose
-
 
 # ----------------------------------------------------------------------
 # Scenario constants — keep in sync with MagicSim's
@@ -137,7 +135,8 @@ def _build_current_state(planner: MotionPlanner, mobile: bool) -> JointState:
     """Live-ish joint state: USD retract for torso / head / arms; for
     the mobile variant, also stick the dummy_base joints at the
     parked-base position so cuRobo's free-base solver sees the actual
-    starting world pose."""
+    starting world pose.
+    """
     q = planner.default_joint_state.position.clone()
     if mobile:
         names = list(planner.joint_names)
@@ -155,7 +154,8 @@ def _build_goal(planner: MotionPlanner) -> GoalToolPose:
     """R_ee tracks the bottle-grasp target; L_ee filled with current FK
     so it's not a NaN target (cuRobo would otherwise want a real
     track / disable criteria pair, which the MotionPlanner standalone
-    API doesn't expose)."""
+    API doesn't expose).
+    """
     pose_dict = {}
     for f in planner.tool_frames:
         if f == "R_ee":
@@ -286,7 +286,7 @@ def main():
             float(result.position_error.max()) if result is not None else "N/A",
         )
         return
-    print(f"  ✓ plan_pose succeeded")
+    print("  ✓ plan_pose succeeded")
     print(f"  trajopt pos_err   = {float(result.position_error.max()):.6f} m")
     print(f"  trajopt rot_err   = {float(result.rotation_error.max()):.6f} rad")
     # Best-effort dump of all available result attrs.

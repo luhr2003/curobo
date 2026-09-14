@@ -88,7 +88,6 @@ simulation_app = SimulationApp(
 
 # ---- Post-SimulationApp imports ------------------------------------------
 import numpy as np
-
 from omni.isaac.core import World
 from omni.isaac.core.objects import cuboid, sphere
 from pxr import Gf, UsdGeom
@@ -101,7 +100,6 @@ from curobo.examples.isaacsim.helper import add_extensions, add_robot_to_scene
 from curobo.inverse_kinematics import InverseKinematics, InverseKinematicsCfg
 from curobo.logging import log_and_raise, setup_logger
 from curobo.types import GoalToolPose, JointState, Pose
-
 
 ROBOT_YAML = "tri_ur10e.yml"
 # Always-disabled frame in this demo. tool0 + tool1 are always tracked;

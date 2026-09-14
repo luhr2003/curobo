@@ -120,6 +120,7 @@ Click "Grasp" to plan and execute a three-phase grasp motion.
 
 import argparse
 import sys
+import time
 from pathlib import Path
 from typing import List, Optional
 
@@ -129,7 +130,7 @@ import curobo.runtime as runtime
 from curobo.motion_planner import MotionPlanner, MotionPlannerCfg
 from curobo.types import ContentPath, GoalToolPose, JointState, Pose
 from curobo.viewer import ViserVisualizer
-import time
+
 
 def _get_output_dir() -> Path:
     """Return the example output directory, creating it if needed."""

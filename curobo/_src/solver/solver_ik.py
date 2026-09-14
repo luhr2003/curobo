@@ -22,7 +22,6 @@ from curobo._src.cost.tool_pose_criteria import ToolPoseCriteria
 from curobo._src.geom.collision import SceneCollision
 from curobo._src.geom.types import SceneCfg
 from curobo._src.robot.kinematics.kinematics import KinematicsState
-from curobo._src.rollout.goal_registry import GoalRegistry
 from curobo._src.rollout.metrics import RolloutMetrics
 from curobo._src.solver.seed_ik.seed_ik_solver import SeedIKSolver
 from curobo._src.solver.seed_ik.seed_ik_solver_cfg import SeedIKSolverCfg

@@ -10,6 +10,11 @@ from typing import TYPE_CHECKING, Optional, Union
 import torch
 import torch.autograd.profiler as profiler
 
+from curobo._src.curobolib.cuda_ops.tensor_checks import (
+    check_float16_tensors,
+    check_float32_tensors,
+)
+
 # CuRobo
 from curobo._src.robot.kinematics.kinematics import Kinematics
 from curobo._src.state.state_joint import JointState
@@ -27,7 +32,6 @@ from curobo._src.util.cuda_stream_util import (
     cuda_stream_context,
     synchronize_cuda_streams,
 )
-from curobo._src.curobolib.cuda_ops.tensor_checks import check_float16_tensors, check_float32_tensors
 from curobo._src.util.logging import log_and_raise, log_info
 from curobo._src.util.state_filter import JointStateFilter
 

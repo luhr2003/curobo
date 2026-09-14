@@ -9,7 +9,7 @@ solver layers depend on.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Protocol, Union, runtime_checkable
+from typing import Any, Dict, Optional, Protocol, runtime_checkable
 
 import torch
 

@@ -54,7 +54,6 @@ _ = torch.zeros(4, device="cuda:0")
 
 import argparse
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "--headless_mode",
@@ -118,15 +117,13 @@ from pxr import Gf, UsdGeom  # noqa: E402
 from curobo.batch_motion_planner import BatchMotionPlanner  # noqa: E402
 from curobo.config_io import load_yaml  # noqa: E402
 from curobo.content import get_robot_configs_path  # noqa: E402
-from curobo.logging import setup_logger  # noqa: E402
-from curobo.motion_planner import MotionPlannerCfg  # noqa: E402
-from curobo.types import DeviceCfg, GoalToolPose, JointState, Pose  # noqa: E402
-
 from curobo.examples.isaacsim.helper import (  # noqa: E402
     add_extensions,
     add_robot_to_scene,
 )
-
+from curobo.logging import setup_logger  # noqa: E402
+from curobo.motion_planner import MotionPlannerCfg  # noqa: E402
+from curobo.types import DeviceCfg, GoalToolPose, JointState, Pose  # noqa: E402
 
 ############################################################
 # Config knobs

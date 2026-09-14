@@ -163,7 +163,7 @@ class TestToolPoseCostPerEnvKernel:
     def test_per_env_disable_pattern_yields_zero_cost_on_disabled_links(
         self, cuda_device_cfg
     ):
-        """env 0 disables tool1, env 1 disables tool0, env 2 keeps both.
+        """Env 0 disables tool1, env 1 disables tool0, env 2 keeps both.
 
         With identical non-zero position errors on all (env, link) pairs,
         the per-env kernel must return cost==0 for the disabled (env, link)

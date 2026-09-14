@@ -29,7 +29,7 @@ from curobo._src.geom.data.helper_pose import (
 from curobo._src.geom.types import Mesh, SceneCfg
 from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.types.pose import Pose
-from curobo._src.util.logging import log_and_raise, log_warn
+from curobo._src.util.logging import log_and_raise
 from curobo._src.util.warp import init_warp, warp_support_bvh_constructor_type
 
 # =============================================================================

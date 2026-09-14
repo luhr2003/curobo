@@ -25,9 +25,8 @@ from curobo._src.solver.solver_trajopt_result import TrajOptSolverResult
 from curobo._src.state.state_joint import JointState
 from curobo._src.state.state_joint_trajectory_ops import get_joint_state_at_horizon_index
 from curobo._src.types.pose import Pose
-from curobo._src.types.tool_pose import GoalToolPose, ToolPose
+from curobo._src.types.tool_pose import GoalToolPose
 from curobo._src.util.logging import log_and_raise
-
 
 # MagicSim patch: per-joint Gaussian noise std (radians) used by
 # :func:`_anchor_ik_seeds_to_current_state` to perturb the seed

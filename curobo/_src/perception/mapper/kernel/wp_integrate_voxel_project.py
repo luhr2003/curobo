@@ -48,7 +48,6 @@ from curobo._src.perception.mapper.kernel.wp_hash import (
 from curobo._src.perception.mapper.kernel.wp_integrate_common import (
     compute_tsdf_weight,
     floor_div,
-    quat_from_wxyz_array,
     vec3_from_array,
 )
 from curobo._src.perception.mapper.kernel.wp_stamp_obstacles import (

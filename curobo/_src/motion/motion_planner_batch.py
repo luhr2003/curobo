@@ -19,20 +19,19 @@ import torch
 
 from curobo._src.cost.tool_pose_criteria import ToolPoseCriteria
 from curobo._src.geom.collision import create_collision_checker
-from curobo._src.robot.kinematics.kinematics import Kinematics
-from curobo._src.robot.kinematics.kinematics_state import KinematicsState
 from curobo._src.geom.types import SceneCfg
 from curobo._src.motion.motion_planner import _axis_string_to_vector
 from curobo._src.motion.motion_planner_cfg import MotionPlannerCfg
 from curobo._src.motion.motion_planner_result import GraspPlanResult
+from curobo._src.robot.kinematics.kinematics import Kinematics
+from curobo._src.robot.kinematics.kinematics_state import KinematicsState
 from curobo._src.solver.solver_ik import IKSolver
 from curobo._src.solver.solver_trajopt import TrajOptSolver
 from curobo._src.solver.solver_trajopt_result import TrajOptSolverResult
 from curobo._src.state.state_joint import JointState
 from curobo._src.state.state_joint_trajectory_ops import get_joint_state_at_horizon_index
 from curobo._src.types.pose import Pose
-from curobo._src.types.tool_pose import GoalToolPose, ToolPose
-from curobo._src.util.logging import log_and_raise
+from curobo._src.types.tool_pose import GoalToolPose
 
 
 class BatchMotionPlanner:

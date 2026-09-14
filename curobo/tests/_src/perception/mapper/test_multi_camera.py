@@ -156,7 +156,8 @@ class TestMultiCameraForLoop:
         self, warp_init, device, intrinsics_a, method
     ):
         """Two cameras at the same pose should roughly double TSDF weights
-        compared to a single camera."""
+        compared to a single camera.
+        """
         depth, rgb = self._make_depth_rgb(device)
         pos = torch.zeros(3, dtype=torch.float32, device=device)
         quat = torch.tensor([1.0, 0.0, 0.0, 0.0], dtype=torch.float32, device=device)

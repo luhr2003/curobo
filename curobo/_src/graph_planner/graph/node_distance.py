@@ -10,10 +10,11 @@ from typing import Tuple
 # Third Party
 import torch
 
+from curobo._src.types.device_cfg import DeviceCfg
+
 # CuRobo
 from curobo._src.util.tensor_util import stable_topk
 from curobo._src.util.torch_util import get_torch_jit_decorator
-from curobo._src.types.device_cfg import DeviceCfg
 
 
 class DistanceNeighborCalculator:

@@ -11,7 +11,6 @@ Composed by LBFGSOpt, LSR1Opt, and ConjugateGradientOpt.
 
 from __future__ import annotations
 
-import math
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import torch
@@ -27,7 +26,7 @@ from curobo._src.optim.optimization_iteration_state import OptimizationIteration
 from curobo._src.rollout.rollout_protocol import Rollout
 from curobo._src.util.cuda_event_timer import CudaEventTimer
 from curobo._src.util.cuda_graph_util import GraphExecutor, create_graph_executor
-from curobo._src.util.logging import log_and_raise, log_info
+from curobo._src.util.logging import log_and_raise
 from curobo._src.util.tensor_util import check_nan_last_dimension
 
 

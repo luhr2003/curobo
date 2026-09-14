@@ -20,7 +20,12 @@ from curobo._src.optim.gradient.conjugate_gradient import (
     jit_cg_compute_step_direction,
     jit_cg_shift_buffers,
 )
-from curobo._src.rollout.metrics import CostCollection, CostsAndConstraints, RolloutMetrics, RolloutResult
+from curobo._src.rollout.metrics import (
+    CostCollection,
+    CostsAndConstraints,
+    RolloutMetrics,
+    RolloutResult,
+)
 from curobo._src.types.device_cfg import DeviceCfg
 from curobo._src.util.sampling.sample_buffer import SampleBuffer
 

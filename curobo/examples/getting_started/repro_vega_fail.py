@@ -24,19 +24,18 @@ Run::
 
 from __future__ import annotations
 
-import torch
-
 from copy import deepcopy
 
+import torch
+
+from curobo._src.cost.tool_pose_criteria import ToolPoseCriteria
 from curobo.batch_motion_planner import BatchMotionPlanner
 from curobo.config_io import join_path, load_yaml
 from curobo.content import get_robot_configs_path
-from curobo._src.cost.tool_pose_criteria import ToolPoseCriteria
 from curobo.inverse_kinematics import InverseKinematics, InverseKinematicsCfg
 from curobo.motion_planner import MotionPlannerCfg
 from curobo.scene import Scene
 from curobo.types import DeviceCfg, GoalToolPose, JointState, Pose
-
 
 ROBOT_YAML = "magicsim_vega1p_sharpa.yml"  # fixed-base variant
 B = 1
@@ -45,7 +44,8 @@ B = 1
 def _load_yaml_with_planner_manager_merge():
     """Load magicsim_vega1p_sharpa.yml exactly the way PlannerManager does:
     merge top-level ``extra_fk_link`` into ``robot_cfg.kinematics.tool_frames``
-    (dedup, tracked first, then extras). Returns (merged_cfg, extras, info_links)."""
+    (dedup, tracked first, then extras). Returns (merged_cfg, extras, info_links).
+    """
     raw = load_yaml(join_path(get_robot_configs_path(), ROBOT_YAML))
     cfg = deepcopy(raw["robot_cfg"])
     extras = list(raw.get("extra_fk_link") or [])

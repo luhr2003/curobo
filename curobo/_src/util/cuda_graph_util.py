@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (c) 2023-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
+import gc
 from typing import Callable, Optional, Tuple, Union
 
 import torch
@@ -7,7 +8,6 @@ import torch
 import curobo._src.runtime as curobo_runtime
 from curobo import runtime as curobo_runtime
 from curobo._src.util.logging import log_info, log_warn
-import gc
 
 
 class GraphExecutor:
