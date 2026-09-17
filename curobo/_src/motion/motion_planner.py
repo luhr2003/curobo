@@ -331,7 +331,9 @@ class MotionPlanner:
             seed_config = ik_result.solution
             if success_count < num_seeds:
                 good_solution = seed_config[ik_result.success][0:1, :].clone()
-                seed_config[~ik_result.success][:, :] = good_solution
+                # Boolean indexing returns a copy; assign directly so failed
+                # seeds are repaired before the graph planner checks all goals.
+                seed_config[~ik_result.success] = good_solution
 
             seed_traj = None
             finetune_attempts = 1

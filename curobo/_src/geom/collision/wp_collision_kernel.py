@@ -145,7 +145,9 @@ def sphere_obstacle_collision_kernel(
     local_pt = wp.transform_point(inv_t, query.center)
 
     # Compute local SDF and gradient
-    local_result = compute_local_sdf_with_grad(obs_set, env_idx, obs_local_idx, local_pt)
+    local_result = compute_local_sdf_with_grad(
+        obs_set, env_idx, obs_local_idx, local_pt, query.radius_adjusted
+    )
 
     # Only compute forward transform and accumulate when in collision
     penetration = -local_result[0] + query.radius_adjusted

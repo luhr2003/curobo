@@ -5,21 +5,21 @@
     <parent link="vega_1p_mobile"/>
     <child link="dummy_base_x"/>
     <axis xyz="1. 0. 0."/>
-    <limit lower="-2" upper="2" effort="4800." velocity="15."/>
+    <limit lower="-10" upper="10" effort="4800." velocity="15."/>
   </joint>
   <joint name="dummy_base_prismatic_y_joint" type="prismatic">
     <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
     <parent link="dummy_base_x"/>
     <child link="dummy_base_y"/>
     <axis xyz="0. 1. 0."/>
-    <limit lower="-2" upper="2" effort="4800." velocity="15."/>
+    <limit lower="-10" upper="10" effort="4800." velocity="15."/>
   </joint>
   <joint name="dummy_base_revolute_z_joint" type="revolute">
     <origin xyz="0. 0. 0." rpy="0. 0. 0."/>
     <parent link="dummy_base_y"/>
     <child link="vega_1p_base"/>
     <axis xyz="0. 0. 1."/>
-    <limit lower="-1.5707964" upper="1.5707964" effort="4800." velocity="15.0000002"/>
+    <limit lower="-3.1415927" upper="3.1415927" effort="4800." velocity="15.0000002"/>
   </joint>
   <link name="dummy_base_x">
     <inertial>

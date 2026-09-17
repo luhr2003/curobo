@@ -70,8 +70,8 @@ robot_cfg:
     - vega_1p_R_arm_l6
     - R_arm_l7
     - R_arm_l8
-    # Sharpa hand finger phalanxes — mirror of magicsim_vega1p_sharpa.yml.
-    # See that file for the rationale (collision avoidance for dex grasps).
+    # Arm and hand spheres enclose the physical USD collision shells.
+    # Include finger-base connectors and fingertip pads as well as phalanxes.
     - right_hand_C_MC
     - right_thumb_MC
     - right_thumb_PP
@@ -106,49 +106,88 @@ robot_cfg:
     - left_pinky_PP
     - left_pinky_MP
     - left_pinky_DP
+    - left_index_MCP_VL
+    - left_index_elastomer
+    - left_middle_MCP_VL
+    - left_middle_elastomer
+    - left_pinky_MCP_VL
+    - left_pinky_elastomer
+    - left_ring_MCP_VL
+    - left_ring_elastomer
+    - left_thumb_elastomer
+    - right_index_MCP_VL
+    - right_index_elastomer
+    - right_middle_MCP_VL
+    - right_middle_elastomer
+    - right_pinky_MCP_VL
+    - right_pinky_elastomer
+    - right_ring_MCP_VL
+    - right_ring_elastomer
+    - right_thumb_elastomer
     - attached_object
     collision_spheres:
       vega_1p_base:
-      - center:
-        - -0.021665938198566437
-        - 0.1435871422290802
-        - 0.12281230092048645
-        radius: 0.11187159270048141
-      - center:
-        - -0.06995093822479248
-        - -0.16236436367034912
-        - 0.09352488070726395
-        radius: 0.09625345468521118
-      - center:
-        - 0.2608060836791992
-        - 0.059516921639442444
-        - 0.12661446630954742
-        radius: 0.07756798714399338
-      - center:
-        - 0.2866175174713135
-        - -0.11959073692560196
-        - 0.1147979199886322
-        radius: 0.031201884150505066
-      - center:
-        - 0.10636376589536667
-        - -0.05388494208455086
-        - 0.1758119761943817
-        radius: 0.03397776931524277
-      - center:
-        - -0.31005391478538513
-        - -0.026011260226368904
-        - 0.14026127755641937
-        radius: 0.0196621622890234
-      - center:
-        - -0.2780098617076874
-        - 0.07840969413518906
-        - 0.0883072093129158
-        radius: 0.08582820743322372
-      - center:
-        - 0.10714592784643173
-        - 0.23974019289016724
-        - 0.15874136984348297
-        radius: 0.01855669543147087
+        # Cover the physical base shell; sparse interior spheres miss bottles.
+      - center: [-0.245, -0.175, 0.145]
+        radius: 0.152
+      - center: [-0.245, 0.0, 0.145]
+        radius: 0.152
+      - center: [-0.245, 0.175, 0.145]
+        radius: 0.152
+      - center: [-0.1225, -0.175, 0.145]
+        radius: 0.152
+      - center: [-0.1225, 0.0, 0.145]
+        radius: 0.152
+      - center: [-0.1225, 0.175, 0.145]
+        radius: 0.152
+      - center: [0.0, -0.175, 0.145]
+        radius: 0.152
+      - center: [0.0, 0.0, 0.145]
+        radius: 0.152
+      - center: [0.0, 0.175, 0.145]
+        radius: 0.152
+      - center: [0.1225, -0.175, 0.145]
+        radius: 0.152
+      - center: [0.1225, 0.0, 0.145]
+        radius: 0.152
+      - center: [0.1225, 0.175, 0.145]
+        radius: 0.152
+      - center: [0.245, -0.175, 0.145]
+        radius: 0.152
+      - center: [0.245, 0.0, 0.145]
+        radius: 0.152
+      - center: [0.245, 0.175, 0.145]
+        radius: 0.152
+      - center: [-0.245, -0.175, 0.24]
+        radius: 0.13
+      - center: [-0.245, 0.0, 0.24]
+        radius: 0.13
+      - center: [-0.245, 0.175, 0.24]
+        radius: 0.13
+      - center: [-0.1225, -0.175, 0.24]
+        radius: 0.13
+      - center: [-0.1225, 0.0, 0.24]
+        radius: 0.13
+      - center: [-0.1225, 0.175, 0.24]
+        radius: 0.13
+      - center: [0.0, -0.175, 0.24]
+        radius: 0.13
+      - center: [0.0, 0.0, 0.24]
+        radius: 0.13
+      - center: [0.0, 0.175, 0.24]
+        radius: 0.13
+      - center: [0.1225, -0.175, 0.24]
+        radius: 0.13
+      - center: [0.1225, 0.0, 0.24]
+        radius: 0.13
+      - center: [0.1225, 0.175, 0.24]
+        radius: 0.13
+      - center: [0.245, -0.175, 0.24]
+        radius: 0.13
+      - center: [0.245, 0.0, 0.24]
+        radius: 0.13
+      - center: [0.245, 0.175, 0.24]
+        radius: 0.13
       vega_1p_torso_l1:
       - center:
         - 0.1626695692539215
@@ -306,375 +345,347 @@ robot_cfg:
         - -0.05013555288314819
         radius: 0.009482735767960548
       vega_1p_L_arm_l1:
-      - center:
-        - 0.04601487144827843
-        - 0.0651463121175766
-        - 0.015795085579156876
-        radius: 0.028741654008626938
-      - center:
-        - 0.040852293372154236
-        - 0.057863958179950714
-        - -0.009040756151080132
-        radius: 0.004427190404385328
-      - center:
-        - 0.010959196835756302
-        - 0.002778813475742936
-        - 0.00012116557627450675
-        radius: 0.003640163457021117
-      - center:
-        - 0.018501948565244675
-        - 0.0634738877415657
-        - -0.017300758510828018
-        radius: 0.012503347359597683
-      - center:
-        - -0.02099873498082161
-        - 0.005311429966241121
-        - 0.006293162703514099
-        radius: 0.01289022620767355
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.060833, 0.079138, 0.001768], radius: 0.059709}
+      - {center: [0.036568, 0.059866, 0.000604], radius: 0.061334}
+      - {center: [0.016457, 0.036054, 0.000633], radius: 0.061351}
+      - {center: [-0.005342, 0.014119, -0.000403], radius: 0.057376}
+      - {center: [-0.031575, -0.003024, -0.001571], radius: 0.055662}
       L_arm_l2:
-      - center:
-        - -0.0020094742067158222
-        - 0.011749925091862679
-        - 0.018520791083574295
-        radius: 0.0020000000949949026
-      - center:
-        - 0.10843519866466522
-        - 0.03579768165946007
-        - -0.05637100711464882
-        radius: 0.0020000000949949026
-      - center:
-        - -0.013673145323991776
-        - -0.03879942744970322
-        - -0.093232162296772
-        radius: 0.0020000000949949026
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.016830, -0.000013, 0.005786], radius: 0.053458}
+      - {center: [0.026307, 0.000022, -0.011874], radius: 0.085618}
+      - {center: [0.059105, 0.000057, -0.032625], radius: 0.110056}
+      - {center: [0.063479, 0.000065, -0.061901], radius: 0.114157}
+      - {center: [0.077780, 0.000101, -0.088115], radius: 0.103041}
       L_arm_l3:
-      - center:
-        - 0.020307296887040138
-        - -0.03299178555607796
-        - -0.0012566790683194995
-        radius: 0.002963393460959196
-      - center:
-        - 0.12448497116565704
-        - 0.03226684778928757
-        - 0.060737136751413345
-        radius: 0.012542174197733402
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.009102, -0.002784, -0.017524], radius: 0.051929}
+      - {center: [0.016634, -0.000720, 0.002876], radius: 0.052448}
+      - {center: [0.046694, 0.000152, 0.017954], radius: 0.053479}
+      - {center: [0.074665, 0.000663, 0.035551], radius: 0.055337}
+      - {center: [0.104984, 0.002734, 0.050229], radius: 0.056789}
+      - {center: [0.129397, 0.002499, 0.072333], radius: 0.056035}
       L_arm_l4:
-      - center:
-        - 0.015613965690135956
-        - -0.0837608054280281
-        - -0.004438657313585281
-        radius: 0.005445179063826799
-      - center:
-        - 0.1660267859697342
-        - -0.026593605056405067
-        - -0.0652998760342598
-        radius: 0.0029143481515347958
-      - center:
-        - 0.15330660343170166
-        - -0.045736268162727356
-        - -0.02906990423798561
-        radius: 0.005675191525369883
-      - center:
-        - 0.13457712531089783
-        - -0.07373843342065811
-        - -0.03943396732211113
-        radius: 0.006946354638785124
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.184982, -0.043461, -0.048222], radius: 0.039991}
+      - {center: [0.153471, -0.043190, -0.042593], radius: 0.047190}
+      - {center: [0.120800, -0.043502, -0.039740], radius: 0.053591}
+      - {center: [0.090363, -0.043267, -0.031869], radius: 0.057242}
+      - {center: [0.059135, -0.043409, -0.025392], radius: 0.062205}
+      - {center: [0.023999, -0.043514, -0.028172], radius: 0.067193}
+      - {center: [0.000906, -0.043328, -0.003259], radius: 0.066488}
+      - {center: [-0.026732, -0.043244, 0.011180], radius: 0.065000}
       L_arm_l5:
-      - center:
-        - 0.06438883394002914
-        - -0.000776016793679446
-        - 0.0017563484143465757
-        radius: 0.027727771550416946
-      - center:
-        - 0.007408767007291317
-        - -0.00019526707183104008
-        - -0.012949743308126926
-        radius: 0.023639412596821785
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.097919, -0.007067, 0.000060], radius: 0.052941}
+      - {center: [0.065469, -0.001273, -0.000025], radius: 0.051148}
+      - {center: [0.031558, -0.000070, -0.000041], radius: 0.045339}
+      - {center: [-0.002191, 0.002269, 0.000018], radius: 0.040978}
       vega_1p_L_arm_l6:
-      - center:
-        - 0.06513413786888123
-        - -0.02941819652915001
-        - -0.010768738575279713
-        radius: 0.029973112046718597
-      - center:
-        - 0.06656190752983093
-        - -0.030780714005231857
-        - -0.010774044319987297
-        radius: 0.03136397525668144
-      - center:
-        - 0.012540754862129688
-        - -0.010437006130814552
-        - -0.025839870795607567
-        radius: 0.0025254024658352137
-      - center:
-        - -0.01663030870258808
-        - 0.00783234741538763
-        - 0.002369201509281993
-        radius: 0.0034059053286910057
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.015531, 0.003279, 0.006053], radius: 0.038699}
+      - {center: [0.012086, -0.008101, 0.001961], radius: 0.045443}
+      - {center: [0.040528, -0.020268, 0.000362], radius: 0.052047}
+      - {center: [0.067538, -0.029482, -0.007818], radius: 0.051435}
+      - {center: [0.091461, -0.039681, -0.021877], radius: 0.050304}
       L_arm_l7:
-      - center:
-        - 0.05098035931587219
-        - -0.02348337136209011
-        - -0.004160880111157894
-        radius: 0.0020000000949949026
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.066368, 0.000058, -0.039957], radius: 0.044736}
+      - {center: [0.042497, -0.000095, -0.019058], radius: 0.048863}
+      - {center: [0.016271, -0.000017, -0.002121], radius: 0.042910}
+      - {center: [-0.016718, -0.000099, 0.002367], radius: 0.040332}
       L_arm_l8:
-      - center:
-        - 0.009946844540536404
-        - -0.002707801293581724
-        - -0.03164615482091904
-        radius: 0.020250288769602776
-      - center:
-        - -0.009703291580080986
-        - 0.013251000083982944
-        - -0.007958238013088703
-        radius: 0.0010786398779600859
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.001382, -0.000152, -0.005201], radius: 0.036067}
+      - {center: [0.004493, -0.000290, -0.036486], radius: 0.037923}
       vega_1p_R_arm_l1:
-      - center:
-        - 0.036427974700927734
-        - 0.04294103384017944
-        - -0.015832047909498215
-        radius: 0.022291788831353188
-      - center:
-        - 0.043947771191596985
-        - 0.07981786131858826
-        - 0.005594382993876934
-        radius: 0.017519313842058182
-      - center:
-        - 0.04308512434363365
-        - 0.022137252613902092
-        - 0.010911090299487114
-        radius: 0.012259508483111858
-      - center:
-        - 0.027627166360616684
-        - 0.07892106473445892
-        - -0.02601056732237339
-        radius: 0.018526429310441017
-      - center:
-        - -0.0008271557162515819
-        - -0.012216491624712944
-        - -0.0026662040036171675
-        radius: 0.014124870300292969
-      - center:
-        - 0.06555896997451782
-        - 0.0732569545507431
-        - 0.005871474277228117
-        radius: 0.015237393788993359
-      - center:
-        - 0.049880336970090866
-        - 0.05684133619070053
-        - -0.02020256035029888
-        radius: 0.004253368359059095
-      - center:
-        - -0.0008101917919702828
-        - 0.07014672458171844
-        - -0.0013146393466740847
-        radius: 0.01736014150083065
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.061598, 0.077913, -0.004541], radius: 0.059307}
+      - {center: [0.038311, 0.057623, -0.004234], radius: 0.061698}
+      - {center: [0.016746, 0.035402, -0.002537], radius: 0.063554}
+      - {center: [-0.005575, 0.014041, -0.001296], radius: 0.058723}
+      - {center: [-0.028641, -0.006632, -0.003455], radius: 0.056273}
       R_arm_l2:
-      - center:
-        - -0.025553513318300247
-        - 0.034828778356313705
-        - -0.08618494868278503
-        radius: 0.0020000000949949026
-      - center:
-        - 0.14959999918937683
-        - 0.03725659102201462
-        - -0.04772023484110832
-        radius: 0.0020000000949949026
-      - center:
-        - -0.04139430820941925
-        - -0.008113544434309006
-        - 0.008679773658514023
-        radius: 0.0020000000949949026
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.016830, -0.000013, 0.005786], radius: 0.053458}
+      - {center: [0.026307, 0.000022, -0.011874], radius: 0.085618}
+      - {center: [0.059105, 0.000057, -0.032625], radius: 0.110056}
+      - {center: [0.063479, 0.000065, -0.061901], radius: 0.114157}
+      - {center: [0.077780, 0.000101, -0.088115], radius: 0.103041}
       R_arm_l3:
-      - center:
-        - 0.029777510091662407
-        - -0.02146124467253685
-        - 0.011178686283528805
-        radius: 0.003917821682989597
-      - center:
-        - 0.14659515023231506
-        - -0.016415530815720558
-        - 0.05833364650607109
-        radius: 0.0025655641220510006
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.009102, -0.002784, -0.017524], radius: 0.051929}
+      - {center: [0.016634, -0.000720, 0.002876], radius: 0.052448}
+      - {center: [0.046694, 0.000152, 0.017954], radius: 0.053479}
+      - {center: [0.074665, 0.000663, 0.035551], radius: 0.055337}
+      - {center: [0.104984, 0.002734, 0.050229], radius: 0.056789}
+      - {center: [0.129397, 0.002499, 0.072333], radius: 0.056035}
       R_arm_l4:
-      - center:
-        - 0.07932111620903015
-        - -0.039383597671985626
-        - -0.04774080216884613
-        radius: 0.03850538283586502
-      - center:
-        - -0.008632788434624672
-        - -0.08978943526744843
-        - 0.009939749725162983
-        radius: 0.0072959125973284245
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.184982, -0.043461, -0.048222], radius: 0.039991}
+      - {center: [0.153471, -0.043190, -0.042593], radius: 0.047190}
+      - {center: [0.120800, -0.043502, -0.039740], radius: 0.053591}
+      - {center: [0.090363, -0.043267, -0.031869], radius: 0.057242}
+      - {center: [0.059135, -0.043409, -0.025392], radius: 0.062205}
+      - {center: [0.023999, -0.043514, -0.028172], radius: 0.067193}
+      - {center: [0.000906, -0.043328, -0.003259], radius: 0.066488}
+      - {center: [-0.026732, -0.043244, 0.011180], radius: 0.065000}
       R_arm_l5:
-      - center:
-        - 0.008194603957235813
-        - -0.004888811614364386
-        - -0.0060511683113873005
-        radius: 0.0223044753074646
-      - center:
-        - 0.07174867391586304
-        - 0.005078532267361879
-        - 0.0037194620817899704
-        radius: 0.027368512004613876
-      - center:
-        - 0.006695935968309641
-        - -0.0002064645232167095
-        - 0.008758274838328362
-        radius: 0.007198987063020468
-      - center:
-        - 0.03505127876996994
-        - 0.001823759637773037
-        - -0.016316281631588936
-        radius: 0.004697614815086126
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.097919, 0.007067, -0.000060], radius: 0.052941}
+      - {center: [0.065469, 0.001273, 0.000025], radius: 0.051148}
+      - {center: [0.031558, 0.000070, 0.000041], radius: 0.045339}
+      - {center: [-0.002191, -0.002269, -0.000018], radius: 0.040978}
       vega_1p_R_arm_l6:
-      - center:
-        - 0.0772196501493454
-        - -0.03838267922401428
-        - 0.0006599187618121505
-        radius: 0.023204848170280457
-      - center:
-        - 0.001530793379060924
-        - 0.0004605207359418273
-        - -0.002209495985880494
-        radius: 0.006827907636761665
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.091380, -0.039494, 0.021984], radius: 0.050170}
+      - {center: [0.067352, -0.029468, 0.007888], radius: 0.051465}
+      - {center: [0.040306, -0.020405, -0.000403], radius: 0.051821}
+      - {center: [0.012041, -0.008102, -0.001963], radius: 0.045461}
+      - {center: [-0.015677, 0.003266, -0.005825], radius: 0.038998}
       R_arm_l7:
-      - center:
-        - -0.030360981822013855
-        - 0.006630527321249247
-        - 0.0017159070121124387
-        radius: 0.0020000000949949026
-      - center:
-        - 0.06192703917622566
-        - 0.007921146228909492
-        - -0.03149263933300972
-        radius: 0.0020000000949949026
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.066368, 0.000058, -0.039957], radius: 0.044736}
+      - {center: [0.042497, -0.000095, -0.019058], radius: 0.048863}
+      - {center: [0.016271, -0.000017, -0.002121], radius: 0.042910}
+      - {center: [-0.016718, -0.000099, 0.002367], radius: 0.040332}
       R_arm_l8:
-      - center:
-        - -0.0020064630080014467
-        - -0.007163296919316053
-        - -0.02356943115592003
-        radius: 0.020812157541513443
-      - center:
-        - -0.02752983383834362
-        - -0.0034961174242198467
-        - -0.022378338500857353
-        radius: 0.002260789508000016
-      - center:
-        - 0.0001983990368898958
-        - -0.006867587100714445
-        - -0.037491366267204285
-        radius: 0.00156586233060807
-      # ====== Sharpa hand sphere data (mirror of locked yml) ====
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.001382, -0.000152, -0.005201], radius: 0.036067}
+      - {center: [0.004493, -0.000290, -0.036486], radius: 0.037923}
       right_hand_C_MC:
-      - {center: [-0.004, -0.005,  0.059], radius: 0.0227}
-      - {center: [-0.005, -0.002,  0.021], radius: 0.0227}
-      - {center: [-0.007,  0.016,  0.057], radius: 0.0212}
-      - {center: [-0.005, -0.022,  0.018], radius: 0.0197}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.002283, 0.030136, 0.082401], radius: 0.030906}
+      - {center: [-0.002119, 0.018805, 0.067471], radius: 0.040940}
+      - {center: [-0.000607, 0.008826, 0.051719], radius: 0.045727}
+      - {center: [0.000629, 0.005794, 0.030457], radius: 0.047529}
+      - {center: [-0.000622, -0.005087, 0.015019], radius: 0.041654}
+      - {center: [-0.000392, -0.024447, 0.006399], radius: 0.038148}
       right_thumb_MC:
-      - {center: [ 0.045, -0.010,  0.008], radius: 0.0180}
-      - {center: [ 0.030, -0.008,  0.012], radius: 0.0167}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.062711, -0.009240, 0.007936], radius: 0.021633}
+      - {center: [0.046099, -0.009524, 0.009840], radius: 0.024336}
+      - {center: [0.029559, -0.010889, 0.011230], radius: 0.024463}
+      - {center: [0.012861, -0.011893, 0.011534], radius: 0.023362}
       right_thumb_PP:
-      - {center: [ 0.017,  0.000, -0.002], radius: 0.0116}
-      - {center: [ 0.030, -0.000, -0.003], radius: 0.0109}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.016540, 0.000007, -0.000896], radius: 0.018189}
+      - {center: [0.035842, 0.000070, -0.002636], radius: 0.017100}
       right_thumb_DP:
-      - {center: [ 0.007, -0.002,  0.000], radius: 0.0086}
-      - {center: [ 0.018, -0.004, -0.001], radius: 0.0080}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.020542, -0.009113, -0.000087], radius: 0.013320}
+      - {center: [0.006951, -0.002120, -0.000022], radius: 0.013711}
       right_index_PP:
-      - {center: [ 0.023, -0.001, -0.001], radius: 0.0120}
-      - {center: [ 0.039, -0.000, -0.005], radius: 0.0112}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.017032, -0.000127, 0.000110], radius: 0.015639}
+      - {center: [0.031994, -0.000053, -0.000269], radius: 0.015646}
+      - {center: [0.046965, 0.000023, -0.001160], radius: 0.015214}
       right_index_MP:
-      - {center: [ 0.014, -0.001, -0.000], radius: 0.0096}
-      - {center: [ 0.024, -0.005, -0.000], radius: 0.0096}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.007898, -0.001473, 0.000181], radius: 0.015435}
+      - {center: [0.026970, 0.000597, 0.000248], radius: 0.016247}
       right_index_DP:
-      - {center: [ 0.017, -0.003, -0.000], radius: 0.0079}
-      - {center: [ 0.007, -0.003, -0.001], radius: 0.0079}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.018819, -0.006871, 0.000170], radius: 0.012362}
+      - {center: [0.006164, -0.001962, 0.000124], radius: 0.012277}
       right_middle_PP:
-      - {center: [ 0.019,  0.000, -0.001], radius: 0.0110}
-      - {center: [ 0.039, -0.000, -0.004], radius: 0.0102}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.017032, -0.000127, 0.000110], radius: 0.015639}
+      - {center: [0.031994, -0.000053, -0.000269], radius: 0.015646}
+      - {center: [0.046965, 0.000023, -0.001160], radius: 0.015214}
       right_middle_MP:
-      - {center: [ 0.011, -0.001, -0.000], radius: 0.0096}
-      - {center: [ 0.024, -0.004, -0.000], radius: 0.0096}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.007898, -0.001473, 0.000181], radius: 0.015435}
+      - {center: [0.026970, 0.000597, 0.000248], radius: 0.016247}
       right_middle_DP:
-      - {center: [ 0.006, -0.003, -0.001], radius: 0.0079}
-      - {center: [ 0.016, -0.003, -0.000], radius: 0.0079}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.018819, -0.006871, 0.000170], radius: 0.012362}
+      - {center: [0.006164, -0.001962, 0.000124], radius: 0.012277}
       right_ring_PP:
-      - {center: [ 0.022,  0.000, -0.001], radius: 0.0110}
-      - {center: [ 0.036, -0.000, -0.003], radius: 0.0102}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.017032, -0.000127, 0.000110], radius: 0.015639}
+      - {center: [0.031994, -0.000053, -0.000269], radius: 0.015646}
+      - {center: [0.046965, 0.000023, -0.001160], radius: 0.015214}
       right_ring_MP:
-      - {center: [ 0.014, -0.001, -0.000], radius: 0.0096}
-      - {center: [ 0.024, -0.005,  0.000], radius: 0.0096}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.007898, -0.001473, 0.000181], radius: 0.015435}
+      - {center: [0.026970, 0.000597, 0.000248], radius: 0.016247}
       right_ring_DP:
-      - {center: [ 0.015, -0.003, -0.000], radius: 0.0079}
-      - {center: [ 0.006, -0.003, -0.001], radius: 0.0079}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.018819, -0.006871, 0.000170], radius: 0.012362}
+      - {center: [0.006164, -0.001962, 0.000124], radius: 0.012277}
       right_pinky_MC:
-      - {center: [ 0.006,  0.002, -0.041], radius: 0.0148}
-      - {center: [ 0.005,  0.007, -0.026], radius: 0.0142}
-      - {center: [ 0.008,  0.007, -0.012], radius: 0.0142}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.006878, 0.007048, -0.021134], radius: 0.023035}
+      - {center: [0.004813, 0.007308, -0.031375], radius: 0.032225}
+      - {center: [0.019390, 0.006645, -0.037106], radius: 0.032272}
+      - {center: [0.031052, 0.005039, -0.047061], radius: 0.021831}
       right_pinky_PP:
-      - {center: [ 0.024,  0.000, -0.001], radius: 0.0110}
-      - {center: [ 0.040, -0.000, -0.002], radius: 0.0102}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.017032, -0.000127, 0.000110], radius: 0.015639}
+      - {center: [0.031994, -0.000053, -0.000269], radius: 0.015646}
+      - {center: [0.046965, 0.000023, -0.001160], radius: 0.015214}
       right_pinky_MP:
-      - {center: [ 0.010, -0.002, -0.000], radius: 0.0096}
-      - {center: [ 0.025, -0.003,  0.000], radius: 0.0096}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.007898, -0.001473, 0.000181], radius: 0.015435}
+      - {center: [0.026970, 0.000597, 0.000248], radius: 0.016247}
       right_pinky_DP:
-      - {center: [ 0.005, -0.003,  0.001], radius: 0.0079}
-      - {center: [ 0.015, -0.003,  0.000], radius: 0.0079}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.018819, -0.006871, 0.000170], radius: 0.012362}
+      - {center: [0.006164, -0.001962, 0.000124], radius: 0.012277}
       left_hand_C_MC:
-      - {center: [-0.004,  0.005,  0.059], radius: 0.0227}
-      - {center: [-0.005,  0.002,  0.021], radius: 0.0227}
-      - {center: [-0.007, -0.016,  0.057], radius: 0.0212}
-      - {center: [-0.005,  0.022,  0.018], radius: 0.0197}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.002234, -0.030124, 0.082413], radius: 0.030924}
+      - {center: [-0.002114, -0.018803, 0.067477], radius: 0.040939}
+      - {center: [-0.000636, -0.008818, 0.051711], radius: 0.045741}
+      - {center: [0.000637, -0.005785, 0.030463], radius: 0.047516}
+      - {center: [-0.000616, 0.005088, 0.015019], radius: 0.041651}
+      - {center: [-0.000393, 0.024438, 0.006395], radius: 0.038142}
       left_thumb_MC:
-      - {center: [ 0.045, -0.010, -0.008], radius: 0.0180}
-      - {center: [ 0.030, -0.008, -0.012], radius: 0.0167}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.064705, -0.008833, -0.008218], radius: 0.021855}
+      - {center: [0.047379, -0.009073, -0.010157], radius: 0.024427}
+      - {center: [0.030207, -0.010985, -0.010986], radius: 0.024380}
+      - {center: [0.012932, -0.012422, -0.011022], radius: 0.023282}
       left_thumb_PP:
-      - {center: [ 0.017,  0.000,  0.002], radius: 0.0116}
-      - {center: [ 0.030,  0.000,  0.003], radius: 0.0109}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.016545, 0.000097, 0.000909], radius: 0.018195}
+      - {center: [0.035838, -0.000061, 0.002724], radius: 0.017003}
       left_thumb_DP:
-      - {center: [ 0.007, -0.002,  0.000], radius: 0.0086}
-      - {center: [ 0.018, -0.004,  0.001], radius: 0.0080}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.020542, -0.009113, -0.000087], radius: 0.013320}
+      - {center: [0.006951, -0.002120, -0.000022], radius: 0.013711}
       left_index_PP:
-      - {center: [ 0.023, -0.001,  0.001], radius: 0.0120}
-      - {center: [ 0.039,  0.000,  0.005], radius: 0.0112}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.017011, 0.000065, -0.000135], radius: 0.015645}
+      - {center: [0.031897, 0.000020, 0.000210], radius: 0.015656}
+      - {center: [0.046798, -0.000035, 0.001126], radius: 0.015337}
       left_index_MP:
-      - {center: [ 0.014, -0.001,  0.000], radius: 0.0096}
-      - {center: [ 0.024, -0.005,  0.000], radius: 0.0096}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.007898, -0.001473, 0.000181], radius: 0.015435}
+      - {center: [0.026970, 0.000597, 0.000248], radius: 0.016247}
       left_index_DP:
-      - {center: [ 0.017, -0.003,  0.000], radius: 0.0079}
-      - {center: [ 0.007, -0.003,  0.001], radius: 0.0079}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.018819, -0.006871, 0.000170], radius: 0.012362}
+      - {center: [0.006164, -0.001962, 0.000124], radius: 0.012277}
       left_middle_PP:
-      - {center: [ 0.019,  0.000,  0.001], radius: 0.0110}
-      - {center: [ 0.039,  0.000,  0.004], radius: 0.0102}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.017011, 0.000065, -0.000135], radius: 0.015645}
+      - {center: [0.031897, 0.000020, 0.000210], radius: 0.015656}
+      - {center: [0.046798, -0.000035, 0.001126], radius: 0.015337}
       left_middle_MP:
-      - {center: [ 0.011, -0.001,  0.000], radius: 0.0096}
-      - {center: [ 0.024, -0.004,  0.000], radius: 0.0096}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.007898, -0.001473, 0.000181], radius: 0.015435}
+      - {center: [0.026970, 0.000597, 0.000248], radius: 0.016247}
       left_middle_DP:
-      - {center: [ 0.006, -0.003,  0.001], radius: 0.0079}
-      - {center: [ 0.016, -0.003,  0.000], radius: 0.0079}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.018819, -0.006871, 0.000170], radius: 0.012362}
+      - {center: [0.006164, -0.001962, 0.000124], radius: 0.012277}
       left_ring_PP:
-      - {center: [ 0.022,  0.000,  0.001], radius: 0.0110}
-      - {center: [ 0.036,  0.000,  0.003], radius: 0.0102}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.017011, 0.000065, -0.000135], radius: 0.015645}
+      - {center: [0.031897, 0.000020, 0.000210], radius: 0.015656}
+      - {center: [0.046798, -0.000035, 0.001126], radius: 0.015337}
       left_ring_MP:
-      - {center: [ 0.014, -0.001,  0.000], radius: 0.0096}
-      - {center: [ 0.024, -0.005,  0.000], radius: 0.0096}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.007898, -0.001473, 0.000181], radius: 0.015435}
+      - {center: [0.026970, 0.000597, 0.000248], radius: 0.016247}
       left_ring_DP:
-      - {center: [ 0.015, -0.003,  0.000], radius: 0.0079}
-      - {center: [ 0.006, -0.003,  0.001], radius: 0.0079}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.018819, -0.006871, 0.000170], radius: 0.012362}
+      - {center: [0.006164, -0.001962, 0.000124], radius: 0.012277}
       left_pinky_MC:
-      - {center: [ 0.006,  0.002,  0.041], radius: 0.0148}
-      - {center: [ 0.005,  0.007,  0.026], radius: 0.0142}
-      - {center: [ 0.008,  0.007,  0.012], radius: 0.0142}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.006888, 0.007052, 0.021201], radius: 0.023068}
+      - {center: [0.004796, 0.007319, 0.031401], radius: 0.032199}
+      - {center: [0.019449, 0.006674, 0.036979], radius: 0.032153}
+      - {center: [0.031064, 0.005062, 0.046955], radius: 0.021750}
       left_pinky_PP:
-      - {center: [ 0.024,  0.000,  0.001], radius: 0.0110}
-      - {center: [ 0.040,  0.000,  0.002], radius: 0.0102}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.017011, 0.000065, -0.000135], radius: 0.015645}
+      - {center: [0.031897, 0.000020, 0.000210], radius: 0.015656}
+      - {center: [0.046798, -0.000035, 0.001126], radius: 0.015337}
       left_pinky_MP:
-      - {center: [ 0.010, -0.002,  0.000], radius: 0.0096}
-      - {center: [ 0.025, -0.003,  0.000], radius: 0.0096}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.007898, -0.001473, 0.000181], radius: 0.015435}
+      - {center: [0.026970, 0.000597, 0.000248], radius: 0.016247}
       left_pinky_DP:
-      - {center: [ 0.005, -0.003, -0.001], radius: 0.0079}
-      - {center: [ 0.015, -0.003,  0.000], radius: 0.0079}
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.018819, -0.006871, 0.000170], radius: 0.012362}
+      - {center: [0.006164, -0.001962, 0.000124], radius: 0.012277}
+      left_index_MCP_VL:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.000034, -0.005608, 0.000005], radius: 0.013900}
+      - {center: [-0.000059, 0.005525, -0.000004], radius: 0.014618}
+      left_index_elastomer:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.000239, -0.022086, 0.002655], radius: 0.012217}
+      - {center: [-0.000201, -0.013359, -0.003039], radius: 0.012168}
+      left_middle_MCP_VL:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.000034, -0.005608, 0.000005], radius: 0.013900}
+      - {center: [-0.000059, 0.005525, -0.000004], radius: 0.014618}
+      left_middle_elastomer:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.000239, -0.022086, 0.002655], radius: 0.012217}
+      - {center: [-0.000201, -0.013359, -0.003039], radius: 0.012168}
+      left_pinky_MCP_VL:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.000034, -0.005608, 0.000005], radius: 0.013900}
+      - {center: [-0.000059, 0.005525, -0.000004], radius: 0.014618}
+      left_pinky_elastomer:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.000239, -0.022086, 0.002655], radius: 0.012217}
+      - {center: [-0.000201, -0.013359, -0.003039], radius: 0.012168}
+      left_ring_MCP_VL:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.000034, -0.005608, 0.000005], radius: 0.013900}
+      - {center: [-0.000059, 0.005525, -0.000004], radius: 0.014618}
+      left_ring_elastomer:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.000239, -0.022086, 0.002655], radius: 0.012217}
+      - {center: [-0.000201, -0.013359, -0.003039], radius: 0.012168}
+      left_thumb_elastomer:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.000075, -0.024885, 0.004575], radius: 0.013196}
+      - {center: [-0.000033, -0.014988, -0.001937], radius: 0.013136}
+      right_index_MCP_VL:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.000121, -0.005173, -0.000010], radius: 0.014587}
+      - {center: [-0.000037, 0.005966, -0.000005], radius: 0.013883}
+      right_index_elastomer:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.000239, -0.022086, 0.002655], radius: 0.012217}
+      - {center: [-0.000201, -0.013359, -0.003039], radius: 0.012168}
+      right_middle_MCP_VL:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.000121, -0.005173, -0.000010], radius: 0.014587}
+      - {center: [-0.000037, 0.005966, -0.000005], radius: 0.013883}
+      right_middle_elastomer:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.000239, -0.022086, 0.002655], radius: 0.012217}
+      - {center: [-0.000201, -0.013359, -0.003039], radius: 0.012168}
+      right_pinky_MCP_VL:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.000121, -0.005173, -0.000010], radius: 0.014587}
+      - {center: [-0.000037, 0.005966, -0.000005], radius: 0.013883}
+      right_pinky_elastomer:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.000239, -0.022086, 0.002655], radius: 0.012217}
+      - {center: [-0.000201, -0.013359, -0.003039], radius: 0.012168}
+      right_ring_MCP_VL:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [-0.000121, -0.005173, -0.000010], radius: 0.014587}
+      - {center: [-0.000037, 0.005966, -0.000005], radius: 0.013883}
+      right_ring_elastomer:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.000239, -0.022086, 0.002655], radius: 0.012217}
+      - {center: [-0.000201, -0.013359, -0.003039], radius: 0.012168}
+      right_thumb_elastomer:
+        # Enclose the physical USD collision shell with 2 mm margin.
+      - {center: [0.000075, -0.024885, 0.004575], radius: 0.013196}
+      - {center: [-0.000033, -0.014988, -0.001937], radius: 0.013136}
     self_collision_ignore:
       vega_1p_base:
       - vega_1p_torso_l1
@@ -820,6 +831,24 @@ robot_cfg:
       - vega_1p_R_arm_l6
       - attached_object
     self_collision_buffer:
+      left_index_MCP_VL: -0.1
+      left_index_elastomer: -0.1
+      left_middle_MCP_VL: -0.1
+      left_middle_elastomer: -0.1
+      left_pinky_MCP_VL: -0.1
+      left_pinky_elastomer: -0.1
+      left_ring_MCP_VL: -0.1
+      left_ring_elastomer: -0.1
+      left_thumb_elastomer: -0.1
+      right_index_MCP_VL: -0.1
+      right_index_elastomer: -0.1
+      right_middle_MCP_VL: -0.1
+      right_middle_elastomer: -0.1
+      right_pinky_MCP_VL: -0.1
+      right_pinky_elastomer: -0.1
+      right_ring_MCP_VL: -0.1
+      right_ring_elastomer: -0.1
+      right_thumb_elastomer: -0.1
       vega_1p_base: -0.1
       vega_1p_torso_l1: -0.1
       vega_1p_torso_l2: -0.1
@@ -864,7 +893,14 @@ robot_cfg:
       left_pinky_DP: -0.1
     # Sharpa finger joints locked at 0 — see magicsim_vega1p_sharpa.yml
     # for rationale. Same 44 joints, identical 0.0 lock value.
+    # MobileDeform posture: optimize arms (and the free base), hold torso/head.
     lock_joints:
+      torso_j1: 0.174533
+      torso_j2: 1.047198
+      torso_j3: 0.0
+      head_j1: 0.0
+      head_j2: 0.0
+      head_j3: 0.0
       right_thumb_CMC_FE: 0.0
       right_thumb_CMC_AA: 0.0
       right_thumb_MCP_FE: 0.0
@@ -1004,7 +1040,7 @@ robot_cfg:
       - 1
       - 1
       - 1
-      position_limit_clip: -0.2
+      position_limit_clip: 0.0
       max_acceleration:
       - 15.0
       - 15.0
@@ -1054,40 +1090,30 @@ robot_cfg:
       - 500.0
       - 500.0
       default_joint_position:
-      # cspace order: [base_x, base_y, base_yaw, torso_j1, torso_j2,
-      # torso_j3, head_j1, head_j2, head_j3, L_arm_j1..j7, R_arm_j1..j7].
-      # Synced with vega_1p_sharpa.usd's authored
-      # ``drive:angular:physics:targetPosition`` so the cuRobo retract
-      # matches the IsaacLab spawn pose (see
-      # ``Vega1pSharpaCfg.init_state.joint_pos`` in vega1psharpa.py).
-      # Cold-start MotionGen otherwise gets a current_state in radians
-      # offset from the seed by ~1.5rad on the torso, which lands
-      # trajopt in a folded local minimum.
-      # Mirror of the same change in magicsim_vega1p_sharpa.yml — keep
-      # these in sync.
-      - 0.0       # dummy_base_prismatic_x_joint
-      - 0.0       # dummy_base_prismatic_y_joint
-      - 0.0       # dummy_base_revolute_z_joint
-      - 1.0472    # torso_j1   (USD 60°)
-      - 1.5708    # torso_j2   (USD 90°)
-      - -0.4363   # torso_j3   (USD -25°)
-      - 0.0       # head_j1
-      - 0.0       # head_j2
-      - 0.0       # head_j3
-      - -0.7854   # L_arm_j1   (USD -45°)
-      - 0.0       # L_arm_j2
-      - 0.0       # L_arm_j3
-      - 0.0       # L_arm_j4
-      - 0.0       # L_arm_j5
-      - 0.0       # L_arm_j6
-      - 0.0       # L_arm_j7
-      - 0.7854    # R_arm_j1   (USD +45°)
-      - 0.0       # R_arm_j2
-      - 0.0       # R_arm_j3
-      - 0.0       # R_arm_j4
-      - 0.0       # R_arm_j5
-      - 0.0       # R_arm_j6
-      - 0.0       # R_arm_j7
+      # Synced with VEGA_PLANNING_HOME; scene spawn yaw is configured separately.
+      - 0.0  # dummy_base_prismatic_x_joint
+      - 0.0  # dummy_base_prismatic_y_joint
+      - 0.0  # dummy_base_revolute_z_joint
+      - 0.174533  # torso_j1
+      - 1.047198  # torso_j2
+      - 0.0  # torso_j3
+      - 0.0  # head_j1
+      - 0.0  # head_j2
+      - 0.0  # head_j3
+      - 0.7854  # L_arm_j1
+      - 0.0  # L_arm_j2
+      - 0.0  # L_arm_j3
+      - -2.618  # L_arm_j4
+      - 1.5708  # L_arm_j5
+      - 0.0  # L_arm_j6
+      - 0.0  # L_arm_j7
+      - -0.7854  # R_arm_j1
+      - 0.0  # R_arm_j2
+      - 0.0  # R_arm_j3
+      - -2.618  # R_arm_j4
+      - -1.5708  # R_arm_j5
+      - 0.0  # R_arm_j6
+      - 0.0  # R_arm_j7
       acceleration_scale:
       - 1.0
       - 1.0

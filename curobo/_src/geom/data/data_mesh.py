@@ -604,6 +604,7 @@ def compute_local_sdf(
     env_idx: wp.int32,
     local_idx: wp.int32,
     local_pt: wp.vec3,
+    query_radius: wp.float32 = 0.0,
 ) -> wp.float32:
     """Compute SDF value for a mesh obstacle (no gradient).
 
@@ -616,6 +617,7 @@ def compute_local_sdf(
         env_idx: Environment index.
         local_idx: Local index of the mesh within the environment.
         local_pt: Query point in obstacle local frame.
+        query_radius: Radius used to keep the closest-point query range valid.
 
     Returns:
         Signed distance: negative inside, positive outside.
@@ -628,7 +630,10 @@ def compute_local_sdf(
     bounding_box_size = wp.vec3(obs_set.dims[flat_idx,0],
     obs_set.dims[flat_idx,1],
     obs_set.dims[flat_idx,2])
-    max_distance = wp.length(bounding_box_size) * 0.5
+    # A miss returns this positive distance. It must exceed the caller's
+    # sphere radius plus activation margin; capping it at the mesh's own
+    # size falsely collides large robot spheres with small, distant objects.
+    max_distance = wp.max(wp.length(bounding_box_size) * 0.5, query_radius + 1.0e-4)
 
     # Query mesh for closest point
     result = wp.mesh_query_point(mesh_id, local_pt, max_distance)
@@ -649,6 +654,7 @@ def compute_local_sdf_with_grad(
     env_idx: wp.int32,
     local_idx: wp.int32,
     local_pt: wp.vec3,
+    query_radius: wp.float32 = 0.0,
 ) -> wp.vec4:
     """Compute SDF and gradient for a mesh obstacle in local frame.
 
@@ -662,6 +668,7 @@ def compute_local_sdf_with_grad(
         env_idx: Environment index.
         local_idx: Local index of the mesh within the environment.
         local_pt: Query point in obstacle local frame.
+        query_radius: Radius used to keep the closest-point query range valid.
 
     Returns:
         vec4(signed_dist, grad_local_x, grad_local_y, grad_local_z).
@@ -675,7 +682,10 @@ def compute_local_sdf_with_grad(
     bounding_box_size = wp.vec3(obs_set.dims[flat_idx,0],
     obs_set.dims[flat_idx,1],
     obs_set.dims[flat_idx,2])
-    max_distance = wp.length(bounding_box_size) * 0.5
+    # A miss returns this positive distance. It must exceed the caller's
+    # sphere radius plus activation margin; capping it at the mesh's own
+    # size falsely collides large robot spheres with small, distant objects.
+    max_distance = wp.max(wp.length(bounding_box_size) * 0.5, query_radius + 1.0e-4)
 
     # Query mesh for closest point
     result = wp.mesh_query_point(mesh_id, local_pt, max_distance)
