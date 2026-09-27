@@ -701,9 +701,12 @@ def compute_local_sdf_with_grad(
     # Signed distance: negative inside, positive outside
     signed_dist = dis_length * result.sign
 
-    # Gradient in local frame pointing toward obstacle
+    # Gradient of the penetration (-signed_dist) in the local frame, the
+    # cuboid convention: it points into the obstacle. Outside (sign +1) that
+    # is toward the closest surface point; inside (sign -1) it is away from
+    # it. Without the sign, spheres near a mesh were pulled onto it.
     grad_local = wp.vec3(0.0, 0.0, 0.0)
     if dis_length > _SDF_EPS:
-        grad_local = -delta / dis_length
+        grad_local = result.sign * delta / dis_length
 
     return wp.vec4(signed_dist, grad_local[0], grad_local[1], grad_local[2])
