@@ -117,7 +117,7 @@
     <parent link="g1_29dof_with_hand_rev_1_0" />
     <child link="waist_yaw_link" />
     <axis xyz="0. 0. 1." />
-    <limit lower="-2.618" upper="2.618" effort="88." velocity="32.0000004" />
+    <limit lower="-0.5" upper="0.5" effort="88." velocity="32.0000004" />
   </joint>
   <link name="waist_yaw_link">
     <inertial>
@@ -137,7 +137,7 @@
     <parent link="waist_yaw_link" />
     <child link="waist_roll_link" />
     <axis xyz="1. 0. 0." />
-    <limit lower="-1.0" upper="1.0" effort="50" velocity="37.0" />
+    <limit lower="-0.1" upper="0.1" effort="50" velocity="37.0" />
   </joint>
   <link name="waist_roll_link">
     <inertial>
@@ -157,7 +157,7 @@
     <parent link="waist_roll_link" />
     <child link="torso_link" />
     <axis xyz="0. 1. 0." />
-    <limit lower="-1.5" upper="1.5" effort="50" velocity="37.0" />
+    <limit lower="-0.1" upper="0.1" effort="50" velocity="37.0" />
   </joint>
   <link name="torso_link">
     <inertial>
