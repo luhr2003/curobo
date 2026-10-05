@@ -60,12 +60,45 @@ class WarpMeshCache:
     #: Warp mesh instance with BVH acceleration structure.
     mesh: wp.Mesh
 
+    #: MagicSim patch — geometry identity of the source Mesh (see ``mesh_geometry_signature``).
+    #: None for entries that were not loaded from a Mesh.
+    signature: Optional[tuple] = None
+
     def get_bounds(self) -> Tuple[torch.Tensor, torch.Tensor]:
         """Get axis-aligned bounding box of the mesh."""
         torch_verts = wp.to_torch(self.mesh.points)
         min_vert = torch.min(torch_verts, dim=0).values
         max_vert = torch.max(torch_verts, dim=0).values
         return min_vert, max_vert
+
+
+def mesh_geometry_signature(mesh: Mesh) -> tuple:
+    """Cheap identity of a mesh's geometry, independent of its pose.
+
+    MagicSim patch. The Warp cache is keyed by obstacle name, which callers set to a
+    prim path. A path can come back with other geometry (another asset behind the same
+    prim, a rescaled object), so a name alone must not decide a cache hit.
+    """
+    if mesh.vertices is None or mesh.faces is None:
+        scale = None if mesh.scale is None else tuple(float(v) for v in np.ravel(mesh.scale))
+        return ("file", mesh.file_path, scale)
+    vertices = mesh.vertices
+    if isinstance(vertices, torch.Tensor):
+        vertices = vertices.detach().cpu().numpy()
+    vertices = np.asarray(vertices, dtype=np.float64).reshape(-1, 3)
+    faces = mesh.faces
+    count = int(faces.numel()) if isinstance(faces, torch.Tensor) else int(np.size(faces))
+    stats = np.concatenate([vertices.min(0), vertices.max(0), np.abs(vertices).mean(0)])
+    return ("data", int(vertices.shape[0]), count, tuple(float(v) for v in stats))
+
+
+def same_mesh_geometry(a: Optional[tuple], b: Optional[tuple], tolerance: float = 1.0e-4) -> bool:
+    """Compare two signatures; vertex statistics match within ``tolerance`` metres."""
+    if a is None or b is None or a[:-1] != b[:-1]:
+        return False
+    if a[0] != "data":
+        return a == b
+    return bool(np.allclose(a[-1], b[-1], rtol=0.0, atol=tolerance))
 
 
 # =============================================================================
@@ -128,6 +161,11 @@ class MeshData:
 
     #: Warp device for mesh loading.
     _wp_device: wp.context.Device = field(repr=False, default=None)
+
+    #: MagicSim patch — every geometry ever loaded under a name. ``wp_cache`` points at the
+    #: current one; older ones stay allocated because another environment slot may still hold
+    #: their Warp id, and come back without a reload when the same geometry returns.
+    _wp_versions: Dict[str, List[WarpMeshCache]] = field(repr=False, default_factory=dict)
 
     def __post_init__(self):
         """Initialize Warp device after dataclass creation."""
@@ -280,17 +318,30 @@ class MeshData:
         else:
             new_mesh = wp.Mesh(points=v, indices=f)
 
-        return WarpMeshCache(mesh.name, new_mesh.id, v, f, new_mesh)
+        return WarpMeshCache(mesh.name, new_mesh.id, v, f, new_mesh, mesh_geometry_signature(mesh))
 
     def _load_mesh_into_cache(self, mesh: Mesh) -> WarpMeshCache:
         """Load a mesh into the Warp cache, reusing existing if already loaded.
 
         Cache hits are intentional (each per-env slot load re-submits the
         same mesh names) and non-noisy — no warning emitted.
+
+        MagicSim patch: a hit needs the same geometry, not only the same name. Before this,
+        an obstacle whose shape changed under an unchanged name kept its first shape forever
+        (pose updates still applied), i.e. planning against geometry that no longer exists.
         """
-        if mesh.name not in self.wp_cache:
-            self.wp_cache[mesh.name] = self._load_mesh_to_warp(mesh)
-        return self.wp_cache[mesh.name]
+        cached = self.wp_cache.get(mesh.name)
+        if cached is not None and cached.signature is None:
+            return cached  # not loaded from a Mesh: nothing to compare against
+        signature = mesh_geometry_signature(mesh)
+        if cached is None or not same_mesh_geometry(cached.signature, signature):
+            versions = self._wp_versions.setdefault(mesh.name, [])
+            cached = next((v for v in versions if same_mesh_geometry(v.signature, signature)), None)
+            if cached is None:
+                cached = self._load_mesh_to_warp(mesh)
+                versions.append(cached)
+            self.wp_cache[mesh.name] = cached
+        return cached
 
     def load_batch(self, meshes: List[Mesh], env_idx: int) -> None:
         """Load a batch of meshes into an environment, replacing existing ones.
@@ -489,6 +540,7 @@ class MeshData:
 
         if clear_warp_cache:
             self.wp_cache.clear()
+            self._wp_versions.clear()
 
     # -------------------------------------------------------------------------
     # Warp Conversion
@@ -553,6 +605,14 @@ class MeshDataWarp:
 # =============================================================================
 
 _SDF_EPS = 1e-6
+
+#: MagicSim patch. A query point farther from a mesh than the query radius gets no hit, and the
+#: radius itself is returned as its distance; the collision kernels then compare that value with
+#: the sphere radius. The radius used to be half the mesh's bounding-box diagonal alone, i.e. as
+#: small as the mesh: 4.3 cm for a 5 cm cube, so every sphere wider than that was "in collision"
+#: with the cube from anywhere in the scene, with a zero gradient. Query at least this far (m):
+#: larger than any robot sphere plus its activation distance.
+_MESH_QUERY_FLOOR = 0.5
 
 
 def is_obs_enabled(
@@ -628,7 +688,8 @@ def compute_local_sdf(
     bounding_box_size = wp.vec3(obs_set.dims[flat_idx,0],
     obs_set.dims[flat_idx,1],
     obs_set.dims[flat_idx,2])
-    max_distance = wp.length(bounding_box_size) * 0.5
+    # MagicSim patch: never query (or report a miss) closer than _MESH_QUERY_FLOOR.
+    max_distance = wp.max(wp.length(bounding_box_size) * 0.5, wp.max(obs_set.max_dist, _MESH_QUERY_FLOOR))
 
     # Query mesh for closest point
     result = wp.mesh_query_point(mesh_id, local_pt, max_distance)
@@ -675,7 +736,8 @@ def compute_local_sdf_with_grad(
     bounding_box_size = wp.vec3(obs_set.dims[flat_idx,0],
     obs_set.dims[flat_idx,1],
     obs_set.dims[flat_idx,2])
-    max_distance = wp.length(bounding_box_size) * 0.5
+    # MagicSim patch: never query (or report a miss) closer than _MESH_QUERY_FLOOR.
+    max_distance = wp.max(wp.length(bounding_box_size) * 0.5, wp.max(obs_set.max_dist, _MESH_QUERY_FLOOR))
 
     # Query mesh for closest point
     result = wp.mesh_query_point(mesh_id, local_pt, max_distance)

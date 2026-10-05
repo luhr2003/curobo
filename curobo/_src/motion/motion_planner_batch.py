@@ -20,7 +20,10 @@ import torch
 from curobo._src.cost.tool_pose_criteria import ToolPoseCriteria
 from curobo._src.geom.collision import create_collision_checker
 from curobo._src.geom.types import SceneCfg
-from curobo._src.motion.motion_planner import _axis_string_to_vector
+from curobo._src.motion.motion_planner import (
+    _anchor_ik_seeds_to_current_state,
+    _axis_string_to_vector,
+)
 from curobo._src.motion.motion_planner_cfg import MotionPlannerCfg
 from curobo._src.motion.motion_planner_result import GraspPlanResult
 from curobo._src.robot.kinematics.kinematics import Kinematics
@@ -143,6 +146,8 @@ class BatchMotionPlanner:
         max_attempts: int = 1,
         success_ratio: float = 1.0,
         enable_graph_attempt: int = 0,
+        seed_hook=None,
+        ik_seed_hook=None,
     ) -> Optional[TrajOptSolverResult]:
         """Plan trajectories for a batch of pose targets.
 
@@ -161,6 +166,18 @@ class BatchMotionPlanner:
                 succeeded (0.0-1.0).  Default 1.0 means wait for all.
             enable_graph_attempt: Attempt index at which to start graph
                 seeding (when graph planner is available).
+            seed_hook: MagicSim patch, optional. Called between IK and TrajOpt as
+                ``seed_hook(current_state, ik_result) -> (seed_config, seed_traj)``
+                with ``seed_config`` ``[batch, seeds, dof]`` (the goal configuration
+                of every seed, chosen from ``ik_result.solution``, which then holds the
+                result of every IK seed, best first) and ``seed_traj``
+                ``[batch, seeds, action_horizon, dof]`` or None for the solver's own
+                straight-line seeds. Lets a caller start the optimiser on a path
+                that already goes round an obstacle. None = unchanged behaviour.
+            ik_seed_hook: MagicSim patch, optional. ``ik_seed_hook(current_state, count)
+                -> [batch, count, dof]`` supplies the IK seeds (it replaces the anchored /
+                random ones). Without a ``seed_hook`` the solver's best ``seeds`` results
+                are used.
 
         Returns:
             TrajOptSolverResult with per-problem success, or None if IK
@@ -175,10 +192,25 @@ class BatchMotionPlanner:
         total_time = 0.0
 
         for attempt in range(max_attempts):
+            # MagicSim opt-in, matching MotionPlanner's existing seed policy.
+            # Keep the default call and its random-seed behavior unchanged.
+            # The full IK -> TrajOpt/collision-check path still runs afterward.
+            ik_seed_kwargs = {}
+            ik_return_seeds = num_seeds
+            if self.config.anchor_ik_seeds_to_current_state:
+                ik_seed_kwargs["seed_config"] = _anchor_ik_seeds_to_current_state(
+                    current_state,
+                    max(num_seeds, int(self.ik_solver.config.num_seeds)),
+                )
+            if seed_hook is not None or ik_seed_hook is not None:
+                ik_return_seeds = max(num_seeds, int(self.ik_solver.config.num_seeds))
+            if ik_seed_hook is not None:
+                ik_seed_kwargs["seed_config"] = ik_seed_hook(current_state, ik_return_seeds)
             ik_result = self.ik_solver.solve_pose(
                 goal_tool_poses,
-                return_seeds=num_seeds,
+                return_seeds=ik_return_seeds,
                 current_state=current_state,
+                **ik_seed_kwargs,
             )
             total_time += ik_result.total_time
 
@@ -194,10 +226,18 @@ class BatchMotionPlanner:
                     current_state, ik_result.solution,
                 )
 
+            seed_config = ik_result.solution
+            if seed_hook is not None:
+                seed_config, hook_traj = seed_hook(current_state, ik_result)
+                if hook_traj is not None:
+                    seed_traj = hook_traj
+            if seed_config.shape[1] > num_seeds:
+                seed_config = seed_config[:, :num_seeds].contiguous()
+
             trajopt_result = self.trajopt_solver.solve_pose(
                 goal_tool_poses,
                 current_state,
-                seed_config=ik_result.solution,
+                seed_config=seed_config,
                 seed_traj=seed_traj,
                 use_implicit_goal=use_implicit_goal,
             )

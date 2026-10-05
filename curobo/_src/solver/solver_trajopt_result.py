@@ -159,6 +159,8 @@ class TrajOptSolverResult(BaseSolverResult):
         # 2. Check Convergence (Position and Orientation at the *last* timestep)
         converge_list = []
         cost_list = []
+        position_list = []
+        orientation_list = []
         goalset_index_list = []
         for k in range(len(self.metrics.convergence.names)):
             metric_name = self.metrics.convergence.names[k]
@@ -172,10 +174,12 @@ class TrajOptSolverResult(BaseSolverResult):
 
             if "position_tolerance" in metric_name:
                 cost_list.append(last_step_values)
+                position_list.append(last_step_values)
                 converged = last_step_values < self.position_tolerance
                 converge_list.append(converged)
             elif "orientation_tolerance" in metric_name:
                 cost_list.append(last_step_values)
+                orientation_list.append(last_step_values)
                 converged = last_step_values < self.orientation_tolerance
                 converge_list.append(converged)
             elif "goalset_index" in metric_name:
@@ -221,21 +225,20 @@ class TrajOptSolverResult(BaseSolverResult):
             )
         cost_sum = cost.sum(dim=-1).squeeze(-1)
 
-        pose_error_flat = cost.view(
-            batch_size * num_seeds, cost.shape[-1]
-        )  # Shape: (batch*num_seeds, num_links * 2)
-        num_links = int(pose_error_flat.shape[-1] / 2) if cost.numel() > 0 else 0
-        if num_links > 0:
-            pose_error_link_view = pose_error_flat.view(batch_size, num_seeds, num_links, 2)
-            # position_error shape: (batch, return_seeds)
-            position_error = torch.max(pose_error_link_view[..., 0], dim=-1)[0]
-            # rotation_error shape: (batch, return_seeds)
-            rotation_error = torch.max(pose_error_link_view[..., 1], dim=-1)[0]
-        else:
-            # Handle case with no pose cost metrics
-            dummy_error = torch.zeros_like(success, dtype=torch.float32)
-            position_error = dummy_error
-            rotation_error = dummy_error
+        # MagicSim patch: the worst link of each metric. ``cost`` is laid out as
+        # [position (all links), orientation (all links)]; pairing its columns as
+        # (position, orientation) per link reported the orientation error of the first
+        # link as the position error and zero as the rotation error.
+        def _worst_link(values):
+            if not values:
+                # Handle case with no pose cost metrics
+                return torch.zeros_like(success, dtype=torch.float32)
+            flat = torch.cat(values, dim=-1).reshape(batch_size * num_seeds, -1)
+            return torch.max(flat, dim=-1)[0]
+
+        # position_error / rotation_error shape: (batch * num_seeds,), viewed per seed below
+        position_error = _worst_link(position_list)
+        rotation_error = _worst_link(orientation_list)
 
         # Goalset indices if applicable
         if goalset_index is not None:
