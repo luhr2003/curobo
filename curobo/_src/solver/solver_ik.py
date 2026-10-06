@@ -484,16 +484,20 @@ class IKSolver:
         cost_list = []
         goalset_index_list = []
         pose_cost_list = []
+        position_error_list = []
+        rotation_error_list = []
         for k in range(len(metrics_result.convergence.names)):
             metric_name = metrics_result.convergence.names[k]
             metric_values = metrics_result.convergence.values[k]
 
             if "position_tolerance" in metric_name:
                 pose_cost_list.append(metric_values)
+                position_error_list.append(metric_values)
                 converged = metric_values < self.config.position_tolerance
                 converge_list.append(converged)
             elif "orientation_tolerance" in metric_name:
                 pose_cost_list.append(metric_values)
+                rotation_error_list.append(metric_values)
                 converged = metric_values < self.config.orientation_tolerance
                 converge_list.append(converged)
             elif "goalset_index" in metric_name:
@@ -567,11 +571,6 @@ class IKSolver:
             joint_state=JointState.from_position(q_sol, joint_names=self.joint_names),
         )
 
-        pose_error_flat = pose_cost.view(-1, pose_cost.shape[-1])
-        pose_error_topk = pose_error_flat[topk_abs_idx.view(-1)]
-        num_links = int(pose_error_topk.shape[-1] / 2)
-        pose_error_topk = pose_error_topk.view(batch_size, return_seeds, num_links, 2)
-
         goalset_index_topk = None
         if goalset_index is not None:
             goalset_index_flat = goalset_index.view(-1, goalset_index.shape[-1])
@@ -579,8 +578,15 @@ class IKSolver:
                 batch_size, return_seeds, num_links
             )
 
-        position_error = torch.max(pose_error_topk[..., 0], dim=-1)[0]
-        rotation_error = torch.max(pose_error_topk[..., 1], dim=-1)[0]
+        # Convergence stores all link positions followed by all rotations;
+        # it is not interleaved (position, rotation) per link. Reduce each
+        # metric independently before gathering the ranked seeds.
+        position_error = torch.cat(position_error_list, dim=-1).amax(dim=-1).view(-1)[
+            topk_abs_idx
+        ]
+        rotation_error = torch.cat(rotation_error_list, dim=-1).amax(dim=-1).view(-1)[
+            topk_abs_idx
+        ]
 
         js_solution = solution_state.joint_state
         js_solution = self.auxiliary_rollout.transition_model.get_full_dof_from_solution(
