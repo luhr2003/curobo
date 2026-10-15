@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="casbot">
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0.0068809 0.0020751 0.13249" rpy="0 0 0" />
+      <mass value="18.119" />
+      <inertia ixx="0.26684" ixy="-1.38E-06" ixz="-0.00010759" iyy="0.26904" iyz="0.00018439" izz="0.20764" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/base_link.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/base_link.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="waist_updown_Link">
+    <inertial>
+      <origin xyz="-0.00034541 -0.0012036 0.37223" rpy="0 0 0" />
+      <mass value="6.3093" />
+      <inertia ixx="0.074582" ixy="1.04E-06" ixz="-0.0002427" iyy="0.080739" iyz="-0.00026476" izz="0.016613" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/waist_updown_Link.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/waist_updown_Link.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="waist_updown_joint" type="prismatic">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="waist_updown_Link" />
+    <axis xyz="0 0 1" />
+    <limit lower="0" upper="0.72" effort="2000" velocity="0.15" />
+  </joint>
+  <link name="waist_pitch_Link">
+    <inertial>
+      <origin xyz="0.00088056 -0.067832 0.049908" rpy="0 0 0" />
+      <mass value="1.0381" />
+      <inertia ixx="0.0037037" ixy="1.88E-05" ixz="3.61E-05" iyy="0.0038958" iyz="-0.00050887" izz="0.003814" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/waist_pitch_Link.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/waist_pitch_Link.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="waist_pitch_joint" type="revolute">
+    <origin xyz="0 0.084 0.637" rpy="0 0 0" />
+    <parent link="waist_updown_Link" />
+    <child link="waist_pitch_Link" />
+    <axis xyz="0 1 0" />
+    <limit lower="-0.17453" upper="1.5708" effort="300" velocity="1" />
+  </joint>
+  <link name="waist_yaw_Link">
+    <inertial>
+      <origin xyz="-0.0017955 -0.0014369 0.084525" rpy="0 0 0" />
+      <mass value="1.8012" />
+      <inertia ixx="0.011018" ixy="-1.12E-05" ixz="6.19E-05" iyy="0.0060118" iyz="-3.33E-06" izz="0.0086316" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/waist_yaw_Link.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/waist_yaw_Link.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="waist_yaw_joint" type="revolute">
+    <origin xyz="0 -0.084 0.112" rpy="0 0 0" />
+    <parent link="waist_pitch_Link" />
+    <child link="waist_yaw_Link" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.7453" upper="3.4907" effort="150" velocity="1" />
+  </joint>
+  <link name="head_yaw_Link">
+    <inertial>
+      <origin xyz="-0.032443 -0.0019458 0.068116" rpy="0 0 0" />
+      <mass value="0.14492" />
+      <inertia ixx="0.00021402" ixy="-4.98E-06" ixz="-1.46E-05" iyy="0.00016782" iyz="3.7E-07" izz="0.00012931" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/head_yaw_Link.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/head_yaw_Link.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="head_yaw_joint" type="revolute">
+    <origin xyz="0 0 0.2145" rpy="0 0 0" />
+    <parent link="waist_yaw_Link" />
+    <child link="head_yaw_Link" />
+    <axis xyz="0 0 1" />
+    <limit lower="-2.3562" upper="2.3562" effort="10" velocity="2" />
+  </joint>
+  <link name="head_pitch_Link">
+    <inertial>
+      <origin xyz="0.035279 0.035521 0.0031771" rpy="0 0 0" />
+      <mass value="0.13409" />
+      <inertia ixx="0.00028041" ixy="2.71E-06" ixz="-2.01E-06" iyy="9.53E-05" iyz="-4.25E-08" izz="0.00023741" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/head_pitch_Link.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/head_pitch_Link.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="head_pitch_joint" type="revolute">
+    <origin xyz="0 -0.036 0.08" rpy="0 0 0" />
+    <parent link="head_yaw_Link" />
+    <child link="head_pitch_Link" />
+    <axis xyz="0 1 0" />
+    <limit lower="-1.0472" upper="1.0472" effort="10" velocity="2" />
+  </joint>
+  <link name="left_Link1">
+    <inertial>
+      <origin xyz="0.000318454 0.040043147 2.77E-05" rpy="0 0 0" />
+      <mass value="0.15821696" />
+      <inertia ixx="0.000255855" ixy="-2E-05" ixz="-8.37E-06" iyy="0.000167434" iyz="-1.07E-05" izz="0.000165937" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left_Link1.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/left_Link1.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_joint1" type="revolute">
+    <origin xyz="0 0.1545 0.087523" rpy="0 0 0" />
+    <parent link="waist_yaw_Link" />
+    <child link="left_Link1" />
+    <axis xyz="0 1 0" />
+    <limit lower="-3.2288" upper="1.6057" effort="60" velocity="3" />
+  </joint>
+  <link name="left_Link2">
+    <inertial>
+      <origin xyz="0.022785313 0.00220567 -0.061691193" rpy="0 0 0" />
+      <mass value="0.184197557" />
+      <inertia ixx="0.000314182" ixy="-6.92E-07" ixz="-4.18E-06" iyy="0.000257934" iyz="-1.48E-07" izz="0.000162397" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left_Link2.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/left_Link2.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_joint2" type="revolute">
+    <origin xyz="-0.026 0.057 0" rpy="0 0 0" />
+    <parent link="left_Link1" />
+    <child link="left_Link2" />
+    <axis xyz="1 0 0" />
+    <limit lower="-0.349" upper="3.1415" effort="60" velocity="3" />
+  </joint>
+  <link name="left_Link3">
+    <inertial>
+      <origin xyz="-0.004291654 0.016652675 -0.027896027" rpy="0 0 0" />
+      <mass value="0.111620801" />
+      <inertia ixx="0.000131241" ixy="2.74E-06" ixz="7.86E-06" iyy="0.000151542" iyz="-2.26E-05" izz="7.88E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left_Link3.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/left_Link3.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_joint3" type="revolute">
+    <origin xyz="0.026 0 -0.1315" rpy="0 0 0" />
+    <parent link="left_Link2" />
+    <child link="left_Link3" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.5707" upper="1.5707" effort="60" velocity="3" />
+  </joint>
+  <link name="left_Link4">
+    <inertial>
+      <origin xyz="-0.000258363 -0.029019395 -0.011591417" rpy="0 0 0" />
+      <mass value="0.141298047" />
+      <inertia ixx="0.000110724" ixy="6.97E-09" ixz="-3.36E-07" iyy="0.000186141" iyz="-9.52E-07" izz="0.000112946" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left_Link4.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/left_Link4.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_joint4" type="revolute">
+    <origin xyz="-5.2258E-05 0.027 -0.080909" rpy="0 0 0" />
+    <parent link="left_Link3" />
+    <child link="left_Link4" />
+    <axis xyz="0 1 0" />
+    <limit lower="-2.2689" upper="0.349" effort="60" velocity="3" />
+  </joint>
+  <link name="left_Link5">
+    <inertial>
+      <origin xyz="0.000379109 0.017853123 -0.076310077" rpy="0 0 0" />
+      <mass value="0.195101962" />
+      <inertia ixx="0.000150009" ixy="5.99E-07" ixz="-1.33E-06" iyy="0.000199463" iyz="-6.03E-06" izz="9.03E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left_Link5.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/left_Link5.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_joint5" type="revolute">
+    <origin xyz="5.2258E-05 -0.027 -0.052591" rpy="0 0 0" />
+    <parent link="left_Link4" />
+    <child link="left_Link5" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.5707" upper="1.5707" effort="20" velocity="3" />
+  </joint>
+  <link name="left_Link6">
+    <inertial>
+      <origin xyz="0.022690581 -0.029031042 0.001435734" rpy="0 0 0" />
+      <mass value="0.025694877" />
+      <inertia ixx="1.46E-05" ixy="-3.57E-06" ixz="5.49E-07" iyy="9.56E-06" iyz="-4.66E-07" izz="1.31E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left_Link6.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/left_Link6.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_joint6" type="revolute">
+    <origin xyz="0 0 -0.1665" rpy="0 0 0" />
+    <parent link="left_Link5" />
+    <child link="left_Link6" />
+    <axis xyz="0 1 0" />
+    <limit lower="-1.0471" upper="1.0471" effort="20" velocity="3" />
+  </joint>
+  <link name="left_Link7">
+    <inertial>
+      <origin xyz="-0.028588893 1.54E-06 -0.030615645" rpy="0 0 0" />
+      <mass value="0.038577505" />
+      <inertia ixx="3.14E-05" ixy="-3.1E-10" ixz="6.29E-06" iyy="3.78E-05" iyz="-1.11E-11" izz="1.91E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left_Link7.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/left_Link7.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_joint7" type="revolute">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="left_Link6" />
+    <child link="left_Link7" />
+    <axis xyz="1 0 0" />
+    <limit lower="-1.5707" upper="1.0471" effort="20" velocity="3" />
+  </joint>
+  <link name="right_Link1">
+    <inertial>
+      <origin xyz="0.005184756 -0.046887453 2.43E-05" rpy="0 0 0" />
+      <mass value="0.266608516" />
+      <inertia ixx="0.000300649" ixy="2E-05" ixz="-8.36E-06" iyy="0.000203643" iyz="1.07E-05" izz="0.000202668" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/right_Link1.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/right_Link1.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_joint1" type="revolute">
+    <origin xyz="0 -0.1545 0.088" rpy="0 0 0" />
+    <parent link="waist_yaw_Link" />
+    <child link="right_Link1" />
+    <axis xyz="0 1 0" />
+    <limit lower="-3.2288" upper="1.6057" effort="60" velocity="3" />
+  </joint>
+  <link name="right_Link2">
+    <inertial>
+      <origin xyz="0.024512876 -0.002347653 -0.052722444" rpy="0 0 0" />
+      <mass value="0.173563993" />
+      <inertia ixx="0.000316377" ixy="8.13E-07" ixz="-3.36E-06" iyy="0.000259436" iyz="-1.97E-08" izz="0.000155579" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/right_Link2.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/right_Link2.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_joint2" type="revolute">
+    <origin xyz="-0.026 -0.057 0" rpy="0 0 0" />
+    <parent link="right_Link1" />
+    <child link="right_Link2" />
+    <axis xyz="1 0 0" />
+    <limit lower="-3.1415" upper="0.349" effort="60" velocity="3" />
+  </joint>
+  <link name="right_Link3">
+    <inertial>
+      <origin xyz="-0.004756982 -0.012901671 -0.022910093" rpy="0 0 0" />
+      <mass value="0.099337108" />
+      <inertia ixx="0.000127621" ixy="-2.76E-06" ixz="7.79E-06" iyy="0.00014657" iyz="2.26E-05" izz="7.73E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/right_Link3.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/right_Link3.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_joint3" type="revolute">
+    <origin xyz="0.026 0 -0.1315" rpy="0 0 0" />
+    <parent link="right_Link2" />
+    <child link="right_Link3" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.5707" upper="1.5707" effort="60" velocity="3" />
+  </joint>
+  <link name="right_Link4">
+    <inertial>
+      <origin xyz="-0.000317386 0.026160505 -0.010374714" rpy="0 0 0" />
+      <mass value="0.157643845" />
+      <inertia ixx="0.000114251" ixy="-7.06E-09" ixz="-2.98E-07" iyy="0.000192948" iyz="9.52E-07" izz="0.000116483" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/right_Link4.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/right_Link4.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_joint4" type="revolute">
+    <origin xyz="5.2258E-05 -0.027 -0.080909" rpy="0 0 0" />
+    <parent link="right_Link3" />
+    <child link="right_Link4" />
+    <axis xyz="0 1 0" />
+    <limit lower="-2.2689" upper="0.349" effort="60" velocity="3" />
+  </joint>
+  <link name="right_Link5">
+    <inertial>
+      <origin xyz="-0.000458603 -0.018126937 -0.078253152" rpy="0 0 0" />
+      <mass value="0.174020517" />
+      <inertia ixx="0.000146935" ixy="5.96E-07" ixz="1.28E-06" iyy="0.000194428" iyz="5.99E-06" izz="8.67E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/right_Link5.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/right_Link5.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_joint5" type="revolute">
+    <origin xyz="-5.2258E-05 0.027 -0.052591" rpy="0 0 0" />
+    <parent link="right_Link4" />
+    <child link="right_Link5" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.5707" upper="1.5707" effort="20" velocity="3" />
+  </joint>
+  <link name="right_Link6">
+    <inertial>
+      <origin xyz="0.00514152 0.041780169 0.001262122" rpy="0 0 0" />
+      <mass value="0.059486109" />
+      <inertia ixx="3.81E-05" ixy="4.22E-06" ixz="6.17E-07" iyy="2.39E-05" iyz="1.95E-06" izz="3.1E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/right_Link6.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/right_Link6.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_joint6" type="revolute">
+    <origin xyz="0 0 -0.1665" rpy="0 0 0" />
+    <parent link="right_Link5" />
+    <child link="right_Link6" />
+    <axis xyz="0 1 0" />
+    <limit lower="-1.0471" upper="1.0471" effort="20" velocity="3" />
+  </joint>
+  <link name="right_Link7">
+    <inertial>
+      <origin xyz="-0.024089336 1.25E-06 -0.024947961" rpy="0 0 0" />
+      <mass value="0.047341556" />
+      <inertia ixx="3.27E-05" ixy="-3.1E-10" ixz="6.29E-06" iyy="3.85E-05" iyz="-1.13E-11" izz="1.99E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/right_Link7.STL" />
+      </geometry>
+      <material name="casbot_white">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/collision/right_Link7.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_joint7" type="revolute">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="right_Link6" />
+    <child link="right_Link7" />
+    <axis xyz="1 0 0" />
+    <limit lower="-1.0471" upper="1.5707" effort="20" velocity="3" />
+  </joint>
+  <link name="right_hand">
+    <inertial>
+      <origin xyz="0 0 0.04" rpy="0 0 0" />
+      <mass value="0.73" />
+      <inertia ixx="0.00302439" ixy="0" ixz="0" iyy="0.000734197" iyz="0" izz="0.00277309" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/gripper/hand.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/gripper/hand_collision.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_hand_joint" type="fixed">
+    <origin xyz="0 0 -0.068" rpy="3.14159265 0 0" />
+    <parent link="right_Link7" />
+    <child link="right_hand" />
+  </joint>
+  <link name="right_leftfinger">
+    <inertial>
+      <origin xyz="0 0 0.07" rpy="0 0 0" />
+      <mass value="0.1" />
+      <inertia ixx="0.000176667" ixy="0" ixz="0" iyy="0.000166667" iyz="0" izz="1.66667e-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/gripper/umi_finger_left.obj" />
+      </geometry>
+      <material name="right_leftfinger_color">
+        <color rgba="0.15 0.15 0.17 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/gripper/umi_finger_left.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_finger_joint1" type="prismatic">
+    <origin xyz="0 0 0.0584" rpy="0 0 0" />
+    <parent link="right_hand" />
+    <child link="right_leftfinger" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0.04" effort="20" velocity="0.2" />
+  </joint>
+  <link name="right_rightfinger">
+    <inertial>
+      <origin xyz="0 0 0.07" rpy="0 0 0" />
+      <mass value="0.1" />
+      <inertia ixx="0.000176667" ixy="0" ixz="0" iyy="0.000166667" iyz="0" izz="1.66667e-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/gripper/umi_finger_right.obj" />
+      </geometry>
+      <material name="right_rightfinger_color">
+        <color rgba="0.15 0.15 0.17 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/gripper/umi_finger_right.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_finger_joint2" type="prismatic">
+    <origin xyz="0 0 0.0584" rpy="0 0 0" />
+    <parent link="right_hand" />
+    <child link="right_rightfinger" />
+    <axis xyz="0 -1 0" />
+    <limit lower="0" upper="0.04" effort="20" velocity="0.2" />
+  </joint>
+  <link name="left_hand">
+    <inertial>
+      <origin xyz="0 0 0.04" rpy="0 0 0" />
+      <mass value="0.73" />
+      <inertia ixx="0.00302439" ixy="0" ixz="0" iyy="0.000734197" iyz="0" izz="0.00277309" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/gripper/hand.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/gripper/hand_collision.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_hand_joint" type="fixed">
+    <origin xyz="0 0 -0.068" rpy="3.14159265 0 0" />
+    <parent link="left_Link7" />
+    <child link="left_hand" />
+  </joint>
+  <link name="left_leftfinger">
+    <inertial>
+      <origin xyz="0 0 0.07" rpy="0 0 0" />
+      <mass value="0.1" />
+      <inertia ixx="0.000176667" ixy="0" ixz="0" iyy="0.000166667" iyz="0" izz="1.66667e-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/gripper/umi_finger_left.obj" />
+      </geometry>
+      <material name="left_leftfinger_color">
+        <color rgba="0.15 0.15 0.17 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/gripper/umi_finger_left.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_finger_joint1" type="prismatic">
+    <origin xyz="0 0 0.0584" rpy="0 0 0" />
+    <parent link="left_hand" />
+    <child link="left_leftfinger" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0.04" effort="20" velocity="0.2" />
+  </joint>
+  <link name="left_rightfinger">
+    <inertial>
+      <origin xyz="0 0 0.07" rpy="0 0 0" />
+      <mass value="0.1" />
+      <inertia ixx="0.000176667" ixy="0" ixz="0" iyy="0.000166667" iyz="0" izz="1.66667e-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/gripper/umi_finger_right.obj" />
+      </geometry>
+      <material name="left_rightfinger_color">
+        <color rgba="0.15 0.15 0.17 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/gripper/umi_finger_right.obj" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_finger_joint2" type="prismatic">
+    <origin xyz="0 0 0.0584" rpy="0 0 0" />
+    <parent link="left_hand" />
+    <child link="left_rightfinger" />
+    <axis xyz="0 -1 0" />
+    <limit lower="0" upper="0.04" effort="20" velocity="0.2" />
+  </joint>
+</robot>
